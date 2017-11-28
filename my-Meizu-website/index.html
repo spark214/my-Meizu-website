@@ -6,9 +6,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>魅族官网</title>
 	<link href="css/index.css" type="text/css" rel="stylesheet">
-	<script type="text/javascript" src="./js/jquery-1.8.3.min.js"></script>
-	<!--<link href="./css/bootstrap.min.css" type="text/css" rel="stylesheet">-->
-	<script type="text/javascript" src="./js/bootstrap.min.js" ></script>
+	<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+	<link href="css/bootstrap.css" type="text/css" rel="stylesheet">
+	<script type="text/javascript" src="js/bootstrap.min.js" ></script>
 </head>
 
 <body onLoad="handleLoad()">
@@ -16,22 +16,22 @@
 <div class="banner">
 	<div class="banner-content">
 <ul id="bannerul">
-	<li class="bimg"><img src="./img/mx6banner.jpg" id="p1"></li>
-	<li class="bimg"><img src="./img/E2banner.jpg" id="p2"></li>
-	<li class="bimg"><img src="./img/m5note.jpg"  id="p3"></li>
-	<li class="bimg"><img src="./img/m5sbanner.jpg" id="p4"></li>
+	<li class="bimg"><div id="p1"></div> </li>
+	<li class="bimg"><div id="p2"></div> </li>
+	<li class="bimg"><div id="p3"></div> </li>
+	<li class="bimg"><div id="p4"></div> </li>
 	</ul>
 	<ul id="b_num">
-		<li class="bno">&nbsp;</li>
-		<li class="bno">&nbsp;</li>
-		<li class="bno">&nbsp;</li>
-		<li class="bno">&nbsp;</li>
+		<li class="bno">&nbsp;&nbsp;&nbsp;&nbsp;</li>
+		<li class="bno">&nbsp;&nbsp;&nbsp;&nbsp;</li>
+		<li class="bno">&nbsp;&nbsp;&nbsp;&nbsp;</li>
+		<li class="bno">&nbsp;&nbsp;&nbsp;&nbsp;</li>
 	</ul>
 	</div>
 </div>
 <div class="header">
 	<div class="clearfix">
-			<h class="logo"><img src="./img/logo-new@2x_144f1bd.png" width="115px" height="20px"></h>
+			<h class="logo"><img src="./img/logo-new@2x_144f1bd.png" width="115px" height="30px"></h>
 			<ul class="navs" id="navul">
 				<li><a href="./index.html">首页</a></li>
 				<li class="nav-product" id="nav-product"><a href="#">产品</a>
@@ -51,64 +51,74 @@
 		</div>
 		</div>
 </div>
-<div class="fourad clearfix">
-	<div class="adbox ad1">
-	<a href="./shop.html">
-		<img src="./img/1494576732598.png">
-		<h4>魅友福利</h4>
-		<span>各种惊喜等你开启</span>
-	</a>
+<div class="clearfix row fourAd">
+<CENTER>
+	<div class="col-md-3">
+		<div class="adbox ad1 thumbnail" style="border: none">
+			<a href="./shop.html">
+				<img src="./img/1494576732598.png">
+				<h4>魅友福利</h4>
+				<span>各种惊喜等你开启</span>
+			</a>
+		</div>
 	</div>
-	<div class="adbox ad2">
-	<a href="./shop.html">
-		<img src="./img/1494414801303.jpg">
-		<h4>Super mCharge</h4>
-		<span>20分钟充满不发热</span>
-	</a>
+	<div class="col-md-3">
+		<div class="adbox ad2 thumbnail" style="border: none">
+			<a href="./shop.html">
+				<img src="./img/1494414801303.jpg">
+				<h4>Super mCharge</h4>
+				<span>20分钟充满不发热</span>
+			</a>
+		</div>
 	</div>
-	<div class="adbox ad3">
-	<a href="./shop.html">
-		<img src="./img/Cgbj0FkT__6APeZnAADXNC3gCSc063.png">
-		<h4>PRO 6Plus</h4>
-		<span>购机赠EP2X耳机 12期免息</span>
-	</a>
+	<div class="col-md-3">
+		<div class="adbox ad3 thumbnail" style="border: none">
+			<a href="./shop.html">
+				<img src="./img/Cgbj0FkT__6APeZnAADXNC3gCSc063.png">
+				<h4>PRO 6Plus</h4>
+				<span>购机赠EP2X耳机 12期免息</span>
+			</a>
+		</div>
 	</div>
-	<div class="adbox ad4">
-	<a href="./shop.html">
-		<img src="img/Cgbj0FkT__6Aa09AAABJoSnJFv8299.png">
-		<h4>魅蓝Note5</h4>
-		<span>16G版限时特惠 100元6期免息</span>
-	</a>
+	<div class="col-md-3">
+		<div class="adbox ad4 thumbnail" style="border: none">
+			<a href="./shop.html">
+				<img src="img/Cgbj0FkT__6Aa09AAABJoSnJFv8299.png">
+				<h4>魅蓝Note5</h4>
+				<span>16G版限时特惠 100元6期免息</span>
+			</a>
+		</div>
 	</div>
+	</CENTER>
 </div>
 <div class="fiveser clearfix">
 	<ul class="serul">
 		<li>
-			<a href="#">
+			<a href="javascript:void(0)">
 			<img src="./img/icon-server_01@2x_35d4d97.png" width="60px" height="60px">
 			<br><span>查询真伪</span>
 		</a>
 		</li>
 		<li>
-			<a href="#">
+			<a href="javascript:void(0)">
 			<img src="./img/icon-server_02@2x_3a3862d.png" width="60px" height="60px">
 			<br><span>系统下载</span>
 		</a>
 		</li>
 		<li>
-			<a href="#">
+			<a href="javascript:void(0)">
 			<img src="./img/icon-server_03@2x_df879f6.png" width="60px" height="60px">
 			<br><span>注册产品</span>
 		</a>
 		</li>
 		<li>
-			<a href="#">
+			<a href="javascript:void(0)">
 			<img src="./img/icon-server_04@2x_7e0018e.png" width="60px" height="60px">
 			<br><span>查找手机</span>
 		</a>
 		</li>
 		<li>
-			<a href="#">
+			<a href="javascript:void(0)">
 			<img src="./img/icon-server_05@2x_9fb6660.png" width="60px" height="60px">
 			<br><span>换机助手</span>
 		</a>
@@ -191,7 +201,7 @@
 			clearInterval(interval);
 			hasstarted=false;
 		}
-		start();
+	start();
 		
 	});
 	     function showItem(obj)
