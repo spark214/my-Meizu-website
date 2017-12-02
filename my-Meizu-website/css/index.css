@@ -13,6 +13,8 @@ a:hover{
 .clearfix:after { content: ""; display: block; clear: both;}
 body{
 	position: relative;
+	min-width: 1240px;
+	max-width: 100%;
 }
 .banner-content{
 	position: relative;
@@ -103,9 +105,8 @@ body{
 }
 
 .nav-product dl{
-	width: auto;
-	position: absolute;
 	width: 100%;
+	position: absolute;
 	left: 0;
 	padding-left: 300px;
 	padding-top: 10px;
@@ -113,7 +114,6 @@ body{
 	display: none;
 }
 .nav-product dl dd{
-	
 	float: left;
 	width: 150px;
 	height: 120px;
@@ -131,10 +131,7 @@ body{
 	left: 50%;
 	margin-left: -75px;
 }
-.nav-dd-pro6p{
-	position: relative;
-	left: 10px;
-}
+
 .img-pro6s{
 	position: relative;
 	top:-18px;
@@ -142,20 +139,14 @@ body{
 	margin-left: -102px;
 	margin-bottom: 5px;
 }
-.nav-dd-pro6s{
-	position: relative;
-	left: 10px;
-}
+
 .img-mx6{
 	position: relative;
 	top:-20px;
 	left: 50%;
 	margin-left: -112px;
 }
-.nav-dd-mx6{
-	position: relative;
-	left: 15px;
-}
+
 .img-mlX{
 	position: relative;
 	top:-15px;
@@ -163,10 +154,12 @@ body{
 	margin-left: -112px;
 	margin-bottom: 5px;
 }
-.nav-dd-mlX{
+.nav-dd{
 	position: relative;
-	left: 15px;
+	top:65px !important;
+	left: 5%;
 }
+
 .adbox{
 	width: 200px !important;
 	/*float: left;*/
