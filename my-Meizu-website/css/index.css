@@ -271,7 +271,7 @@ body{
 #p1{
 	width: auto;
 	height: auto;
-	background-image: url("../img/mx6banner.jpg");
+	background-image: url("../img/index_banner_img1.jpg");
 	background-size: cover;
 	background-position: center;
 	min-height: 680px;
@@ -279,7 +279,7 @@ body{
 #p2{
 	width: auto;
 	height: auto;
-	background-image: url("../img/E2banner.jpg");
+	background-image: url("../img/index_banner_img2.jpg");
 	background-size: cover;
 	background-position: center;
 	min-height: 680px;
@@ -287,16 +287,16 @@ body{
 #p3{
 	width: auto;
 	height: auto;
-	background-image: url("../img/m5sbanner.jpg");
+	background-image: url("../img/index_banner_img3.jpg");
 	background-size: cover;
 	background-position: center;
 	min-height: 680px;
 }
-#p4{
-	width: auto;
-	height: auto;
-	background-image: url("../img/m5note.jpg");
-	background-size: contain;
-	background-position: center;
-	min-height: 680px;
-}
+/*#p4{*/
+	/*width: auto;*/
+	/*height: auto;*/
+	/*background-image: url("../img/index_banner_img4.jpg");*/
+	/*background-size: cover;*/
+	/*background-position: center;*/
+	/*min-height: 680px;*/
+/*}*/
