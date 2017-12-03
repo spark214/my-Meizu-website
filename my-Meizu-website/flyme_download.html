@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+    <meta name="viewport" content="width=1240">
+    <meta name="format-detection" content="telephone=no">
+    <title>Flyme 下载</title>
+    <link href="css/flyme_download.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+    <link href="css/bootstrap.css" type="text/css" rel="stylesheet">
+    <link href="css/animate.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="js/bootstrap.min.js" ></script>
+    <script type="text/javascript" src="js/vue.js"></script>
+</head>
+<body>
+    <div class="container">
+        <nav id="nav" class="navbar navbar-default navbar-static-top">
+
+            <div class="navbar-header">
+                <a href="flyme_index.html" class="navbar-brand"><img src="./img/logo-new-toggle@2x_52c2068.png" width="115px" height="20px"> </a>
+            </div>
+            <div class="collapse navbar-collapse navbar-right" id="navLi">
+                <ul class="nav navbar-nav">
+                    <li><a href="">Flyme6</a> </li>
+                    <li ><a href="flyme_download.html" style="color: #00a7ea">下载</a> </li>
+                    <li><a href="">云服务</a> </li>
+                    <li><a href="">魅族便签</a> </li>
+                    <li><a href="index.html" target="_blank">魅族官网</a> </li>
+                </ul>
+            </div>
+
+        </nav>
+        <div class="wrap">
+            <div class="brands_wrap clearfix">
+                <p class="brands_title" :style="{height:showHeight+'px'}">
+                    <span v-for="item in brands" value="{{$index}}" :class="{'on':item.show}" id="brands_span" @click="brandChange($index)">{{item.content}}</span>
+                </p>
+                <div class="arrow" @click="showMore">
+                    {{msg}}
+                    <span class="arrowShow">
+                        <span class="glyphicon glyphicon-chevron-up" v-show="isMsg"></span>
+                        <span class="glyphicon glyphicon-chevron-down" v-show="!isMsg"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="brands_phone clearfix row">
+                <div class="brands_phone_list clearfix">
+                    <ul>
+                        <li v-for="phone in mzPhones" class="col-sm-3" v-show="showIndex==1||showIndex==0">
+                            <a :href="phone.src" class="thumbnail" style="border:none;">
+                                <img :src="phone.url" class="phone_img">
+                                <p style="text-align: center">{{phone.name}}</p>
+                            </a>
+                        </li>
+                        <li v-for="phone in miPhones" class="col-sm-3" v-show="showIndex==2||showIndex==0">
+                            <a :href="phone.src" class="thumbnail" style="border:none;">
+                                <img :src="phone.url" class="phone_img">
+                                <p style="text-align: center">{{phone.name}}</p>
+                            </a>
+                        </li>
+                        <li v-for="phone in oneplusPhones" class="col-sm-3" v-show="showIndex==3||showIndex==0">
+                            <a :href="phone.src" class="thumbnail" style="border:none;">
+                                <img :src="phone.url" class="phone_img">
+                                <p style="text-align: center">{{phone.name}}</p>
+                            </a>
+                        </li>
+                        <li v-for="phone in ssPhones" class="col-sm-3" v-show="showIndex==4||showIndex==0">
+                            <a :href="phone.src" class="thumbnail" style="border:none;">
+                                <img :src="phone.url" class="phone_img">
+                                <p style="text-align: center">{{phone.name}}</p>
+                            </a>
+                        </li>
+                        <li v-for="phone in googlePhones" class="col-sm-3" v-show="showIndex==5||showIndex==0">
+                            <a :href="phone.src" class="thumbnail" style="border:none;">
+                                <img :src="phone.url" class="phone_img">
+                                <p style="text-align: center">{{phone.name}}</p>
+                            </a>
+                        </li>
+                        <li v-for="phone in htcPhones" class="col-sm-3" v-show="showIndex==6||showIndex==0">
+                            <a :href="phone.src" class="thumbnail" style="border:none;">
+                                <img :src="phone.url" class="phone_img">
+                                <p style="text-align: center">{{phone.name}}</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        <hr>
+        <div id="footer">
+            <p>&copy;2017 ToZ LAB Design for Meizu Telecom Equipment Co., Ltd. All rights reserved. </p>
+        </div>
+
+    </div>
+<script>
+    new Vue({
+        el:".wrap",
+        data:{
+            brands:[
+                {content:"全部品牌", show:true},
+                {content:"魅族",show:false},
+                {content:"小米",show:false},
+                {content:"一加",show:false},
+                {content:"三星",show:false},
+                {content:"谷歌",show:false},
+                {content:"HTC",show:false},
+                {content:"努比亚",show:false},
+                {content:"索尼",show:false},
+                {content:"乐金",show:false},
+                {content:"华为",show:false}],
+            msg:"更多品牌",
+            isMsg:false,
+            showHeight:104,
+            showIndex:0,
+            mzPhones:[
+                {name:"PRO 7",url:"img/flyme_download_pro7.png",src:""},
+                {name:"PRO 6plus",url:"img/flyme_download_pro6plus.png",src:""},
+                {name:"PRO 6s",url:"img/flyme_download_pro6s.png",src:""},
+                {name:"魅蓝X",url:"img/flyme_download_mbluX.png",src:""},
+                {name:"MX6",url:"img/flyme_download_mx6.png",src:""},
+                {name:"MX5",url:"img/flyme_download_mx5.png",src:""},
+                {name:"MX3",url:"img/flyme_download_mx3.png",src:""},
+                {name:"MX2",url:"img/flyme_download_mx2.png",src:""}
+            ],
+            miPhones:[
+                {name:"小米5",url:"img/flyme_download_mi5.png",src:""},
+                {name:"小米Note",url:"img/flyme_download_miNote.png",src:""},
+                {name:"小米4",url:"img/flyme_download_mi4.png",src:""}
+            ],
+            oneplusPhones:[
+                {name:"一加3",url:"img/flyme_download_oneplus3.png",src:""},
+                {name:"一加2",url:"img/flyme_download_oneplus2.png",src:""}
+            ],
+            ssPhones:[
+                {name:"S7edge",url:"img/flyme_download_s7e.png",src:""}
+            ],
+            googlePhones:[
+                {name:"Nexus6P",url:"img/flyme_download_nexus6p.png",src:""}
+            ],
+            htcPhones:[
+                {name:"HTC One(m8)",url:"img/flyme_download_m8.png",src:""}
+            ],
+        },
+        methods:{
+            showMore:function () {
+
+                if(this.isMsg==false){
+                    this.msg="收起";
+                    this.isMsg=true;
+                    this.showHeight=154;
+
+                }
+                else{
+                    this.msg="更多品牌";
+                    this.isMsg=false;
+                    this.showHeight=104;
+                }
+                return;
+            },
+            brandChange:function (index) {
+                for(var i=0;i<this.brands.length;i++){
+                    this.brands[i].show=false;
+                }
+                this.brands[index].show=true;
+                this.showIndex=index;
+            }
+        }
+
+
+    });
+</script>
+</body>
+</html>
