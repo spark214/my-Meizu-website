@@ -35,7 +35,7 @@
         <div class="wrap">
             <div class="brands_wrap clearfix">
                 <p class="brands_title" :style="{height:showHeight+'px'}">
-                    <span v-for="item in brands" value="{{$index}}" :class="{'on':item.show}" id="brands_span" @click="brandChange($index)">{{item.content}}</span>
+                    <span v-for="(item,index) in brands" :value="index" :class="{'on':item.show}" id="brands_span" @click="brandChange(index)">{{item.content}}</span>
                 </p>
                 <div class="arrow" @click="showMore">
                     {{msg}}
@@ -116,32 +116,32 @@
             showHeight:104,
             showIndex:0,
             mzPhones:[
-                {name:"PRO 7",url:"img/flyme_download_pro7.png",src:""},
-                {name:"PRO 6plus",url:"img/flyme_download_pro6plus.png",src:""},
-                {name:"PRO 6s",url:"img/flyme_download_pro6s.png",src:""},
-                {name:"魅蓝X",url:"img/flyme_download_mbluX.png",src:""},
-                {name:"MX6",url:"img/flyme_download_mx6.png",src:""},
-                {name:"MX5",url:"img/flyme_download_mx5.png",src:""},
-                {name:"MX3",url:"img/flyme_download_mx3.png",src:""},
-                {name:"MX2",url:"img/flyme_download_mx2.png",src:""}
+                {name:"PRO 7",url:"img/flyme_download_pro7.png",src:"flyme_download_pro6plus.html"},
+                {name:"PRO 6plus",url:"img/flyme_download_pro6plus.png",src:"flyme_download_pro6plus.html"},
+                {name:"PRO 6s",url:"img/flyme_download_pro6s.png",src:"flyme_download_pro6plus.html"},
+                {name:"魅蓝X",url:"img/flyme_download_mbluX.png",src:"flyme_download_pro6plus.html"},
+                {name:"MX6",url:"img/flyme_download_mx6.png",src:"flyme_download_pro6plus.html"},
+                {name:"MX5",url:"img/flyme_download_mx5.png",src:"flyme_download_pro6plus.html"},
+                {name:"MX3",url:"img/flyme_download_mx3.png",src:"flyme_download_pro6plus.html"},
+                {name:"MX2",url:"img/flyme_download_mx2.png",src:"flyme_download_pro6plus.html"}
             ],
             miPhones:[
-                {name:"小米5",url:"img/flyme_download_mi5.png",src:""},
-                {name:"小米Note",url:"img/flyme_download_miNote.png",src:""},
-                {name:"小米4",url:"img/flyme_download_mi4.png",src:""}
+                {name:"小米5",url:"img/flyme_download_mi5.png",src:"flyme_download_pro6plus.html"},
+                {name:"小米Note",url:"img/flyme_download_miNote.png",src:"flyme_download_pro6plus.html"},
+                {name:"小米4",url:"img/flyme_download_mi4.png",src:"flyme_download_pro6plus.html"}
             ],
             oneplusPhones:[
-                {name:"一加3",url:"img/flyme_download_oneplus3.png",src:""},
-                {name:"一加2",url:"img/flyme_download_oneplus2.png",src:""}
+                {name:"一加3",url:"img/flyme_download_oneplus3.png",src:"flyme_download_pro6plus.html"},
+                {name:"一加2",url:"img/flyme_download_oneplus2.png",src:"flyme_download_pro6plus.html"}
             ],
             ssPhones:[
-                {name:"S7edge",url:"img/flyme_download_s7e.png",src:""}
+                {name:"S7edge",url:"img/flyme_download_s7e.png",src:"flyme_download_pro6plus.html"}
             ],
             googlePhones:[
-                {name:"Nexus6P",url:"img/flyme_download_nexus6p.png",src:""}
+                {name:"Nexus6P",url:"img/flyme_download_nexus6p.png",src:"flyme_download_pro6plus.html"}
             ],
             htcPhones:[
-                {name:"HTC One(m8)",url:"img/flyme_download_m8.png",src:""}
+                {name:"HTC One(m8)",url:"img/flyme_download_m8.png",src:"flyme_download_pro6plus.html"}
             ],
         },
         methods:{
@@ -167,7 +167,12 @@
                 this.brands[index].show=true;
                 this.showIndex=index;
             }
+        },
+        mounted:function () {
+            var index=location.hash.split("#")[1]==null?0:location.hash.split("#")[1];
+            this.brandChange(index);
         }
+
 
 
     });

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=1240">
     <meta name="format-detection" content="telephone=no">
     <title>Flyme 系统下载 — PRO 6Plus</title>
-    <link href="css/flyme_pro6p.css" type="text/css" rel="stylesheet">
+    <link href="css/flyme_download_page.css" type="text/css" rel="stylesheet">
     <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
     <link href="css/bootstrap.css" type="text/css" rel="stylesheet">
     <script type="text/javascript" src="js/bootstrap.min.js" ></script>
@@ -31,45 +31,139 @@
     </nav>
     <div class="firm">
 
+            <div class="brands_wrap clearfix">
+                <p class="brands_title" :style="{height:showHeight+'px'}">
+                    <span v-for="(item,index) in brands" :value="index" :class="{'on':item.show}" id="brands_span" @click="brandChange(index)">{{item.content}}</span>
+                </p>
+                <div class="arrow" @click="showMore">
+                    {{msg}}
+                    <span class="arrowShow">
+                        <span class="glyphicon glyphicon-chevron-up" v-show="isMsg"></span>
+                        <span class="glyphicon glyphicon-chevron-down" v-show="!isMsg"></span>
+                    </span>
+                </div>
+            </div>
 
-    <div class="downloadInfo">
-        <div class="leftImg">
-            <img :src="system.imgUrl" class="phone_img">
+    <div class="downloadInfo clearfix">
+        <div class="downloadInfoTop clearfix">
+            <div class="leftImg">
+                <img :src="system.imgUrl" class="phone_img">
+            </div>
+            <div class="phoneInfo">
+                <h3 style="color: #000;">{{system.phoneName}}</h3>
+                <p class="phoneInfo_tips" style="margin-top: 35px">当前使用系统版本（根据 "关于手机" 信息确认当前使用系统的版本号后缀）</p>
+                <a id="phoneNowVersion" v-for="data in system.phoneNowVersion" class="btn btn-default" :class="{'btnOn':data.show}"
+                   style="width: 140px;height: 35px;margin-top: 15px">{{data.content}}</a>
+                <p class="phoneInfo_tips" style="margin-top:35px;" >可更新版本</p>
+                <a id="systemUpdateChoice" v-for="(item,index) in system.systemUpdateChoice" :value="index"  :class="{'btnOn':item.show}" class="btn btn-default"
+                   @click="versionChange(index)" style="width: 120px;height: 35px;margin-top: 15px;margin-right: 30px">{{item.content}}</a>
+                <a class="downloadButton btn btn-primary" style="width: 200px;height: 40px;margin-top: 30px;"><p class="downloadButton-p">下载</p></a>
+                <p style="margin-top: 20px">刷机前请提前备份您的个人资料，以防资料丢失！</p>
+            </div>
         </div>
-        <div class="phoneInfo">
-            <h3>{{system.phoneName}}</h3>
-            <p class="phoneInfo_tips">当前使用系统版本（根据 "关于手机" 信息确认当前使用系统的版本号后缀）</p>
-            <a id="phoneNowVersion" v-for="data in system.phoneNowVersion">{{data}}</a>
-            <p class="phoneInfo_tips">可更新版本</p>
-            <a id="systemUpdateChoice" v-for="item in system.systemUpdateChoice" value="{{$index}}">{{item}}</a>
-            <a class="downloadButton">下载</a>
-            <p>刷机前请提前备份您的个人资料，以防资料丢失！</p>
-        </div>
+
         <div class="systemInfo">
-            <label for="systemVersion">版本：</label>
-            <p class="phoneInfo_tips" id="systemVersion">Flyme {{system.systemVersion[choice]}}</p>
-            <label for="dataSize">文件大小：</label>
-            <p class="phoneInfo_tips" id="dataSize">{{system.dataSize[choice]}}MB</p>
-            <label for="publishTime">发布时间：</label>
-            <p class="phoneInfo_tips" id="publishTime">{{system.publishTime[choice]}}</p>
+
+            <p class="phoneInfo_tips" id="systemVersion">版本：Flyme {{system.systemVersion[choice]}}</p>
+            <p class="phoneInfo_tips" id="dataSize">文件大小：{{system.dataSize[choice]}}MB</p>
+            <p class="phoneInfo_tips" id="publishTime">发布时间：{{system.publishTime[choice]}}</p>
+        </div>
+
+        <div class="updateInfo">
+            <h4>更新记录</h4>
+            <p style="margin-top: 20px">升级说明</p>
+            <ul class="updateInfoList">
+                <li>在更新或使用过程中遇到任何问题，均可通过「用户帮助」App 进行反馈。</li>
+                <li>通过手机推送获取的系统更新安全可靠，不会占据存储空间，更不会导致数据丢失。</li>
+                <li> 整个更新过程大约需要 20 分钟，请在点击“更新”按钮后耐心等待，更新过程中切勿按压手机按键，避免更新受到干扰。</li>
+                <li> 更新期间手机将自动重启，伴有的少量发热属于正常现象，勿需担心。</li>
+                <li>系统更新部分变更描述可能随版本、机型或网络运营商而有所差异，请魅友们见谅。</li>
+            </ul>
+        </div>
+
+        <div class="historyVersion" v-show="system.historyVersion[choice].length!=0">
+            <h4>历史版本</h4>
+            <table>
+                <tr v-for="(item,index) in system.historyVersion">
+                    <td width="215px">Flyme{{item.version}}</td>
+                    <td width="165px">{{item.dataSize}}MB</td>
+                    <td width="138px"><a href="javascript:void(0)">更新记录</a> </td>
+                    <td width="138px"><a href="javascript:void(0)">下载</a> </td>
+                    <td width="120px">{{item.publishTime}}</td>
+                </tr>
+            </table>
         </div>
     </div>
+
+
+    </div>
+    <hr>
+    <div id="footer">
+        <p>&copy;2017 ToZ LAB Design for Meizu Telecom Equipment Co., Ltd. All rights reserved. </p>
     </div>
 </div>
 <script>
     new Vue({
        el:".firm",
         data:{
+            brands:[
+                {content:"全部品牌", show:false},
+                {content:"魅族",show:false},
+                {content:"小米",show:false},
+                {content:"一加",show:false},
+                {content:"三星",show:false},
+                {content:"谷歌",show:false},
+                {content:"HTC",show:false},
+                {content:"努比亚",show:false},
+                {content:"索尼",show:false},
+                {content:"乐金",show:false},
+                {content:"华为",show:false}],
+            msg:"更多品牌",
+            isMsg:false,
+            showHeight:104,
            choice:0,
            system:{
                phoneName:"PRO 6Plus",
-               phoneNowVersion:["A(公开版)"],
-               systemUpdateChoice:["体验版","稳定版","出厂系统"],
+               phoneNowVersion:[{content:"A(公开版)",show:true}],
+               systemUpdateChoice:[{content:"体验版",show:true},{content:"稳定版",show:false},{content:"出厂系统",show:false}],
                systemVersion:["6.7.11.28 beta","6.2.0.2A","6.0.1.2A"],
                dataSize:["968","1241","1068"],
                publishTime:["2017-11-28","2017-10-25","2017-02-03"],
-               imgUrl:"img/flyme_download_pro6plus.png"
+               imgUrl:"img/flyme_download_pro6plus.png",
+               historyVersion:[
+                       {version:"6.7.11.14 beta",dataSize:"1282",publishTime:"2017-11-15"},
+                       {version:"6.7.10.16 beta",dataSize:"1241",publishTime:"2017-10-17"},
+                       {version:"6.7.7.15 beta",dataSize:"1257",publishTime:"2017-07-16"},
+                       ]
            }
+        },
+        methods:{
+            showMore:function () {
+
+                if(this.isMsg==false){
+                    this.msg="收起";
+                    this.isMsg=true;
+                    this.showHeight=154;
+
+                }
+                else{
+                    this.msg="更多品牌";
+                    this.isMsg=false;
+                    this.showHeight=104;
+                }
+                return;
+            },
+            brandChange:function (index) {
+                   location.href="flyme_download.html#"+index;
+
+            },
+            versionChange(index){
+                for(var i=0;i<this.system.systemUpdateChoice.length;i++){
+                    this.system.systemUpdateChoice[i].show=false;
+                }
+                this.system.systemUpdateChoice[index].show=true;
+                this.choice=index;
+            }
         }
     });
 </script>
