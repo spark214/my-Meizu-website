@@ -10,6 +10,9 @@
 a:hover{
     text-decoration: none !important;
 }
+.on{
+    color: #00a7ea ;
+}
 .header{
     position: absolute;
     width: 100%;
@@ -18,6 +21,7 @@ a:hover{
 body{
     min-width: 1240px;
     max-width: 100%;
+    background-color: #F6F6F6 !important;
 
 }
 .navs{
@@ -56,9 +60,10 @@ body{
     padding-bottom: 10px;
 }
 .header{
-    position: absolute;
+    position: relative;
     width: 100%;
     top: 0;
+    background-color: #ffffff;
 
 }
 
@@ -71,6 +76,10 @@ body{
     background: #fff;
     display: none;
 }
+
+.nav-product:hover dl{
+     display:block;
+ }
 .nav-product dl dd{
     float: left;
     width: 150px;
@@ -117,3 +126,58 @@ body{
     top:65px !important;
     left: 5%;
 }
+
+.selectBox,.router,.showItem{
+    width: 1240px;
+    margin-top: 20px;
+    margin: 0 auto;
+}
+.selectBox{
+    background-color: #ffffff;
+}
+.brandSelect ul li,.screenSelect ul li{
+    display: inline-block;
+    width:80px;
+}
+
+.screenSelect,.brandSelect{
+   padding:20px 0 0 20px;
+}
+.screenSelect{
+    padding-bottom:20px;
+}
+.showItem{
+    margin-top: 30px;
+}
+.showItem>.row>ul>li{
+    position: relative;
+    left: 15px;
+    width:301px;
+    height:410px;
+    background-color: #ffffff;
+    text-align: center;
+    margin-right: 12px;
+    margin-bottom: 10px;
+}
+#smallImg>a{
+    display: inline-block;
+    margin-right: 5px;
+}
+.onborder{
+    border: 1px solid #596959 !important;
+}
+
+#footer{
+    bottom: 0;
+    text-align: center;
+    background-color: #ffffff;
+    width: 100%;
+    height: 50px;
+}
+#footer p{
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+
