@@ -27,7 +27,7 @@ body{
 .navs{
     float: right;
     margin-right: 150px;
-    margin-top: 10px;
+    margin-top: 30px;
 }
 .header a{
     color: #000;
@@ -35,10 +35,14 @@ body{
 .header a:hover{
     color: #31a5e7;
 }
+.router{
+    padding-bottom: 10px;
+    padding-top:10px;
+}
 .login{
     position: absolute;
     left: 90%;
-    top: 12px;
+    top: 30px;
     font-size: 14px;
 }
 .login a{
@@ -56,17 +60,17 @@ body{
     margin-top: 5px;
 }
 .logo img{
-    margin-top: 10px;
+    margin-top: 30px;
     padding-bottom: 10px;
 }
 .header{
     position: relative;
     width: 100%;
+    height: 80px;
     top: 0;
     background-color: #ffffff;
 
 }
-
 .nav-product dl{
     width: 100%;
     position: absolute;
@@ -132,14 +136,20 @@ body{
     margin-top: 20px;
     margin: 0 auto;
 }
+.router{
+
+}
 .selectBox{
     background-color: #ffffff;
+    border: 1px solid #efefef;
 }
 .brandSelect ul li,.screenSelect ul li{
     display: inline-block;
     width:80px;
 }
-
+.brandSelect ul li:not(:first-child),.screenSelect ul li:not(:first-child){
+    cursor: pointer;
+}
 .screenSelect,.brandSelect{
    padding:20px 0 0 20px;
 }
@@ -148,6 +158,7 @@ body{
 }
 .showItem{
     margin-top: 30px;
+    cursor: pointer;
 }
 .showItem>.row>ul>li{
     position: relative;

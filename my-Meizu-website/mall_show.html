@@ -19,10 +19,10 @@
             <li><a href="./index.html">首页</a></li>
             <li class="nav-product" id="nav-product"><a href="#">产品</a>
                 <dl>
-                    <dd><a href="para.html"><img src="./img/pro6plus_e6bf23a.png" class="img-pro6p"><a class="nav-dd">PRO 6 Plus</a></a></dd>
-                    <dd><a href="para.html"><img src="./img/pro6s_e769573.png" class="img-pro6s"><a class="nav-dd" href="para.html">PRO 6s</a></a></dd>
-                    <dd><a href="para.html"><img src="./img/mx6_23e5fc6.png" class="img-mx6"><a class="nav-dd" href="para.html">MX6</a></a></dd>
-                    <dd><a href="para.html"><img src="./img/m3x_9846898.png" class="img-mlX"><a class="nav-dd" href="para.html">魅蓝X</a></a></dd>
+                    <dd><a href="shop.html"><img src="./img/pro6plus_e6bf23a.png" class="img-pro6p"><a class="nav-dd">PRO 6 Plus</a></a></dd>
+                    <dd><a href="shop.html"><img src="./img/pro6s_e769573.png" class="img-pro6s"><a class="nav-dd" href="para.html">PRO 6s</a></a></dd>
+                    <dd><a href="shop.html"><img src="./img/mx6_23e5fc6.png" class="img-mx6"><a class="nav-dd" href="para.html">MX6</a></a></dd>
+                    <dd><a href="shop.html"><img src="./img/m3x_9846898.png" class="img-mlX"><a class="nav-dd" href="para.html">魅蓝X</a></a></dd>
                 </dl>
             </li>
             <li><a href="./shop.html">商城</a></li>
@@ -35,35 +35,35 @@
 </div>
 <div class="contain clearfix">
     <div class="router">
-        <span><a href="">首页</a></span>&nbsp;>&nbsp;<span><a href="">全部商品</a></span>><span>手机</span>
+        <span><a href="" style="color: #000">首页</a></span>&nbsp;>&nbsp;<span><a href="javascript:void(0)" style="color: #000">全部商品</a></span>><span style="color: #999">手机</span>
     </div>
     <div class="selectBox">
         <div class="brandSelect">
             <ul>
                 <li>品牌：</li>
-                <li><a>全部</a></li>
-                <li><a>魅族品牌</a></li>
-                <li><a>魅蓝品牌</a></li>
+                <li @click="brandSelect('',0)" :class="{'on':on1[0]}"><span>全部</span></li>
+                <li @click="brandSelect('魅族',1)" :class="{'on':on1[1]}"><span>魅族品牌</span></li>
+                <li @click="brandSelect('魅蓝',2)" :class="{'on':on1[2]}"><span>魅蓝品牌</span></li>
             </ul>
         </div>
         <div class="screenSelect">
             <ul>
                 <li>屏幕尺寸：</li>
-                <li><a>全部</a></li>
-                <li><a>5.2英寸</a></li>
-                <li><a>5.5英寸</a></li>
+                <li @click="brandSelect('',0)" class="on"><span>全部</span></li>
+                <li  ><span>5.2英寸</span></li>
+                <li  ><span>5.5英寸</span></li>
             </ul>
         </div>
     </div>
     <div class="showItem">
         <div class="row">
             <ul>
-                <li v-for="(item,index) in phones" class="col-sm-3">
+                <li v-for="(item,index) in phones" class="col-sm-3" v-show="item.show">
                     <a class="thumbnail"  style="border:none;" href="shop.html">
                         <img :src="item.img[item.imgIndex]" width="220px">
                         <div id="smallImg">
-                            <a class="" v-for="(img,idx) in item.img">
-                                <img class="thumbnail" :src="item.img[idx]" width="40px" :class="{'onborder':idx==item.imgIndex}">
+                            <a class="" v-for="(img,idx) in item.img" @click="bigImgChange(index,idx)">
+                                <img class="thumbnail" :src="item.img[idx]" width="40px" :class="{'onborder':idx==item.imgIndex}" >
                             </a>
                         </div>
                         <p style="font-size: 14px">{{item.name}}</p>
@@ -96,9 +96,25 @@
                 {name:'魅族 PRO 6Plus',img:["img/pro6p_black@240x240.jpg","img/pro6p_sliver@240x240.jpg"],into:'强大内芯，购机享12期免息',price:'2699',show:true,imgIndex:0},
                 {name:'魅族 PRO 7',img:["img/pro7_red@240x240.jpg","img/pro7_black@240x240.jpg"],into:'12.12有神秘惊喜 双瞳如小窗 佳景观历历',price:'2499',show:true,imgIndex:0},
             ],
+            on1:[true,false,false]
 
         },
         methods:{
+            bigImgChange:function(index,idx){
+                this.phones[index].imgIndex=idx;
+            },
+            brandSelect:function(str,index){
+                for(var i=0;i<this.on1.length;i++){
+                    this.on1[i]=false;
+                }
+                this.on1[index]=true;
+                for(var i=0;i<this.phones.length;i++){
+                    this.phones[i].show=true;
+                    if(this.phones[i].name.indexOf(str)<0){
+                        this.phones[i].show=false;
+                    }
+                }
+            }
 
         }
     });
