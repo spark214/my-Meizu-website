@@ -103,69 +103,74 @@
     </div>
 </div>
 <script>
-    new Vue({
-       el:".firm",
-        data:{
-            brands:[
-                {content:"全部品牌", show:false},
-                {content:"魅族",show:false},
-                {content:"小米",show:false},
-                {content:"一加",show:false},
-                {content:"三星",show:false},
-                {content:"谷歌",show:false},
-                {content:"HTC",show:false},
-                {content:"努比亚",show:false},
-                {content:"索尼",show:false},
-                {content:"乐金",show:false},
-                {content:"华为",show:false}],
-            msg:"更多品牌",
-            isMsg:false,
-            showHeight:104,
-           choice:0,
-           system:{
-               phoneName:"PRO 6Plus",
-               phoneNowVersion:[{content:"A(公开版)",show:true}],
-               systemUpdateChoice:[{content:"体验版",show:true},{content:"稳定版",show:false},{content:"出厂系统",show:false}],
-               systemVersion:["6.7.11.28 beta","6.2.0.2A","6.0.1.2A"],
-               dataSize:["968","1241","1068"],
-               publishTime:["2017-11-28","2017-10-25","2017-02-03"],
-               imgUrl:"img/flyme_download_pro6plus.png",
-               historyVersion:[
-                       {version:"6.7.11.14 beta",dataSize:"1282",publishTime:"2017-11-15"},
-                       {version:"6.7.10.16 beta",dataSize:"1241",publishTime:"2017-10-17"},
-                       {version:"6.7.7.15 beta",dataSize:"1257",publishTime:"2017-07-16"},
-                       ]
-           }
-        },
-        methods:{
-            showMore:function () {
-
-                if(this.isMsg==false){
-                    this.msg="收起";
-                    this.isMsg=true;
-                    this.showHeight=154;
-
+    window.onload=function () {
+        new Vue({
+            el: ".firm",
+            data: {
+                brands: [
+                    {content: "全部品牌", show: false},
+                    {content: "魅族", show: false},
+                    {content: "小米", show: false},
+                    {content: "一加", show: false},
+                    {content: "三星", show: false},
+                    {content: "谷歌", show: false},
+                    {content: "HTC", show: false},
+                    {content: "努比亚", show: false},
+                    {content: "索尼", show: false},
+                    {content: "乐金", show: false},
+                    {content: "华为", show: false}],
+                msg: "更多品牌",
+                isMsg: false,
+                showHeight: 104,
+                choice: 0,
+                system: {
+                    phoneName: "PRO 6Plus",
+                    phoneNowVersion: [{content: "A(公开版)", show: true}],
+                    systemUpdateChoice: [{content: "体验版", show: true}, {content: "稳定版", show: false}, {
+                        content: "出厂系统",
+                        show: false
+                    }],
+                    systemVersion: ["6.7.11.28 beta", "6.2.0.2A", "6.0.1.2A"],
+                    dataSize: ["968", "1241", "1068"],
+                    publishTime: ["2017-11-28", "2017-10-25", "2017-02-03"],
+                    imgUrl: "img/flyme_download_pro6plus.png",
+                    historyVersion: [
+                        {version: "6.7.11.14 beta", dataSize: "1282", publishTime: "2017-11-15"},
+                        {version: "6.7.10.16 beta", dataSize: "1241", publishTime: "2017-10-17"},
+                        {version: "6.7.7.15 beta", dataSize: "1257", publishTime: "2017-07-16"},
+                    ]
                 }
-                else{
-                    this.msg="更多品牌";
-                    this.isMsg=false;
-                    this.showHeight=104;
-                }
-                return;
             },
-            brandChange:function (index) {
-                   location.href="flyme_download.html#"+index;
+            methods: {
+                showMore: function () {
 
-            },
-            versionChange(index){
-                for(var i=0;i<this.system.systemUpdateChoice.length;i++){
-                    this.system.systemUpdateChoice[i].show=false;
+                    if (this.isMsg == false) {
+                        this.msg = "收起";
+                        this.isMsg = true;
+                        this.showHeight = 154;
+
+                    }
+                    else {
+                        this.msg = "更多品牌";
+                        this.isMsg = false;
+                        this.showHeight = 104;
+                    }
+                    return;
+                },
+                brandChange: function (index) {
+                    location.href = "flyme_download.html#" + index;
+
+                },
+                versionChange(index){
+                    for (var i = 0; i < this.system.systemUpdateChoice.length; i++) {
+                        this.system.systemUpdateChoice[i].show = false;
+                    }
+                    this.system.systemUpdateChoice[index].show = true;
+                    this.choice = index;
                 }
-                this.system.systemUpdateChoice[index].show=true;
-                this.choice=index;
             }
-        }
-    });
+        });
+    }
 </script>
 </body>
 </html>
