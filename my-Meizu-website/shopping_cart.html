@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1240">
+    <meta name="format-detection" content="telephone=no">
+    <title>确认订单 - 魅族商城</title>
+    <link href="css/shopping_cart.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+    <link href="css/bootstrap.css" type="text/css" rel="stylesheet">
+    <link href="css/animate.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="js/bootstrap.min.js" ></script>
+    <script type="text/javascript" src="js/vue.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="header clearfix">
+        <div class="header_logo">
+            <a href="flyme_index.html" class="navbar-brand"><img src="./img/logo-new-toggle@2x_52c2068.png" width="115px" height="20px"> </a>
+        </div>
+        <div class="header_router clearfix">
+            <ol class="breadcrumb" style="background: #fff">
+                <li><a href="#">购物车</a></li>
+                <li class="active">确认订单</li>
+                <li><a href="#">在线支付</a></li>
+                <li><a href="#">完成</a></li>
+            </ol>
+        </div>
+        <div class="header_right clearfix">
+            <a >我的订单</a>
+        </div>
+    </div>
+    <div class="receiverMsg clearfix">
+        <h3>收货人信息</h3>
+        <hr>
+        <div class="receiverMsg_box" class="clearfix">
+            <ul>
+                <li id="hasMsg" v-for="item in receiver">
+                    <h4>{{item.name}}</h4>
+                    <h4>{{item.tel}}</h4>
+                    <p>{{item.addr}}</p>
+                </li>
+                <li id="addMsg">
+                    <div>
+                        <div><a class="glyphicon glyphicon-plus-sign" ></a></div>
+                        <p>添加新地址</p>
+                    </div>
+
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="orderMsg">
+        <h3>确定订单信息</h3>
+        <hr>
+        <table>
+            <tr>
+                <td width="438px" height="62px" valign="middle"><p style="margin-left: 15px;margin-top:8px;font-size: 12px">供应商：魅族</p></td>
+                <td width="228px" height="62px" valign="middle"><h4><b>单价</b></h4></td>
+                <td width="140px" height="62px" valign="middle"><h4><b>数量</b></h4></td>
+                <td width="160px" height="62px" valign="middle"><h4><b>小计</b></h4></td>
+                <td width="192px" align="center" height="62px" valign="middle"><h4><b>配送方式</b></h4></td>
+            </tr>
+            <tr v-for="item in product">
+                <td class="clearfix orderMsg_product"> <img :src="item.img" width="102px" height="102px"> <p>{{item.name}}</p><p>{{item.version}}</p></td>
+                <td height="150px"><p>{{item.price}}</p></td>
+                <td height="150px" align="left"><p style="padding-left: 13px">{{item.num}}</p></td>
+                <td height="150px"><p>{{item.sum}}</p></td>
+                <td height="150px" align="center" style="border:1px solid #ccc "><p>{{item.dev}}</p></td>
+
+            </tr>
+            <tfoot>
+            <tr>
+                <td colspan="5">
+                    <div class="orderMsg_info">
+                       <span>备注</span>
+                        <textarea placeholder="备注..." maxlength="45"></textarea>
+                    </div>
+                    <div class="orderMsg_total">
+                        合计
+                        <span>1522</span>
+                    </div>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el:".container",
+        data:{
+            receiver:[
+                {name:"林梓键",tel:"13192256005",addr:"广东省珠海市香洲区北理工"},
+                {name:"TozLam",tel:"13411942184",addr:"广东省汕头市龙湖区泰星路"}
+                ],
+            product:[
+                {name:"魅族PRO 6s",version:"全网通公开版 星空黑 64GB",img:"img/pro6s_black@240x240.jpg",
+                    price:"2299",num:"1",sum:"2299",dev:"快递配送：运费0元"},
+                {name:"魅族PRO7",img:"img/pro7_red@240x240.jpg",version:"全网通公开版 提香红4GB+64GB",
+                    price:"2499",num:"1",sum:"2499",dev:"快递配送：运费0元"}
+            ],
+
+        }
+    });
+</script>
+</body>
+</html>
