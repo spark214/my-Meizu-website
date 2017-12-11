@@ -50,11 +50,12 @@ a:hover{
     width: 275px;
     height: 144px;
    float: left;
-    border: 2px solid #00a7ea;
+    border: 0.5px solid #ccc;
     margin-right: 10px;
+    cursor: pointer;
 }
 .receiverMsg_selected{
-    border: 2px solid #00a7ea;
+    border: 2px solid #00a7ea !important;
 }
 #addMsg{
     text-align: center;
@@ -64,6 +65,10 @@ a:hover{
     top: 50%;
     transform: translateY(-50%);
 }
+.receiverMsg_box{
+    padding-bottom: 30px;
+    margin-left: 20px;
+}
 .orderMsg_product img{
     float: left;
 }
@@ -71,22 +76,67 @@ a:hover{
     position: relative;
     top: 20px;
 }
+.orderMsg{
+    position: relative;
+    top: 10px;
+    padding-bottom: 20px;
+}
 .orderMsg>table tr{
     border-bottom: 1px solid #ccc;
 }
 .orderMsg>table{
     border: 1px solid #ccc;
-    margin-left: 20px;
+    margin-bottom: 20px;
     font-size: 16px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.orderMsg>h4{
+    padding-top: 20px;
+    padding-left: 20px;
 }
 .orderMsg_info textarea{
-    width: 552px;
+    width: 502px;
     height: 48px;
     resize: none;
 }
 .orderMsg_info{
     font-size: 12px;
+    float: left;
+    width: 600px;
+    margin: 20px 0 20px 15px;
 }
 .orderMsg_total{
     float: right;
+    position: relative;
+    top: 30px;
+    right: 20px;
+}
+#receiverName{
+    float: left;
+    font-weight: bold;
+    margin:10px 0 10px 10px
+}
+#receiverTel{
+    float: right;
+    font-weight: bold;
+    margin:10px 10px 10px 0
+}
+#receiverAddr{
+    position: relative;
+    top: 15px;
+    left: 10px;
+}
+#footer{
+    bottom: 0;
+    text-align: center;
+    background-color: #ffffff;
+    width: 100%;
+    height: 50px;
+}
+#footer p{
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }

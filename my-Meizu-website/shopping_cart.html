@@ -31,14 +31,17 @@
         </div>
     </div>
     <div class="receiverMsg clearfix">
-        <h3>收货人信息</h3>
+        <h4 style="margin-left: 20px;font-weight: bold;padding-top: 10px">收货人信息</h4>
         <hr>
-        <div class="receiverMsg_box" class="clearfix">
+        <div class="receiverMsg_box clearfix">
             <ul>
-                <li id="hasMsg" v-for="item in receiver">
-                    <h4>{{item.name}}</h4>
-                    <h4>{{item.tel}}</h4>
-                    <p>{{item.addr}}</p>
+                <li id="hasMsg" v-for="(item,index) in receiver" style="font-size: 12px" class="clearfix"
+                    v-show="receiver.length!=0" :class="{'receiverMsg_selected':item.selected}" @click="receiverOn(index)">
+                   <div style="border-bottom: 0.1px solid #ccc" class="clearfix">
+                       <span v-text="item.name" id="receiverName"></span>
+                       <span v-text="item.tel" id="receiverTel" class="clearfix"></span>
+                   </div>
+                    <p v-text="item.addr" id="receiverAddr" ></p>
                 </li>
                 <li id="addMsg">
                     <div>
@@ -51,7 +54,7 @@
         </div>
     </div>
     <div class="orderMsg">
-        <h3>确定订单信息</h3>
+        <h4 style="font-weight: bold">确定订单信息</h4>
         <hr>
         <table>
             <tr>
@@ -62,47 +65,69 @@
                 <td width="192px" align="center" height="62px" valign="middle"><h4><b>配送方式</b></h4></td>
             </tr>
             <tr v-for="item in product">
-                <td class="clearfix orderMsg_product"> <img :src="item.img" width="102px" height="102px"> <p>{{item.name}}</p><p>{{item.version}}</p></td>
-                <td height="150px"><p>{{item.price}}</p></td>
-                <td height="150px" align="left"><p style="padding-left: 13px">{{item.num}}</p></td>
-                <td height="150px"><p>{{item.sum}}</p></td>
-                <td height="150px" align="center" style="border:1px solid #ccc "><p>{{item.dev}}</p></td>
+                <td class="clearfix orderMsg_product"> <img :src="item.img" width="102px" height="102px"> <p v-text="item.name"></p><p v-text="item.version"></p></td>
+                <td height="150px"><p v-text="'￥'+item.price" style="color: #e02b41"></p></td>
+                <td height="150px" align="left"><p style="padding-left: 13px" v-text="item.num"></p></td>
+                <td height="150px"><p v-text="'￥'+item.sum" style="color: #e02b41"></p></td>
+                <td height="150px" align="center" style="border:1px solid #ccc " :rowspan="item.row" v-show="item.row!=0"><p v-text="item.dev"></p></td>
 
             </tr>
             <tfoot>
-            <tr>
+            <tr bgcolor="#f6f6f6">
                 <td colspan="5">
                     <div class="orderMsg_info">
-                       <span>备注</span>
+                       <span style="vertical-align:top">备注&nbsp;&nbsp;</span>
                         <textarea placeholder="备注..." maxlength="45"></textarea>
                     </div>
-                    <div class="orderMsg_total">
+                    <div class="orderMsg_total" style="font-size: 16px">
                         合计
-                        <span>1522</span>
+                        <span style="font-size: 22px;color:#e02b41;font-weight: bold;" v-text="'￥'+totalPrice+'.00'"></span>
                     </div>
                 </td>
             </tr>
             </tfoot>
         </table>
     </div>
+    <div class="paymentMsg">
+        <h4 style="font-weight: bold">选择支付方式</h4>
+
+    </div>
+    <hr>
+    <div id="footer">
+        <p>&copy;2017 ToZ LAB Design for Meizu Telecom Equipment Co., Ltd. All rights reserved. </p>
+    </div>
 </div>
 
 <script>
-    new Vue({
+    var vr=new Vue({
         el:".container",
         data:{
             receiver:[
-                {name:"林梓键",tel:"13192256005",addr:"广东省珠海市香洲区北理工"},
-                {name:"TozLam",tel:"13411942184",addr:"广东省汕头市龙湖区泰星路"}
+                {name:"林梓键",tel:"13192256005",addr:"广东省珠海市香洲区北理工",selected:true},
+                {name:"ToZLam",tel:"13411942184",addr:"广东省汕头市龙湖区泰星路",selected:false}
                 ],
             product:[
                 {name:"魅族PRO 6s",version:"全网通公开版 星空黑 64GB",img:"img/pro6s_black@240x240.jpg",
-                    price:"2299",num:"1",sum:"2299",dev:"快递配送：运费0元"},
+                    price:"2299",num:"1",sum:"2299",dev:"快递配送：运费0元",row:2},
                 {name:"魅族PRO7",img:"img/pro7_red@240x240.jpg",version:"全网通公开版 提香红4GB+64GB",
-                    price:"2499",num:"1",sum:"2499",dev:"快递配送：运费0元"}
+                    price:"2499",num:"1",sum:"2499",dev:"快递配送：运费0元",row:0}
             ],
+            totalPrice:4798.00,
+            num:2
+
+        },
+        methods:{
+            receiverOn:function(index){
+
+                for(var i=0;i<this.receiver.length;i++){
+                    this.receiver[i].selected=false;
+
+                }
+                this.receiver[index].selected=true;
+            }
 
         }
+
     });
 </script>
 </body>
