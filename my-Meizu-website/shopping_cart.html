@@ -90,6 +90,33 @@
     </div>
     <div class="paymentMsg">
         <h4 style="font-weight: bold">选择支付方式</h4>
+        <div class="payment_select clearfix">
+            <div class="payment_ali clearfix">
+                <div class="payment_aliSelect  clearfix">
+                    <span>支付宝</span>
+                    <ul>
+                        <li v-for="item in ali"><img width="125" height="40" :src="item.img"></li>
+                    </ul>
+                </div>
+                <div  class="payment_antIns clearfix">
+                    <ul>
+                        <li v-for="(item,index) in antIns"><p v-text="'￥'+item.pay+' x '+item.month" ></p></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="payment_wechat clearfix">
+                <span>微信支付</span>
+                <ul >
+                    <li><img src="img/payment_wechatpay.png" width="125" height="40"></li>
+                </ul>
+            </div>
+            <div class="payment_bank clearfix">
+                <span>网上银行</span>
+                <ul>
+                    <li v-for="item in bank"><img width="125" height="40" :src="item.img"style="border: 0.5px solid #8c8c8c"></li>
+                </ul>
+            </div>
+        </div>
 
     </div>
     <hr>
@@ -113,7 +140,19 @@
                     price:"2499",num:"1",sum:"2499",dev:"快递配送：运费0元",row:0}
             ],
             totalPrice:4798.00,
-            num:2
+            num:2,
+            bank:[
+                {name:"中国银行",img:"img/payment_boc.png",tel:""},
+                {name:"中国工商银行",img:"img/payment_icbc.png",tel:""},
+                {name:"中国建设银行",img:"img/payment_ccb.png",tel:""},
+                {name:"中国交通银行",img:"img/payment_jiaotong.png",tel:""},
+                {name:"中国农业银行",img:"img/payment_abc.png",tel:""},
+            ],
+            ali:[
+                {name:"蚂蚁花呗",img:"img/payment_antIns.png"},
+                {name:"支付宝",img:"img/payment_alipay.png"},
+            ],
+            antIns:[{pay:0,month:3},{pay:0,month:6},{pay:0,month:12}]
 
         },
         methods:{

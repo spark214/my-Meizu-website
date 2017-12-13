@@ -40,7 +40,7 @@ a:hover{
     right: 5%;
     top:30px;
 }
-.receiverMsg,.orderMsg{
+.receiverMsg,.orderMsg,.paymentMsg{
     width: 1240px;
     margin: 0 auto;
     margin-top: 20px;
@@ -127,6 +127,37 @@ a:hover{
     position: relative;
     top: 15px;
     left: 10px;
+}
+.payment_select{
+    width: 1160px;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 1px solid #ccc;
+}
+.payment_select span{
+    float: left;
+    margin-top: 10px;
+    margin-right: 50px;
+    width: 60px;
+}
+.payment_aliSelect ul,.payment_bank ul,.payment_wechat ul{
+    float: left;
+}
+.payment_ali li,.payment_bank li{
+    float: left;
+    margin-right: 80px;
+}
+.payment_antIns{
+    position: relative;
+    width: 816px;
+    background-color: #f6f6f6;
+}
+.payment_antIns li{
+    width: 160px;
+    height: 80px;
+    border-radius: 4px;
+    border: 1px solid #00a7ea;
 }
 #footer{
     bottom: 0;
