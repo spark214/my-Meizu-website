@@ -54,7 +54,7 @@ a:hover{
     margin-right: 10px;
     cursor: pointer;
 }
-.receiverMsg_selected{
+.receiverMsg_selected,.payment_antIns_selected{
     border: 2px solid #00a7ea !important;
 }
 #addMsg{
@@ -144,20 +144,52 @@ a:hover{
 .payment_aliSelect ul,.payment_bank ul,.payment_wechat ul{
     float: left;
 }
-.payment_ali li,.payment_bank li{
+.payment_ali li,.payment_bank li:not(:last-child){
     float: left;
     margin-right: 80px;
 }
 .payment_antIns{
     position: relative;
-    width: 816px;
+    width: 600px;
     background-color: #f6f6f6;
+    left: 50px;
 }
 .payment_antIns li{
     width: 160px;
-    height: 80px;
+    height: 50px;
     border-radius: 4px;
-    border: 1px solid #00a7ea;
+    border: 1px solid #ccc;
+    margin: 20px 0 20px 20px;
+    cursor: pointer;
+}
+.payment_antIns_p{
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.payment_ali,.payment_wechat,.payment_bank{
+    margin: 50px 0 50px 50px;
+}
+.payment_computed{
+    width: 254px;
+    height: 318px;
+    float: right;
+    position: relative;
+    right:50px;
+    top:50px;
+}
+.payment_computed>div p:first-child{
+    float: left;
+}
+.payment_computed>div p:last-child{
+    float: right;
+}
+#checkedButton{
+    width: 98px;
+    height: 35px;
+    border: none;
+    background-color: #00a7ea;
+    float: right;
 }
 #footer{
     bottom: 0;

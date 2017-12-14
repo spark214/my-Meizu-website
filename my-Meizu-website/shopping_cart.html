@@ -88,7 +88,7 @@
             </tfoot>
         </table>
     </div>
-    <div class="paymentMsg">
+    <div class="paymentMsg clearfix">
         <h4 style="font-weight: bold">选择支付方式</h4>
         <div class="payment_select clearfix">
             <div class="payment_ali clearfix">
@@ -100,7 +100,12 @@
                 </div>
                 <div  class="payment_antIns clearfix">
                     <ul>
-                        <li v-for="(item,index) in antIns"><p v-text="'￥'+item.pay+' x '+item.month" ></p></li>
+                        <li  :class="{'payment_antIns_selected':antIns[0].selected}" @click="antInsSelected(0)">
+                            <p v-model="antIns[0].pay" v-text="'￥'+pay3+' x '+antIns[0].month+' 期 '"style="font-size: 16px;width: 100%" align="center" class="payment_antIns_p"></p></li>
+                        <li  :class="{'payment_antIns_selected':antIns[1].selected}" @click="antInsSelected(1)">
+                            <p v-model="antIns[1].pay" v-text="'￥'+pay6+' x '+antIns[1].month+' 期 '"style="font-size: 16px;width: 100%" align="center" class="payment_antIns_p"></p></li>
+                        <li  :class="{'payment_antIns_selected':antIns[2].selected}" @click="antInsSelected(2)">
+                            <p v-model="antIns[2].pay" v-text="'￥'+pay12+' x '+antIns[2].month+' 期 '"style="font-size: 16px;width: 100%" align="center" class="payment_antIns_p"></p></li>
                     </ul>
                 </div>
             </div>
@@ -112,13 +117,21 @@
             </div>
             <div class="payment_bank clearfix">
                 <span>网上银行</span>
-                <ul>
+                <ul style="width: 950px">
                     <li v-for="item in bank"><img width="125" height="40" :src="item.img"style="border: 0.5px solid #8c8c8c"></li>
                 </ul>
             </div>
+
+            </div>
+        <div class="payment_computed clearfix">
+        <div class="clearfix"><p>总金额</p><p v-text="'￥'+totalPrice+'.00'"></p></div>
+        <div class="clearfix"><p>运费</p><p v-text="'￥0.00'"></p></div>
+        <hr>
+        <div class="clearfix"><p>应付：</p><p v-text="'￥'+totalPrice+'.00'" style="font-size: 20px;color:#e02b41;font-weight: bold;"></p></div>
+        <button id="checkedButton" class="btn btn-primary">确认订单</button>
+        </div>
         </div>
 
-    </div>
     <hr>
     <div id="footer">
         <p>&copy;2017 ToZ LAB Design for Meizu Telecom Equipment Co., Ltd. All rights reserved. </p>
@@ -152,7 +165,7 @@
                 {name:"蚂蚁花呗",img:"img/payment_antIns.png"},
                 {name:"支付宝",img:"img/payment_alipay.png"},
             ],
-            antIns:[{pay:0,month:3},{pay:0,month:6},{pay:0,month:12}]
+            antIns:[{pay:0,month:3,selected:true},{pay:0,month:6,selected:false},{pay:0,month:12,selected:false}]
 
         },
         methods:{
@@ -163,8 +176,37 @@
 
                 }
                 this.receiver[index].selected=true;
+            },
+            antInsSelected(index){
+                for(var i=0;i<this.antIns.length;i++){
+                    this.antIns[i].selected=false;
+
+                }
+                this.antIns[index].selected=true;
             }
 
+        },
+        computed:{
+            pay3:function () {
+                   return this.antIns[0].pay=(this.totalPrice/this.antIns[0].month).toFixed(2);
+
+            },
+            pay6:function () {
+                return this.antIns[1].pay=(this.totalPrice/this.antIns[1].month).toFixed(2);
+
+            },
+            pay12:function () {
+                return this.antIns[2].pay=(this.totalPrice/this.antIns[2].month).toFixed(2);
+
+            }
+
+        },
+        mounted:function () {
+            var index=location.hash.split("#")[1]==null?0:location.hash.split("#")[1];
+            this.num=index;
+            if(index==1)
+            this.totalPrice=2299;
+            this.product.length=index;
         }
 
     });
