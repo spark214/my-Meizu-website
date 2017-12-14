@@ -27,7 +27,7 @@ a:hover{
 }
 
 .wrap{
-    width: 1240px;
+    width: 95%;
     margin: 0 auto;
     margin-top: 20px;
 }
@@ -39,7 +39,7 @@ a:hover{
 }
 
 .brands_title{
-    width: 700px;
+    width: 57%;
     margin: 0 70px;
     float: left;
     /*height: 104px;*/

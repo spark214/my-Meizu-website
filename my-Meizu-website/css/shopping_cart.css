@@ -41,7 +41,7 @@ a:hover{
     top:30px;
 }
 .receiverMsg,.orderMsg,.paymentMsg{
-    width: 1240px;
+    width: 95%;
     margin: 0 auto;
     margin-top: 20px;
     background: #fff;
@@ -57,6 +57,10 @@ a:hover{
 .receiverMsg_selected,.payment_antIns_selected{
     border: 2px solid #00a7ea !important;
 }
+.payment_antIns_selected{
+    color: #00a7ea;
+}
+
 #addMsg{
     text-align: center;
 }
@@ -92,7 +96,7 @@ a:hover{
     left: 50%;
     transform: translateX(-50%);
 }
-.orderMsg>h4{
+.orderMsg>h4,.paymentMsg>h4{
     padding-top: 20px;
     padding-left: 20px;
 }
@@ -129,11 +133,12 @@ a:hover{
     left: 10px;
 }
 .payment_select{
-    width: 1160px;
+    width: 95%;
     position: relative;
     left: 50%;
     transform: translateX(-50%);
     border: 1px solid #ccc;
+    margin-top: 30px;
 }
 .payment_select span{
     float: left;

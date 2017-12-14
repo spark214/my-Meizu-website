@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1240">
+    <meta name="viewport"  content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no">
     <title>确认订单 - 魅族商城</title>
     <link href="css/shopping_cart.css" type="text/css" rel="stylesheet">
@@ -77,7 +77,7 @@
                 <td colspan="5">
                     <div class="orderMsg_info">
                        <span style="vertical-align:top">备注&nbsp;&nbsp;</span>
-                        <textarea placeholder="备注..." maxlength="45"></textarea>
+                        <textarea placeholder="备注..." maxlength="45" ></textarea>
                     </div>
                     <div class="orderMsg_total" style="font-size: 16px">
                         合计
@@ -90,15 +90,16 @@
     </div>
     <div class="paymentMsg clearfix">
         <h4 style="font-weight: bold">选择支付方式</h4>
+        <hr>
         <div class="payment_select clearfix">
             <div class="payment_ali clearfix">
                 <div class="payment_aliSelect  clearfix">
                     <span>支付宝</span>
                     <ul>
-                        <li v-for="item in ali"><img width="125" height="40" :src="item.img"></li>
+                        <li v-for="(item,index) in ali" @click="aliSelected(index)" style="cursor: pointer"><img width="125" height="40" :src="item.img" ></li>
                     </ul>
                 </div>
-                <div  class="payment_antIns clearfix">
+                <div  class="payment_antIns clearfix" v-show="antInsShow">
                     <ul>
                         <li  :class="{'payment_antIns_selected':antIns[0].selected}" @click="antInsSelected(0)">
                             <p v-model="antIns[0].pay" v-text="'￥'+pay3+' x '+antIns[0].month+' 期 '"style="font-size: 16px;width: 100%" align="center" class="payment_antIns_p"></p></li>
@@ -112,13 +113,13 @@
             <div class="payment_wechat clearfix">
                 <span>微信支付</span>
                 <ul >
-                    <li><img src="img/payment_wechatpay.png" width="125" height="40"></li>
+                    <li onclick="aliSelected(1)" style="cursor: pointer"><img src="img/payment_wechatpay.png" width="125" height="40"></li>
                 </ul>
             </div>
             <div class="payment_bank clearfix">
                 <span>网上银行</span>
-                <ul style="width: 950px">
-                    <li v-for="item in bank"><img width="125" height="40" :src="item.img"style="border: 0.5px solid #8c8c8c"></li>
+                <ul style="width: 88%">
+                    <li v-for="item in bank"><img width="125" height="40" :src="item.img"style="border: 0.5px solid #8c8c8c" style="cursor: pointer"@click="aliSelected(1)"></li>
                 </ul>
             </div>
 
@@ -165,7 +166,8 @@
                 {name:"蚂蚁花呗",img:"img/payment_antIns.png"},
                 {name:"支付宝",img:"img/payment_alipay.png"},
             ],
-            antIns:[{pay:0,month:3,selected:true},{pay:0,month:6,selected:false},{pay:0,month:12,selected:false}]
+            antIns:[{pay:0,month:3,selected:true},{pay:0,month:6,selected:false},{pay:0,month:12,selected:false}],
+            antInsShow:true
 
         },
         methods:{
@@ -183,6 +185,14 @@
 
                 }
                 this.antIns[index].selected=true;
+            },
+            aliSelected(index){
+
+                if(index==0){
+                    this.antInsShow=true;
+                }
+                else
+                    this.antInsShow=false;
             }
 
         },
@@ -202,7 +212,7 @@
 
         },
         mounted:function () {
-            var index=location.hash.split("#")[1]==null?0:location.hash.split("#")[1];
+            var index=location.hash.split("#")[1]==null?2:location.hash.split("#")[1];
             this.num=index;
             if(index==1)
             this.totalPrice=2299;
