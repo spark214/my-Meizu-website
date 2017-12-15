@@ -19,13 +19,13 @@
             <li><a href="./index.html">首页</a></li>
             <li class="nav-product" id="nav-product"><a href="#">产品</a>
                 <dl>
-                    <dd><a href="shop.html"><img src="./img/pro6plus_e6bf23a.png" class="img-pro6p"><a class="nav-dd">PRO 6 Plus</a></a></dd>
-                    <dd><a href="shop.html"><img src="./img/pro6s_e769573.png" class="img-pro6s"><a class="nav-dd" href="para.html">PRO 6s</a></a></dd>
-                    <dd><a href="shop.html"><img src="./img/mx6_23e5fc6.png" class="img-mx6"><a class="nav-dd" href="para.html">MX6</a></a></dd>
-                    <dd><a href="shop.html"><img src="./img/m3x_9846898.png" class="img-mlX"><a class="nav-dd" href="para.html">魅蓝X</a></a></dd>
+                    <dd><a href="shopping_show.html"><img src="./img/pro6plus_e6bf23a.png" class="img-pro6p"><a class="nav-dd">PRO 6 Plus</a></a></dd>
+                    <dd><a href="shopping_show.html"><img src="./img/pro6s_e769573.png" class="img-pro6s"><a class="nav-dd" href="product_para.html">PRO 6s</a></a></dd>
+                    <dd><a href="shopping_show.html"><img src="./img/mx6_23e5fc6.png" class="img-mx6"><a class="nav-dd" href="product_para.html">MX6</a></a></dd>
+                    <dd><a href="shopping_show.html"><img src="./img/m3x_9846898.png" class="img-mlX"><a class="nav-dd" href="product_para.html">魅蓝X</a></a></dd>
                 </dl>
             </li>
-            <li><a href="./shop.html">商城</a></li>
+            <li><a href="shopping_show.html">商城</a></li>
             <li><a href="javascript:void(0)">服务</a></li>
             <li><a href="flyme_index.html" target="_blank">Flyme</a></li>
         </ul>
@@ -59,7 +59,7 @@
         <div class="row">
             <ul>
                 <li v-for="(item,index) in phones" class="col-sm-3" v-show="item.show">
-                    <a class="thumbnail"  style="border:none;" href="shop.html">
+                    <a class="thumbnail"  style="border:none;" href="shopping_show.html">
                         <img :src="item.img[item.imgIndex]" width="220px">
                         <div id="smallImg">
                             <a class="" v-for="(img,idx) in item.img" @click="bigImgChange(index,idx)">
