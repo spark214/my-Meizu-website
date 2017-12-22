@@ -1,7 +1,8 @@
 # my-meizu-website
 fake魅族官网
 
-## June Vesion
+## FrontEnd前端
+### June Version
 尚未考虑JS性能
 图片加载速度缓慢
 
@@ -11,7 +12,7 @@ ui有待更完善的设计
 
 详细截图稍后更新
 
-## Dec. Version
+### Dec. Version
 修复部分上一版本BUG
 
 
@@ -19,8 +20,9 @@ ui有待更完善的设计
 
 
 新增加页面采用Vue框架编程
-但未对页面进行webpage打包
+但未对页面进行webpack打包
 
 
 尚未加入移动版页面
 
+## BackEnd后端
