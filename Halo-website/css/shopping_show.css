@@ -151,7 +151,7 @@ body{
 	cursor: pointer;
 }
 .simg-selected{
-	border: 1px solid #999;
+	border: 1px solid #dcdcdc;
 }
 .property{
 	position: relative;
@@ -193,7 +193,7 @@ body{
 }
 .property-select{
 	margin-top: 20px;
-	border-bottom: 1px solid #999999;
+	border-bottom: 1px solid #dcdcdc;
 	
 }
 .property-select dl{
@@ -269,7 +269,7 @@ body{
 .property-support{
 	margin-top: 15px;
 	margin-bottom: 15px;
-	border-bottom: 1px solid #999;
+	border-bottom: 1px solid #dcdcdc;
 }
 .property-support dd{
 	color: #666;
@@ -302,7 +302,7 @@ body{
 .num-box input{
 	height: 30px;
 	width: 60px;
-	border: 1px solid #999;
+	border: 1px solid #dcdcdc;
 	
 }
 .num{
@@ -340,7 +340,7 @@ input{
 	left: 20px;
 }
 .pd-header{
-	border-bottom: 1px solid #999999;
+	border-bottom: 1px solid #dcdcdc;
 	width: 100%;
 }
 .pd-header ul li{
@@ -453,4 +453,56 @@ input{
 	font-size: 14px;
 	position: relative;
 	top: 8px;
+}
+.pd-section-detail{
+	display: none;
+}
+.pd-section-standard{
+	display: none;
+}
+.question-list dl{
+	position: relative;
+	border-top: 1px solid #dcdcdc;
+	padding-top: 35px;
+	margin-bottom: 20px;
+}
+.question-list dt{
+	font-size: 18px;
+	color: black;
+	padding-left: 65px;
+	height: 36px;
+	line-height: 2;
+	position: relative;
+}
+.question-list dt::after{
+	content: "";
+	width: 36px;
+	height: 26px;
+	position: absolute;
+	left: 10px;
+	top: 3px;
+	background: url("../img/icons.png") left top no-repeat;
+}
+.question-list dd{
+	color: #999;
+	position: relative;
+	padding-left: 65px;
+	line-height: 2;
+	padding: 15px 0 20px 65px;
+}
+.question-list dd::after{
+	content: "";
+	width: 36px;
+	height: 26px;
+	position: absolute;
+	left:10px;
+	background: url("../img/icons.png") -36px top no-repeat;
+}
+.question-list h4{
+	color: #00c3f5;
+	font-weight: 700;
+}
+.question-list{
+	margin-top: 30px;
+	border-bottom: 1px solid #dcdcdc;
 }

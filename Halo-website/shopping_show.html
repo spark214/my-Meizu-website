@@ -7,13 +7,14 @@
 	<title>魅族PRO 6s - 魅族商城</title>
 	<link href="css/shopping_show.css" type="text/css" rel="stylesheet">
 	<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="js/vue.js"></script>
 </head>
 
 <body onLoad="handleLoad()">
 <div class="content">
 	<div class="header">
 	<div class="clearfix">
-			<h class="logo"><img src="./img/logo-new-toggle@2x_52c2068.png" width="115px" height="20px"></h>
+			<h class="logo"><img src="./img/halo-230-40-blue.png" width="120px" height="24px"></h>
 			<ul class="nav" id="navul">
 				<li><a href="./index.html">首页</a></li>
 				<li class="nav-product" id="nav-product"><a href="#">产品</a>
@@ -26,7 +27,7 @@
 				</li>
 				<li><a href="mall_show.html">商店</a></li>
 				<li><a href="#">服务</a></li>
-				<li><a href="flyme_index.html">Flyme</a></li>
+				<li><a href="flyme_index.html">Flow.</a></li>
 			</ul>
 		<div class="login">
 			<a href="login.html">注册</a><a>|</a><a href="login.html">登陆</a>
@@ -37,21 +38,21 @@
 	<section class="row clearfix">
 	<div class="imgdesc">
 		<div class="preview">
-			<img src="./img/CnQOjVgaoHCAElUeAAt-NlibcLE021.png680x680.jpg" width="395" class="bigimg">
+			<img src="img/pro6s-black-02-680.jpg" width="395" class="bigimg">
 		</div>
 		<div class="smallimg">
 			<ul>
 				<li>
-					<img src="./img/CnQOjVgaoHCAElUeAAt-NlibcLE021.png680x680.jpg" width="75" class="simg-1 simg-selected simg" onClick="imgchange(simg1)">
+					<img src="img/pro6s-black-02-680.jpg" width="75" class="simg-1 simg-selected simg" onClick="imgchange(simg1)">
 				</li>
 				<li>
-					<img src="./img/CnQOjVgaoG6AFdBvAARSVT1Ofl4789.png680x680 (1).jpg" width="75" class="simg-2 simg" onClick="imgchange(simg2)">
+					<img src="img/pro6s-black-01.jpg" width="75" class="simg-2 simg" onClick="imgchange(simg2)">
 				</li>
 				<li>
-					<img src="./img/Cix_s1gaoHCAXy2aAAV67G8l3X0685.png680x680 (1).jpg" width="75" class="simg-3 simg" onClick="imgchange(simg3)">
+					<img src="img/Cix_s1gaoHCAXy2aAAV67G8l3X0685.png680x680 (1).jpg" width="75" class="simg-3 simg" onClick="imgchange(simg3)">
 				</li>
 				<li>
-					<img src="./img/CnQOjVgaoHKAdz42AAJngEiD5r0412.png680x680 (1).jpg" width="75" class="simg-4 simg" onClick="imgchange(simg4)">
+					<img src="img/CnQOjVgaoHKAdz42AAJngEiD5r0412.png680x680 (1).jpg" width="75" class="simg-4 simg" onClick="imgchange(simg4)">
 				</li>
 			</ul>
 		</div>
@@ -70,9 +71,9 @@
 					<dt>网络类型：</dt>
 					<dd class="property-select-nettype"><a href="#"><span>全网通公开版</span></a></dd>
 					<dt class="property-select-color-lab">颜色分类：</dt>
-					<dd class="property-select-color rose" onClick="rosechange()"><a href="#"><img src="./img/Cix_s1gaoBuAJthwAA1jPCtyxxQ181.png80x80.png" width="32"><span>玫瑰金</span></a></dd>
-					<dd class="property-select-color gold" onClick="goldchange()"><a href="#" ><img src="./img/CnQOjVgaoE2AeO-qAA2BsUgqVWc879.png80x80.png" width="32"><span>香槟金</span></a></dd>
-					<dd class="property-select-color black selected" onClick="blackchange()"><a href="#"><img src="./img/Cix_s1gaoG-AJ-cpAAqULbIBw-M082.png80x80.png" width="32"><span>星空黑</span></a></dd>
+					<dd class="property-select-color rose" onClick="rosechange()"><a href="#"><img src="img/Cix_s1gaoBuAJthwAA1jPCtyxxQ181.png80x80.png" width="32"><span>玫瑰金</span></a></dd>
+					<dd class="property-select-color gold" onClick="goldchange()"><a href="#" ><img src="img/CnQOjVgaoE2AeO-qAA2BsUgqVWc879.png80x80.png" width="32"><span>香槟金</span></a></dd>
+					<dd class="property-select-color black selected" onClick="blackchange()"><a href="#"><img src="img/Cix_s1gaoG-AJ-cpAAqULbIBw-M082.png80x80.png" width="32"><span>星空黑</span></a></dd>
 					<dt>内存容量：</dt>
 					<dd class="property-select-rom"><a href="#"><span>64G</span></a></dd>
 				</dl>
@@ -110,7 +111,7 @@
 		</ul>
 	</div>
 
-	<section class="pd-section clearfix">
+	<section class="pd-section-detail clearfix">
 	<p>
 		<img src="./img/CnQOjVgb8CmAFK1FAANdR22LNqk020.jpg">
 		<img src="./img/CnQOjVgbBSmAHD3CAAEmRmHbK6A573.jpg">
@@ -125,6 +126,25 @@
 		<img src="./img/Cix_s1gbBSuAeIP4AAGNmFNXqFc787.jpg">
 		<img src="./img/CnQOjVgbBSyAKPAaAACHfbU2Tp0218.jpg">
 		</p>
+	</section>
+
+	<section class="pd-section-standard">
+		<table class="standard-table">
+			<tr>
+				<th colspan="2">基础信息</th>
+			</tr>
+			<tr></tr>
+		</table>
+	</section>
+
+	<section class="pd-section-question">
+		<div class="question-list">
+			<h4>热门回答</h4>
+			<dl v-for="(item,index) in questions">
+				<dt v-text="item.title"></dt>
+				<dd v-text="item.answer"></dd>
+			</dl>
+		</div>
 	</section>
 </div>
 	<div class="section footer">
@@ -288,7 +308,21 @@
 			}
 		});
 	});
-	
+
+window.onload=function () {
+	new Vue({
+		el:".content",
+		data:{
+		    questions:[
+				{title:"魅族15 系列解锁方式是怎样的？",answer:"支持指纹识别解锁以及面部识别解锁；指纹解锁键位于手机屏幕下方。"},
+                {title:"魅族15 系列是否保留 mBack 实体按键？形状？",answer:"非物理按键，可识别轻触及按压，操作逻辑和 mBack 相同。7mm 直径圆圈。"},
+                {title:"魅族15 系列采用的系统是什么？",answer:"搭载全新的Flyme7系统。"}
+			]
+		}
+
+	});
+}
+
 	</script>
 </body>
 </html>
