@@ -11,6 +11,7 @@ body,
   height: 100%;
   overflow: hidden;
 }
+.clearfix:after { content: ""; display: block; clear: both;}
 
 body {
   font-family: 'PingFang SC', "Helvetica Neue", Helvetica, "microsoft yahei", arial, STHeiTi, sans-serif;

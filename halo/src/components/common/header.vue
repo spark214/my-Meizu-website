@@ -54,6 +54,9 @@
   }
 </script>
 <style>
+  .header{
+    z-index: 100;
+  }
   .navs{
     float: right;
     margin-right: 150px;
@@ -82,7 +85,7 @@
     font-size: 14px;
   }
   .nav-img{
-    width: 120px;
+    width: 100px;
   }
   .logo{
     margin-left: 25px;
@@ -95,10 +98,12 @@
   .header{
     position: relative;
     width: 100%;
-    height: 80px;
+    height: 70px;
     top: 0;
-    background-color: #ffffff;
-
+    background-color: transparent;
+  }
+  .header:hover{
+    background-color: #fff;
   }
   .nav-product dl{
     width: 100%;
@@ -117,7 +122,7 @@
   .nav-product dl dd{
     float: left;
     width: 150px;
-    height: 120px;
+    height: 130px;
     text-align: center;
 
   }
@@ -126,9 +131,6 @@
     position: relative;
     font-size: 12px;
   }
-  .nav-dd{
-  }
-  .clearfix:after { content: ""; display: block; clear: both;}
 
   a:hover{
     text-decoration: none !important;
