@@ -17,20 +17,20 @@
           <h1>{{mobPhone.brand+mobPhone.name}}</h1>
           <p class="right_slogan">{{mobPhone.slogan}}</p>
           <div class="right_price">
-            <a>价&nbsp;&nbsp;&nbsp;&nbsp;格</a>
+            <a>价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格：</a>
             <span>￥{{mobPhone.price}}.00</span>
           </div>
           <div class="right_selecct">
             <dl>
               <dt class="right_selecct_rom_lab">网络类型：</dt>
-              <dd v-for="item in mobPhone.nettype" class="right_selecct_rom_lab">
-                <el-button>{{item.name}}</el-button>
+              <dd v-for="item in mobPhone.nettype" class="right_selecct_rom_lab" @click="form.nettype=item.name">
+                <el-button :class="{selected:form.nettype==item.name}">{{item.name}}</el-button>
               </dd>
             </dl>
             <dl>
               <dt class="right_selecct_item_lab">颜色分类：</dt>
               <dd v-for="item in mobPhone.color" class="right_selecct_item right_selecct_item_lab">
-                <a @click="form.color=item.name">
+                <a @click="form.color=item.name;form.colorName=item.colorName" :class="{selected:form.color==item.name}">
                   <img :src="'../../../static/img/'+mobPhone.name+'_'+item.name+'_2_680x680.jpg'" width="32px"><span>{{item.colorName}}</span>
                 </a>
               </dd>
@@ -38,7 +38,7 @@
             <dl>
               <dt class="right_selecct_rom_lab">内存容量：</dt>
               <dd v-for="(item,index) in mobPhone.rom" class=" right_selecct_rom_lab" @click="form.rom=item.size">
-                <el-button>{{item.size}}</el-button>
+                <el-button :class="{selected:form.rom==item.size}">{{item.size}}</el-button>
               </dd>
             </dl>
           </div>
@@ -130,9 +130,9 @@
         <a href="login.html"><span>现在购买</span></a>
       </div>
       <div class="bar-desc">
-        <span>{{mobPhone.brand+mobPhone.name}}</span>
-        <span class="bar-desc-price">￥{{form.buyCount*mobPhone.price}}.00</span>
-        <label>全网通公开版 <a class="bar-color">{{form.colorName}}</a> 64GB</label>
+        <span>{{mobPhone.brand+mobPhone.name}}&nbsp;<span class="bar-desc-price">￥{{form.buyCount*mobPhone.price}}.00</span></span>
+        <br>
+        <label>全网通公开版 <a class="bar-color">{{form.colorName}}</a> {{form.rom}}</label>
       </div>
     </div>
   </div>
@@ -306,11 +306,16 @@
 
   .right_selecct_item a {
     width: 100px;
+    height: 39px;
     display: inline-block;
     border: 1px solid #dcdcdc;
     border-radius: 5px;
     margin-bottom: 10px;
     text-align: center;
+    cursor: pointer;
+  }
+  .selected{
+    border: 1px solid #31a5e7 !important;
   }
 
   .right_selecct_item a img {
@@ -534,9 +539,10 @@
     top: 15px;
   }
 
-  .bar-desc span {
+  .bar-desc>span {
     position: relative;
-    right: -50px;
+    right:50px;
+    float: right;
   }
 
   .bar-desc-price {
@@ -544,16 +550,20 @@
     font-size: 18px;
     font-weight: 800;
     position: relative;
-    right: -60px !important;
+    right:0px ;
+    float: right;
+    top:-2px;
+    margin-left: 10px;
 
   }
 
   .bar-desc label {
     font-size: 12px;
     position: relative;
-    right: 50px;
     color: #666;
-    top: 20px
+    top: 0px;
+    right: 50px;
+    float:right;
   }
 
   .bar-button {

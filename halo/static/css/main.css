@@ -15,6 +15,7 @@ body,
 }
 .pageContain{
   overflow: hidden;
+  width: 1240px;
   position:absolute;
   left: 50%;
   transform: translateX(-50%);
