@@ -8,14 +8,14 @@ body,
 #app,
 .wrapper {
   width: 100%;
-  overflow-x: hidden;
+  /*overflow-x: hidden;*/
   min-width: 1240px;
   max-width: 100%;
+  position: relative;
 }
 .pageContain{
   overflow: hidden;
-  width: 1240px;
-  position: relative;
+  position:absolute;
   left: 50%;
   transform: translateX(-50%);
 }
