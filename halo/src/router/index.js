@@ -8,7 +8,23 @@ export default new Router({
   routes:[
     {
       path:'/',
-      component:resolve => require(['../components/page/Index.vue'], resolve),
+      component:resolve => require(['../components/page/index.vue'], resolve),
+    },
+    {
+      path:'/mallIndex',
+      component:resolve => require(['../components/page/mall-index.vue'], resolve),
+    },
+    {
+      path:'/mallProduct',
+      component:resolve => require(['../components/page/mall-product.vue'], resolve),
+    },
+    {
+      path:'/404',
+      component:resolve => require(['../components/page/404.vue'], resolve),
+    },
+    {
+      path: '*',
+      redirect: '/404'
     }
   ]
 })

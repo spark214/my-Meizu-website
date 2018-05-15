@@ -21,6 +21,7 @@
             backgroundImage: "url(" + require("../../../static/img/Banner_15.jpg") + ")",
             backgroundRepeat: "no-repeat",
             backgroundPosition:"center",
+            backgroundSize:"cover",
 
            },
           {backgroundImage: "url(" + require("../../../static/img/Banner_Ep52.jpg") + ")",
@@ -30,6 +31,7 @@
           {backgroundImage: "url(" + require("../../../static/img/Banner_POP.jpg") + ")",
             backgroundRepeat: "no-repeat",
             backgroundPosition:"center",
+            backgroundSize:"cover",
       },
         ]
       }

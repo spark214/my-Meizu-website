@@ -18,7 +18,8 @@
           <dd v-for="(item,index) in fitting"><img :src="item.url" class="nav-img"><p class="nav-dd">{{item.name}}</p></dd>
         </dl>
       </li>
-      <li><a href="flyme_index.html" target="_blank">Flyme</a></li>
+      <li><a @click="goRouter('mallProduct')">商城</a></li>
+      <li><a target="_blank">Flow.</a></li>
     </ul>
     <div class="login">
       <a href="javascript:void(0)">注册</a><a>|</a><a href="javascript:void(0)">登陆</a>
@@ -50,6 +51,12 @@
 
 
       }
+    },
+    methods:{
+      goRouter(that) {
+        this.$router.push({path: "/" + that});
+      },
+
     }
   }
 </script>
@@ -83,6 +90,7 @@
     display: inline-block;
     margin-right: 20px;
     font-size: 14px;
+    cursor: pointer;
   }
   .nav-img{
     width: 100px;
@@ -98,7 +106,7 @@
   .header{
     position: relative;
     width: 100%;
-    height: 70px;
+    height: 60px;
     top: 0;
     background-color: transparent;
   }
