@@ -15,38 +15,16 @@
         </div>
         <div class="contain_head_right">
           <h1>{{mobPhone.brand+mobPhone.name}}</h1>
-          <p class="right_slogan">{{mobPhone.slogan}}</p>
+          <p class="right_slogan">{{mobPhone.title}}</p>
           <div class="right_price">
             <a>价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格：</a>
             <span>￥{{form.price}}.00</span>
           </div>
           <div class="right_selecct">
-            <dl>
-              <dt class="right_selecct_rom_lab">版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：</dt>
-              <dd v-for="item in mobPhone.version" class="right_selecct_rom_lab" >
-                <el-button :class="{selected:form.version==item}">{{item}}</el-button>
-              </dd>
-            </dl>
-            <dl>
-              <dt class="right_selecct_rom_lab">网络类型：</dt>
-              <dd v-for="item in mobPhone.nettype" class="right_selecct_rom_lab" @click="form.nettype=item">
-                <el-button :class="{selected:form.nettype==item}">{{item}}</el-button>
-              </dd>
-            </dl>
-            <dl>
-              <dt class="right_selecct_item_lab">颜色分类：</dt>
-              <dd v-for="item in mobPhone.color" class="right_selecct_item right_selecct_item_lab">
-                <a @click="form.color=item.name;form.colorName=item.colorName"
-                   :class="{selected:form.color==item.name}">
-                  <img :src="'../../../static/img/'+mobPhone.name+'_'+item.name+'_2_680x680.jpg'" width="32px"><span>{{item.colorName}}</span>
-                </a>
-              </dd>
-            </dl>
-            <dl>
-              <dt class="right_selecct_rom_lab">内存容量：</dt>
-              <dd v-for="(item,index) in mobPhone.rom" class=" right_selecct_rom_lab"
-                  @click="form.rom=item.size;form.price=item.price">
-                <el-button :class="{selected:form.rom==item.size}">{{item.size}}</el-button>
+            <dl v-for="(item,key,index) in mobPhone.attr">
+              <dt class="right_selecct_rom_lab">{{key}}</dt>
+              <dd v-for="subitem in item" class="right_selecct_rom_lab" >
+                <el-button >{{subitem}}</el-button>
               </dd>
             </dl>
           </div>
@@ -72,16 +50,13 @@
                 <el-input-number v-model="form.buyCount" :min="1" :max="10" size="mini"
                                  controls-position="right"></el-input-number>
               </dd>
-            </dl>
-            <div class="right_button">
-                  <el-button type="danger" size="medium" class="right_buynow">
-                    立即购买
-                  </el-button>
-                  <el-button type="primary" size="medium" class="right_buynow">
-                    加入购物车
-                  </el-button>
-            </div>
+              <dd class="right_selecct_item_lab">
+                <el-button type="primary" size="medium" class="right_buynow">
+                  立即购买
+                </el-button>
+              </dd>
 
+            </dl>
 
           </div>
         </div>
@@ -144,7 +119,7 @@
         <span>{{mobPhone.brand+mobPhone.name}}&nbsp;<span
           class="bar-desc-price">￥{{form.buyCount*form.price}}.00</span></span>
         <br>
-        <label>{{form.nettype}} <a class="bar-color">{{form.colorName}}</a> {{form.rom}}</label>
+        <label>全网通公开版 <a class="bar-color">{{form.colorName}}</a> {{form.rom}}</label>
       </div>
     </div>
   </div>
@@ -158,22 +133,16 @@
         mobPhone:
           {
             brand: '魅族',
-            name: '15',
-            slogan: '2000万暗光双摄， AI智能美颜',
-            version: ["魅族15", "魅族15Plus", "魅族M15"],
-            nettype: ["全网通公开版", "移动定制版"],
-            color: [
-              {colorName: '雅金', name: 'gold'},
-              {colorName: '汝窑白', name: 'while'},
-              {colorName: '砚墨', name: 'black'}
-            ],
-            rom: [{size: '4GB+64GB', price: '2499'}, {size: '4GB+128GB', price: '2699'}],
+            name: "15",
+            title: "限量现货发售",
+            price: [2499,2699],
+            version:["标配","限量版","典藏版"],
+            attr: {网络类型:["全网通", "移动版"], 颜色分类:["gold", "while", "black"], 内存容量:["4GB+64GB", "4GB+128GB"]},
           },
         form: {
           color: 'while',
           colorName: '汝窑白',
-          version:'魅族15',
-          price: 2499,
+          price:2499,
           buyCount: 1,
           nettype: '全网通公开版',
           rom: '4GB+64GB',
@@ -203,21 +172,17 @@
         var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
         var detailPosition = document.getElementById("contain_detail").offsetTop
         if (scrollTop > detailPosition) {
-           this.barShow = true;
+          this.barShow = true;
         }
         else {
           this.barShow = false;
         }
       },
-    },
 
+    },
     computed: {},
     mounted() {
-      setTimeout(() => {
-        this.handleScroll()
-      }, 300)
-      window.addEventListener('scroll', this.handleScroll)
-      window.addEventListener('resize', this.handleScroll)
+      window.addEventListener('scroll', this.handleScroll);
     },
   }
 </script>
@@ -412,7 +377,6 @@
   }
 
   .right_buynow {
-    width: 120px;
     margin-left: 50px;
   }
 
@@ -447,17 +411,15 @@
   .question_section {
     width: 1240px;
   }
-  .right_button {
-    margin-left: -40px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
 
   .question-list dl {
     position: relative;
     border-top: 1px solid #dcdcdc;
     padding-top: 35px;
     margin-bottom: 20px;
+  }
+  .question-list dl:nth-child(2){
+    border-top: 2px !important;
   }
 
   .question-list dt {
@@ -467,10 +429,6 @@
     height: 36px;
     line-height: 2;
     position: relative;
-  }
-
-  .question-list dl:nth-child(2) {
-    border-top: 2px !important;
   }
 
   .question-list dt::after {
@@ -625,12 +583,5 @@
   .selectedSection {
     border-bottom: 2px solid #31a5e7;
     color: #31a5e7;
-  }
-  .fixed{
-    position: fixed;
-    top: 1px;
-    left: 10px;
-    z-index: 100;
-    width: 600px;
   }
 </style>
