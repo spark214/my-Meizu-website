@@ -15,8 +15,12 @@ export default new Router({
       component:resolve => require(['../components/page/mall-index.vue'], resolve),
     },
     {
-      path:'/mallProduct',
-      component:resolve => require(['../components/page/mall-product.vue'], resolve),
+      path:'/mallProductPhone',
+      component:resolve => require(['../components/page/mall-product-phone.vue'], resolve),
+    },
+    {
+      path:'/mallProductOther',
+      component:resolve => require(['../components/page/mall-product-other.vue'], resolve),
     },
     {
       path:'/404',

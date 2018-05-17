@@ -18,11 +18,12 @@
           <dd v-for="(item,index) in fitting"><img :src="item.url" class="nav-img"><p class="nav-dd">{{item.name}}</p></dd>
         </dl>
       </li>
-      <li><a @click="goRouter('mallProduct')">商城</a></li>
+      <li><a @click="goRouter('mallProductPhone')">商城</a></li>
       <li><a target="_blank">Flow.</a></li>
+      <li class="nav-search"><input type="text" placeholder="魅族15"><i class="el-icon-search"></i> </li>
     </ul>
-    <div class="login">
-      <a href="javascript:void(0)">注册</a><a>|</a><a href="javascript:void(0)">登陆</a>
+    <div class="login"  v-show="!isLogin">
+
     </div>
   </div>
 </template>
@@ -47,7 +48,8 @@
           {name:'魅蓝酷MA萌移动电源',url:'../../../static/img/kuma-m10_while_480x480.png'},
           {name:'魅族手环',url:'../../../static/img/mzband_black_480x480.png'},
           {name:'魅蓝酷MA萌旅行套装',url:'../../../static/img/everyday_all_480x480.png'},
-        ]
+        ],
+        isLogin:true,
 
 
       }
@@ -67,7 +69,7 @@
   .navs{
     float: right;
     margin-right: 150px;
-    margin-top: 30px;
+    margin-top: 20px;
   }
   .header a{
     color: #000;
@@ -78,7 +80,7 @@
   .login{
     position: absolute;
     left: 90%;
-    top: 30px;
+    top: 20px;
     font-size: 14px;
   }
   .login a{
@@ -96,12 +98,14 @@
     width: 100px;
   }
   .logo{
+    position: absolute;
     margin-left: 25px;
-    margin-top: 10px;
+    z-index: 100;
   }
   .logo img{
     margin-top: 20px;
     padding-bottom: 10px;
+
   }
   .header{
     position: relative;
@@ -150,5 +154,23 @@
     position: absolute;
     width: 100%;
     top: 0;
+  }
+  .nav-search{
+    width: 135px !important;
+    height: 25px;
+    border-radius: 20px;
+    border: 0.5px solid #dcdcdc;
+  }
+  .nav-search input{
+    width: 100px;
+    border: none;
+    margin-left: 8px;
+    margin-top: 6px;
+    outline: none;
+    font-size: 11px;
+  }
+
+  .nav-search i{
+    margin-right: 3px;
   }
 </style>

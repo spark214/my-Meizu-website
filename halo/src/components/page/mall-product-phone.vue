@@ -24,7 +24,7 @@
             <dl>
               <dt class="right_selecct_rom_lab">版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：</dt>
               <dd v-for="item in mobPhone.version" class="right_selecct_rom_lab" >
-                <el-button :class="{selected:form.version==item}">{{item}}</el-button>
+                <el-button :class="{selected:form.version==item}" size="small">{{item}}</el-button>
               </dd>
             </dl>
             <dl>
@@ -626,11 +626,5 @@
     border-bottom: 2px solid #31a5e7;
     color: #31a5e7;
   }
-  .fixed{
-    position: fixed;
-    top: 1px;
-    left: 10px;
-    z-index: 100;
-    width: 600px;
-  }
+
 </style>
