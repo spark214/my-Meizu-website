@@ -21,7 +21,7 @@
             <p class="nav-dd">{{item.name}}</p></dd>
         </dl>
       </li>
-      <li><a @click="goRouter('mallProductOther')">商城</a></li>
+      <li><a @click="goRouter('mallIndex')">商城</a></li>
       <li><a target="_blank">Flow.</a></li>
       <li class="nav-search"><input type="text" placeholder="魅族15"><i class="el-icon-search"></i></li>
     </ul>

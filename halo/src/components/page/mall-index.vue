@@ -1,61 +1,235 @@
 <template>
-  <div>
+  <div class="pageContain mallIndex">
     <v-header></v-header>
-    <div class="carousel">
-      <el-carousel height="680px"  trigger="click">
-        <el-carousel-item v-for="item in banner" :key="item">
-          <div class="banner-content" :style="item"></div>
-        </el-carousel-item>
-      </el-carousel>
-      <div class="sideBar">
-        <el-row>
-          <el-col :span="4">
-            <el-menu>
-              <el-menu-item>
-                <span slot="title">手机</span>
-              </el-menu-item>
-              <el-menu-item>
-                <span slot="title">智能设备</span>
-              </el-menu-item>
-              <el-menu-item>
-              <span slot="title">智能穿戴</span>
-            </el-menu-item>
 
-            </el-menu>
-          </el-col>
-        </el-row>
+    <div class="container">
+      <div class="banner">
+        <div class="carousel clearfix">
+          <el-carousel height="600px" trigger="click" arrow="never">
+            <el-carousel-item v-for="item in banner" :key="item">
+              <div class="banner-content" :style="item"></div>
+            </el-carousel-item>
+          </el-carousel>
+        </div>
+
+        <div class="sideBar" @mouseleave="evtSideLeave">
+          <div class="side-left">
+            <ul class="side">
+              <li class="side-item" @mouseenter="evtSideEnter(item.type)" v-for="item in sideItems">
+                {{item.content}}
+              </li>
+            </ul>
+          </div>
+          <div class="side-detail" v-show="goodsStatus">
+            <ul class="detail-item" v-for="goods in filterCurrGoods">
+              <li class="datail-goods" v-for="item in goods">
+                <a class="goods-link">
+                  <img :src="item.imgUrl">
+                  <div class="goods-link-name">
+                    {{item.name}}
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
+
+
   </div>
 </template>
 <script>
   import vHeader from '../common/header';
+
   export default {
-    data(){
-      return{
-        banner:[
+    data() {
+      return {
+        banner: [
           {
-            backgroundImage: "url(" + require("../../../static/img/Banner_15.jpg") + ")",
+            backgroundImage: "url(" + require("../../../static/img/mallIndex-halo-1240x500.jpg") + ")",
             backgroundRepeat: "no-repeat",
-            backgroundPosition:"center",
-            backgroundSize:"cover",
+            backgroundPosition: "center",
 
           },
-          {backgroundImage: "url(" + require("../../../static/img/Banner_Ep52.jpg") + ")",
+          {
+            backgroundImage: "url(" + require("../../../static/img/mallIndex-mz15-1240x500.jpg") + ")",
             backgroundRepeat: "no-repeat",
-            backgroundPosition:"center",
+            backgroundPosition: "center",
           },
-          {backgroundImage: "url(" + require("../../../static/img/Banner_POP.jpg") + ")",
+          {
+            backgroundImage: "url(" + require("../../../static/img/mallIndex-pop-1240x500.jpg") + ")",
             backgroundRepeat: "no-repeat",
-            backgroundPosition:"center",
-            backgroundSize:"cover",
+            backgroundPosition: "center",
           },
-        ]
+        ],
+        currGoods: [],
+        goodsStatus: false,
+        sideItems: [
+          {type: 'phone', content: '手机'},
+          {type: 'device', content: '智能设备'},
+          {type: 'wear', content: '智能穿戴'},
+          {type: 'game', content: '游戏设备'},
+          {type: 'hear', content: '数码影音'},
+          {type: 'fitting', content: '手机配件/移动电源'},
+          {type: 'storage', content: '移动存储/办公设备'},
+          {type: 'hobby', content: '生活周边'}
+        ],
+        phone: [
+          {
+            sourceUrl: '//www.mi.com/mi5/',
+            buyUrl: '//item.mi.com/buyphone/mi5',
+            imgUrl: 'http://c1.mifile.cn/f/i/15/goods/list/mi5bar80.jpg?width=40&height=40',
+            name: '小米手机5',
+            buyStatus: true
+          },
+          {
+            sourceUrl: '//www.mi.com/mimax/',
+            buyUrl: '//item.mi.com/buyphone/mimax',
+            imgUrl: 'http://c1.mifile.cn/f/i/15/goods/sidebar/maxbar80.jpg?width=40&height=40',
+            name: '小米Max',
+            buyStatus: true
+          },
+          {
+            sourceUrl: '//www.mi.com/note3/pro/',
+            buyUrl: '//item.mi.com/buyphone/note3',
+            imgUrl: 'http://c1.mifile.cn/f/i/15/goods/sidebar/note3.jpg?width=40&height=40',
+            name: '小米Note3',
+            buyStatus: true
+          },
+          {
+            sourceUrl: '//www.mi.com/hongmi3s/',
+            buyUrl: '//item.mi.com/buyphone/hongmi3s',
+            imgUrl: 'http://c1.mifile.cn/f/i/g/2015/video/hm3s80x80.jpg?width=40&height=40',
+            name: '红米手机3S',
+            buyStatus: true
+          },
+          {
+            sourceUrl: '//www.mi.com/redmipro/',
+            buyUrl: '//item.mi.com/buyphone/redmipro/',
+            imgUrl: 'http://c1.mifile.cn/f/i/15/goods/sidebar/hongmi3.jpg?width=40&height=40',
+            name: '红米Pro',
+            buyStatus: true
+          },
+          {
+            sourceUrl: '//www.mi.com/hongmi3/',
+            buyUrl: '//item.mi.com/buyphone/hongmi3/',
+            imgUrl: 'http://c1.mifile.cn/f/i/15/goods/list/mi5bar80.jpg?width=40&height=40',
+            name: '红米手机3',
+            buyStatus: true
+          },
+          {
+            sourceUrl: '//www.mi.com/hongmi3x/',
+            buyUrl: '//item.mi.com/buyphone/hongmi3x',
+            imgUrl: 'http://c1.mifile.cn/f/i/g/2015/video/3X80.jpg?width=40&height=40',
+            name: '红米手机3X',
+            buyStatus: true
+          },
+          {
+            sourceUrl: '//heyue.mi.com/',
+            buyUrl: '//item.mi.com/buyphone/mi5',
+            imgUrl: 'http://c1.mifile.cn/f/i/15/goods/sidebar/heyue.jpg?width=40&height=40',
+            name: '合约机',
+            buyStatus: false
+          },
+          {
+            sourceUrl: '//www.mi.com/compare/',
+            buyUrl: '//item.mi.com/buyphone/mi5',
+            imgUrl: 'http://c1.mifile.cn/f/i/15/goods/sidebar/compare.jpg?width=40&height=40',
+            name: '对比手机',
+            buyStatus: false
+          },
+          {
+            sourceUrl: '//www.mi.com/mimobile/',
+            buyUrl: '//item.mi.com/buyphone/mi5',
+            imgUrl: 'http://c1.mifile.cn/f/i/15/goods/sidebar/mimobile.jpg?width=40&height=40',
+            name: '小米移动 电话卡',
+            buyStatus: false
+          }
+        ],
 
       }
     },
-    components:{
+    components: {
       vHeader
+    },
+    methods: {
+      evtSideEnter(currType) {
+        this.currGoods = this[currType]
+        this.goodsStatus = true
+      },
+      evtSideLeave() {
+        this.goodsStatus = false
+      }
+    },
+    computed: {
+      filterCurrGoods: function () {
+        let filterGoods = [[], [], [], [], []]
+        this.currGoods.forEach(function (item, index) {
+          let goodsIndex = Math.floor(index / 6)
+          filterGoods[goodsIndex].push(item)
+        })
+        return filterGoods
+      }
     },
   }
 </script>
+<style>
+
+  .mallIndex {
+    width: 1280px;
+  }
+.container{
+  position: relative;
+}
+  .carousel {
+    position: relative;
+    margin-top: -60px;
+  }
+  .banner{
+    position: relative;
+  }
+
+  .sideBar {
+    width: 235px;
+    height: auto;
+    background: rgba(0, 0, 0, .3);
+    position: absolute;
+    left: 40px;
+    top:90px;
+    z-index: 100;
+    color: #fff;
+  }
+
+  .side-left {
+
+  }
+
+  .side {
+
+  }
+
+  .side-item {
+
+  }
+
+  .side-detail {
+
+  }
+
+  .detail-item {
+
+  }
+
+  .datail-goods {
+
+  }
+
+  .goods-link {
+
+  }
+
+  .goods-link-name {
+
+  }
+</style>
