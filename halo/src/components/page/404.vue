@@ -1,12 +1,12 @@
 <template>
-  <div class="errorPage">
+  <div class="errorPage pageContain">
     <button @click="back">Go Back</button>
   </div>
 </template>
 <style type="text/css">
   .errorPage {
-    width: 100%;
-    height: 100%;
+    width: 1280px;
+    height: 620px;
     background: url("../../../static/img/404page.jpg");
     background-position: center;
     overflow: hidden;

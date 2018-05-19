@@ -1,0 +1,68 @@
+<template>
+  <div class="contain_head_img">
+    <img :src="'../../../static/img/'+name+'_'+color+'_'+selectPic+'_680x680.jpg'" width="395px"
+    class="img_preview">
+    <ul>
+      <li v-for="(pic,picIndex) in 4">
+        <img :src="'../../../static/img/'+name+'_'+color+'_'+(picIndex+1)+'_680x680.jpg'"
+             width="75px" @click="changePic(picIndex)" :class="{selectPic:selectPic==(picIndex+1)}">
+      </li>
+    </ul>
+  </div>
+</template>
+<style>
+  .contain_head_img {
+    position: relative;
+    float: left;
+    width: 40%;
+    margin-left: 30px;
+  }
+
+  .contain_head_img ul {
+    margin-left: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+
+  .contain_head_img ul li {
+    display: inline;
+    margin-right: 25px;
+    cursor: pointer;
+  }
+
+  .contain_head_img ul li img {
+    box-sizing: border-box;
+  }
+
+  .selectPic {
+    border: 1px solid #dcdcdc;
+  }
+</style>
+<script>
+  import bus from './bus.js';
+
+  export default {
+    props:{
+      name:{
+        type:[String]
+      },
+      color:{
+        type:[String]
+      },
+    },
+    data(){
+      return{
+        selectPic: 1,
+
+      }
+    },
+    methods:{
+      changePic(index) {
+        this.selectPic = (index + 1);
+      },
+
+    },
+    mounted(){
+    }
+  }
+</script>

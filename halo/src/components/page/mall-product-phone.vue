@@ -1,18 +1,11 @@
 <template>
   <div class="mall-product">
+
     <v-header></v-header>
+
     <div class="container clearfix pageContain">
       <div class="contain_head clearfix">
-        <div class="contain_head_img">
-          <img :src="'../../../static/img/'+mobPhone.name+'_'+form.color+'_'+selectPic+'_680x680.jpg'" width="395px"
-               class="img_preview">
-          <ul>
-            <li v-for="(pic,picIndex) in 4">
-              <img :src="'../../../static/img/'+mobPhone.name+'_'+form.color+'_'+(picIndex+1)+'_680x680.jpg'"
-                   width="75px" @click="changePic(picIndex)" :class="{selectPic:selectPic==(picIndex+1)}">
-            </li>
-          </ul>
-        </div>
+        <v-photo :name="mobPhone.name" :color="form.color"></v-photo>
         <div class="contain_head_right">
           <h1>{{mobPhone.brand+mobPhone.name}}</h1>
           <p class="right_slogan">{{mobPhone.slogan}}</p>
@@ -23,7 +16,7 @@
           <div class="right_selecct">
             <dl>
               <dt class="right_selecct_rom_lab">版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：</dt>
-              <dd v-for="item in mobPhone.version" class="right_selecct_rom_lab" >
+              <dd v-for="item in mobPhone.version" class="right_selecct_rom_lab">
                 <el-button :class="{selected:form.version==item}" size="small">{{item}}</el-button>
               </dd>
             </dl>
@@ -50,21 +43,7 @@
               </dd>
             </dl>
           </div>
-          <div class="right_support">
-            <dl>
-              <dt>支&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;持：</dt>
-              <dd class="support-dd"><i class="el-icon-circle-check-outline"
-                                        style="color: #31a5e7"></i><span>花呗分期</span></dd>
-              <dd class="support-dd"><i class="el-icon-circle-check-outline"
-                                        style="color: #31a5e7"></i><span>百城速达</span></dd>
-              <dd class="support-dd"><i class="el-icon-circle-check-outline"
-                                        style="color: #31a5e7"></i><span>顺丰包邮</span></dd>
-              <dd class="support-dd"><i class="el-icon-circle-check-outline"
-                                        style="color:#31a5e7"></i><span>7天无理由退货</span></dd>
-              <dt>服&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;务：</dt>
-              <dd><span>本商品由 {{mobPhone.brand}} 负责发货并提供售后服务</span></dd>
-            </dl>
-          </div>
+          <v-suport :brand="mobPhone.brand"></v-suport>
           <div class="right_count">
             <dl>
               <dt class="right_selecct_item_lab">数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：</dt>
@@ -73,84 +52,38 @@
                                  controls-position="right"></el-input-number>
               </dd>
             </dl>
+
             <div class="right_button">
-                  <el-button type="danger" size="medium" class="right_buynow">
-                    立即购买
-                  </el-button>
-                  <el-button type="primary" size="medium" class="right_buynow">
-                    加入购物车
-                  </el-button>
+              <el-button type="danger" size="medium" class="right_buynow">
+                立即购买
+              </el-button>
+              <el-button type="primary" size="medium" class="right_buynow">
+                加入购物车
+              </el-button>
             </div>
-
-
           </div>
         </div>
       </div>
 
-      <div class="contain_detail" id="contain_detail">
-        <div class="contain_detail_header">
-          <ul>
-            <li :class="{selectedSection:sectionIndex==1}" @click="sectionIndex=1"><a>商品详情</a></li>
-            <li :class="{selectedSection:sectionIndex==2}" @click="sectionIndex=2"><a>常见问题</a></li>
-          </ul>
-        </div>
+      <v-detail :name="mobPhone.name"></v-detail>
 
-        <section class="detail_section" v-show="sectionIndex==1">
-          <p v-for="(item,index) in 13">
-            <img :src="'../../../static/img/'+mobPhone.name+'page_detail_'+(index+1)+'.jpg'">
-          </p>
-        </section>
-
-        <section class="question_section" v-show="sectionIndex==2">
-          <div class="question-list">
-            <h4>热门回答</h4>
-            <dl v-for="(item,index) in questions">
-              <dt v-text="item.title"></dt>
-              <dd v-text="item.answer"></dd>
-            </dl>
-          </div>
-        </section>
-
-      </div>
-
-      <div class="contain_footer clearfix">
-        <table class="foottable">
-          <tr>
-            <td><img src="../../../static/img/sf.png" class="tinyicon"><a>顺丰包邮</a></td>
-            <td><img src="../../../static/img/nextarrive.png" class="tinyicon"><a>100+城市次日送达</a></td>
-            <td><img src="../../../static/img/7days.png" class="tinyicon"><a>7天无理由退货</a></td>
-            <td><img src="../../../static/img/15days.png" class="tinyicon"><a>15天换货保障</a></td>
-          </tr>
-
-          <tr>
-            <td><img src="../../../static/img/1years.png" class="tinyicon"><a>1年免费保修</a></td>
-            <td><img src="../../../static/img/2300.png" class="tinyicon"><a>2300+线下体验店</a></td>
-            <td><img src="../../../static/img/further.png" class="tinyicon"><a>远程支持服务</a></td>
-            <td><img src="../../../static/img/fix.png" class="tinyicon"><a>上门快修</a></td>
-          </tr>
-        </table>
-      </div>
-      <div class="copyright">
-        <p>&copy;2018 Halo Telecom Equipment Co., Ltd. All rights reserved. 备案号： 粤ICP备18002543号-1 </p>
-      </div>
+      <v-footer></v-footer>
 
     </div>
+    <v-hover :brand="mobPhone.brand" :name="form.name" :nettype="form.nettype" :buyCount="form.buyCount"
+             :price="form.price"
+             :rom="form.rom" :colorName="form.colorName"></v-hover>
 
-    <div class="hoverbar clearfix" id="hoverbar" v-show="barShow">
-      <div class="bar-button">
-        <a href="login.html"><span>现在购买</span></a>
-      </div>
-      <div class="bar-desc">
-        <span>{{mobPhone.brand+mobPhone.name}}&nbsp;<span
-          class="bar-desc-price">￥{{form.buyCount*form.price}}.00</span></span>
-        <br>
-        <label>{{form.nettype}} <a class="bar-color">{{form.colorName}}</a> {{form.rom}}</label>
-      </div>
-    </div>
   </div>
 </template>
 <script>
   import vHeader from '../common/header';
+  import vPhoto from '../common/photoShow';
+  import bus from '../common/bus.js';
+  import vSuport from '../common/suport';
+  import vDetail from '../common/detail';
+  import vFooter from '../common/footer';
+  import vHover from '../common/hoverBar';
 
   export default {
     data() {
@@ -170,87 +103,36 @@
             rom: [{size: '4GB+64GB', price: '2499'}, {size: '4GB+128GB', price: '2699'}],
           },
         form: {
+          name: '15',
           color: 'while',
           colorName: '汝窑白',
-          version:'魅族15',
+          version: '魅族15',
           price: 2499,
           buyCount: 1,
           nettype: '全网通公开版',
           rom: '4GB+64GB',
         },
-        selectPic: 1,
-        sectionIndex: 1,
-
-        questions: [
-          {title: "魅族15 系列解锁方式是怎样的？", answer: "支持指纹识别解锁以及面部识别解锁；指纹解锁键位于手机屏幕下方。"},
-          {title: "魅族15 系列是否保留 mBack 实体按键？形状？", answer: "非物理按键，可识别轻触及按压，操作逻辑和 mBack 相同。7mm 直径圆圈。"},
-          {title: "魅族15 系列采用的系统是什么？", answer: "搭载全新的Flyme7系统。"}
-        ],
         sumPrice: 0,
-        barShow: false,
-
 
       }
     },
     components: {
-      vHeader
+      vHeader, vPhoto, vSuport, vDetail, vFooter, vHover
     },
     methods: {
       changePic(index) {
         this.selectPic = (index + 1);
       },
-      handleScroll() {
-        var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-        var detailPosition = document.getElementById("contain_detail").offsetTop
-        if (scrollTop > detailPosition) {
-           this.barShow = true;
-        }
-        else {
-          this.barShow = false;
-        }
-      },
+
     },
 
     computed: {},
-    mounted() {
-      setTimeout(() => {
-        this.handleScroll()
-      }, 300)
-      window.addEventListener('scroll', this.handleScroll)
-      window.addEventListener('resize', this.handleScroll)
-    },
+
   }
 </script>
 <style>
   .contain_head {
     width: 100%;
-  }
-
-  .contain_head_img {
-    position: relative;
-    float: left;
-    width: 40%;
-    margin-left: 30px;
-  }
-
-  .contain_head_img ul {
-    margin-left: 20px;
-    margin-bottom: 20px;
-    margin-top: 20px;
-  }
-
-  .contain_head_img ul li {
-    display: inline;
-    margin-right: 25px;
-    cursor: pointer;
-  }
-
-  .contain_head_img ul li img {
-    box-sizing: border-box;
-  }
-
-  .selectPic {
-    border: 1px solid #dcdcdc;
   }
 
   .contain_head_right {
@@ -416,210 +298,10 @@
     margin-left: 50px;
   }
 
-  .contain_detail {
-    position: relative;
-    top: 70px;
-  }
-
-  .contain_detail_header {
-    border-bottom: 1px solid #dcdcdc;
-    width: 100%;
-  }
-
-  .contain_detail_header ul li {
-    width: 100px;
-    height: 35px;
-    display: inline-block;
-    margin-right: 50px;
-    text-align: center;
-    cursor: pointer;
-  }
-
-  .detail_section p {
-    line-height: 0;
-    position: relative;
-  }
-
-  .detail_section {
-    margin-top: 25px;
-  }
-
-  .question_section {
-    width: 1240px;
-  }
   .right_button {
     margin-left: -40px;
     margin-top: 20px;
     margin-bottom: 20px;
-  }
-
-  .question-list dl {
-    position: relative;
-    border-top: 1px solid #dcdcdc;
-    padding-top: 35px;
-    margin-bottom: 20px;
-  }
-
-  .question-list dt {
-    font-size: 18px;
-    color: black;
-    padding-left: 65px;
-    height: 36px;
-    line-height: 2;
-    position: relative;
-  }
-
-  .question-list dl:nth-child(2) {
-    border-top: 2px !important;
-  }
-
-  .question-list dt::after {
-    content: "";
-    width: 36px;
-    height: 26px;
-    position: absolute;
-    left: 10px;
-    top: 3px;
-    background: url("../../../static/img/icons.png") left top no-repeat;
-  }
-
-  .question-list dd {
-    color: #999;
-    position: relative;
-    padding-left: 65px;
-    line-height: 2;
-    padding: 15px 0 20px 65px;
-  }
-
-  .question-list dd::after {
-    content: "";
-    width: 36px;
-    height: 26px;
-    position: absolute;
-    left: 10px;
-    background: url("../../../static/img/icons.png") -36px top no-repeat;
-  }
-
-  .question-list h4 {
-    color: #00c3f5;
-    font-weight: 700;
-  }
-
-  .question-list {
-    margin-top: 30px;
-    border-bottom: 1px solid #dcdcdc;
-  }
-
-  .foottable {
-    width: 800px;
-    position: relative;
-    left: 50%;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    margin-left: -380px;
-  }
-
-  .foottable tr {
-    text-align: justify;
-  }
-
-  .foottable td {
-    width: 200px;
-    height: 80px;
-  }
-
-  .foottable a {
-    color: #999999;
-    position: relative;
-    top: -7px;
-    left: 5px;
-  }
-
-  .contain_footer {
-    margin-top: 100px;
-    width: 100%;
-    border-bottom: 1px solid #DCDCDC;
-  }
-
-  .copyright {
-    text-align: center;
-  }
-
-  .copyright p {
-    font-size: 14px;
-    color: #999999;
-    margin-top: 20px;
-  }
-
-  .hoverbar {
-    position: fixed !important;
-    top: 0px;
-    left: 0px;
-    background: #fff;
-    width: 100%;
-    height: 70px;
-    z-index: 1000;
-    opacity: .9;
-
-  }
-
-  .bar-desc {
-    float: right;
-    position: relative;
-    right: 0px;
-    top: 15px;
-  }
-
-  .bar-desc > span {
-    position: relative;
-    right: 50px;
-    float: right;
-  }
-
-  .bar-desc-price {
-    color: #e22841;
-    font-size: 18px;
-    font-weight: 800;
-    position: relative;
-    right: 0px;
-    float: right;
-    top: -2px;
-    margin-left: 10px;
-
-  }
-
-  .bar-desc label {
-    font-size: 12px;
-    position: relative;
-    color: #666;
-    top: 0px;
-    right: 50px;
-    float: right;
-  }
-
-  .bar-button {
-    float: right;
-    position: relative;
-    top: 15px;
-    right: 20px;
-    cursor: pointer;
-  }
-
-  .bar-button a {
-    width: 120px;
-    height: 40px;
-    border: 1px solid #31a5e7;
-    border-radius: 2px;
-    display: inline-block;
-    background: #31a5e7;
-    text-align: center;
-  }
-
-  .bar-button a span {
-    color: #fff;
-    font-size: 14px;
-    position: relative;
-    top: 8px;
   }
 
   .selectedSection {
