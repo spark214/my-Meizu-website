@@ -5,19 +5,22 @@
       <li><a href="./index.html">首页</a></li>
       <li class="nav-product" id="nav-phone"><a>手机</a>
         <dl>
-          <dd v-for="(item,index) in mobPhone"><img :src="item.url" class="nav-img">
+          <dd v-for="(item,index) in mobPhone" @click="goRouter('mallProductPhone')">
+            <img :src="item.url" class="nav-img">
             <p class="nav-dd">{{item.name}}</p></dd>
         </dl>
       </li>
       <li class="nav-product"><a>声学</a>
         <dl>
-          <dd v-for="(item,index) in earPhone"><img :src="item.url" class="nav-img">
+          <dd v-for="(item,index) in earPhone" @click="goRouter('mallProductOther')">
+            <img :src="item.url" class="nav-img">
             <p class="nav-dd">{{item.name}}</p></dd>
         </dl>
       </li>
       <li class="nav-product"><a>配件</a>
         <dl>
-          <dd v-for="(item,index) in fitting"><img :src="item.url" class="nav-img">
+          <dd v-for="(item,index) in fitting" @click="goRouter('mallProductOther')">
+            <img :src="item.url" class="nav-img">
             <p class="nav-dd">{{item.name}}</p></dd>
         </dl>
       </li>

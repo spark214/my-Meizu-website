@@ -5,45 +5,26 @@
 
     <div class="container clearfix pageContain">
       <div class="contain_head clearfix">
-        <v-photo :name="mobPhone.name" :color="form.color"></v-photo>
+        <v-photo :imgurl="filterImg"></v-photo>
         <div class="contain_head_right">
-          <h1>{{mobPhone.brand+mobPhone.name}}</h1>
-          <p class="right_slogan">{{mobPhone.slogan}}</p>
+          <h1>{{common.name}}</h1>
+          <p class="right_slogan">{{common.title}}</p>
           <div class="right_price">
             <a>价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格：</a>
-            <span>￥{{form.price}}.00</span>
+            <span>￥{{common.price}}.00</span>
           </div>
           <div class="right_selecct">
             <dl>
-              <dt class="right_selecct_rom_lab">版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：</dt>
-              <dd v-for="item in mobPhone.version" class="right_selecct_rom_lab">
-                <el-button :class="{selected:form.version==item}" size="small">{{item}}</el-button>
-              </dd>
-            </dl>
-            <dl>
-              <dt class="right_selecct_rom_lab">网络类型：</dt>
-              <dd v-for="item in mobPhone.nettype" class="right_selecct_rom_lab" @click="form.nettype=item">
-                <el-button :class="{selected:form.nettype==item}">{{item}}</el-button>
-              </dd>
-            </dl>
-            <dl>
               <dt class="right_selecct_item_lab">颜色分类：</dt>
-              <dd v-for="item in mobPhone.color" class="right_selecct_item right_selecct_item_lab">
-                <a @click="form.color=item.name;form.colorName=item.colorName"
+              <dd v-for="item in filterColor" class="right_selecct_item right_selecct_item_lab">
+                <a @click=""
                    :class="{selected:form.color==item.name}">
-                  <img :src="'../../../static/img/'+mobPhone.name+'_'+item.name+'_2_680x680.jpg'" width="32px"><span>{{item.colorName}}</span>
+                  <img :src="item.img" width="32px"><span>{{item.name}}</span>
                 </a>
               </dd>
             </dl>
-            <dl>
-              <dt class="right_selecct_rom_lab">内存容量：</dt>
-              <dd v-for="(item,index) in mobPhone.rom" class=" right_selecct_rom_lab"
-                  @click="form.rom=item.size;form.price=item.price">
-                <el-button :class="{selected:form.rom==item.size}">{{item.size}}</el-button>
-              </dd>
-            </dl>
           </div>
-          <v-suport :brand="mobPhone.brand"></v-suport>
+          <v-suport :brand="common.name"></v-suport>
           <div class="right_count">
             <dl>
               <dt class="right_selecct_item_lab">数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：</dt>
@@ -65,14 +46,14 @@
         </div>
       </div>
 
-      <v-detail :name="mobPhone.name"></v-detail>
+      <!--<v-detail :name=""></v-detail>-->
 
       <v-footer></v-footer>
 
     </div>
-    <v-hover :brand="mobPhone.brand" :name="form.name" :nettype="form.nettype" :buyCount="form.buyCount"
-             :price="form.price"
-             :rom="form.rom" :colorName="form.colorName"></v-hover>
+    <!--<v-hover :brand="mobPhone.brand" :name="form.name" :nettype="form.nettype" :buyCount="form.buyCount"-->
+             <!--:price="form.price"-->
+             <!--:rom="form.rom" :colorName="form.colorName"></v-hover>-->
 
   </div>
 </template>
@@ -88,20 +69,17 @@
   export default {
     data() {
       return {
-        mobPhone:
-          {
-            brand: '魅族',
-            name: '15',
-            slogan: '2000万暗光双摄， AI智能美颜',
-            version: ["魅族15", "魅族15Plus", "魅族M15"],
-            nettype: ["全网通公开版", "移动定制版"],
-            color: [
-              {colorName: '雅金', name: 'gold'},
-              {colorName: '汝窑白', name: 'while'},
-              {colorName: '砚墨', name: 'black'}
-            ],
-            rom: [{size: '4GB+64GB', price: '2499'}, {size: '4GB+128GB', price: '2699'}],
-          },
+        "common": {
+          "name": "魅族手环",
+          "title": "腕间流动的心率专家",
+          "price": 169,
+          "color": [
+            "https://openfile.meizu.com/group1/M00/00/C8/Cix_s1hGFveAE3RcAAOqzSlfPuA022.png@240x240.jpg:黑色"
+          ],
+          "imgUrl": [
+            "https://openfile.meizu.com/group1/M00/00/C8/Cix_s1hGFveAE3RcAAOqzSlfPuA022.png680x680.jpg,https://openfile.meizu.com/group1/M00/00/C8/CnQOjVhGFveAQPDGAAPhPu3QlRw570.png680x680.jpg,https://openfile.meizu.com/group1/M00/00/C8/CnQOjVhGFveAE13JAAK1qX5uOUc838.png680x680.jpg,https://openfile.meizu.com/group1/M00/00/C8/Cix_s1hGFvmAKqehAAEitg7s_D0643.png680x680.jpg"
+          ],
+        },
         form: {
           name: '15',
           color: 'while',
@@ -113,6 +91,7 @@
           rom: '4GB+64GB',
         },
         sumPrice: 0,
+        selectColor: 0,
 
       }
     },
@@ -126,8 +105,30 @@
 
     },
 
-    computed: {},
+    computed: {
+      filterImg() {
+        let imgurl = []
+        let currindex = 0
+        let nextindex = this.common.imgUrl[this.selectColor].indexOf(",", currindex)
 
+        while (nextindex > 0) {
+          imgurl.push(this.common.imgUrl[this.selectColor].slice(currindex, nextindex))
+          currindex = nextindex + 1
+          nextindex = this.common.imgUrl[this.selectColor].indexOf(",", currindex)
+        }
+        imgurl.push(this.common.imgUrl[this.selectColor].slice(currindex))
+        return imgurl
+      },
+      filterColor() {
+        let color=[]
+        const item = this.common.color
+        for (let i = 0; i < item.length; i++) {
+          let index = item[i].lastIndexOf(":")
+          color.push({name:item[i].substr(index+1),img:item[i].slice(0, index)})
+        }
+        return color
+      },
+      }
   }
 </script>
 <style>

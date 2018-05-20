@@ -30,6 +30,7 @@ a {
   text-decoration: none
 }
 .container {
+  padding: 30px;
   background: #fff;
   border-top: 0.5px solid #dcdcdc;
   margin-top: 60px;

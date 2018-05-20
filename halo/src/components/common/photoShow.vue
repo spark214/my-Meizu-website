@@ -1,11 +1,11 @@
 <template>
   <div class="contain_head_img">
-    <img :src="'../../../static/img/'+name+'_'+color+'_'+selectPic+'_680x680.jpg'" width="395px"
+    <img :src="imgurl[selectPic]" width="395px"
     class="img_preview">
     <ul>
-      <li v-for="(pic,picIndex) in 4">
-        <img :src="'../../../static/img/'+name+'_'+color+'_'+(picIndex+1)+'_680x680.jpg'"
-             width="75px" @click="changePic(picIndex)" :class="{selectPic:selectPic==(picIndex+1)}">
+      <li v-for="(pic,picIndex) in imgurl">
+        <img :src="pic"
+             width="75px" @click="changePic(picIndex)" :class="{selectPic:selectPic==(picIndex)}">
       </li>
     </ul>
   </div>
@@ -43,26 +43,24 @@
 
   export default {
     props:{
-      name:{
-        type:[String]
-      },
-      color:{
-        type:[String]
-      },
+      imgurl:{
+        type:[Array]
+      }
     },
     data(){
       return{
-        selectPic: 1,
+        selectPic: 0,
 
       }
     },
     methods:{
       changePic(index) {
-        this.selectPic = (index + 1);
+        this.selectPic = (index);
       },
 
     },
     mounted(){
+      alert(imgurl)
     }
   }
 </script>
