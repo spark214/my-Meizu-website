@@ -16,8 +16,9 @@ body,
 .pageContain{
   overflow: hidden;
   width: 1240px;
-  position:absolute;
+  position:relative;
   left: 50%;
+  top: 60px;
   transform: translateX(-50%);
 }
 .clearfix:after { content: ""; display: block; clear: both;}
@@ -30,10 +31,12 @@ a {
   text-decoration: none
 }
 .container {
-  padding: 30px;
+
   background: #fff;
   border-top: 0.5px solid #dcdcdc;
-  margin-top: 60px;
+}
+.contain_head{
+  padding: 30px;
 }
 .crumbs {
   margin-bottom: 20px;

@@ -1,9 +1,9 @@
 <template>
-  <div class="mall-product">
+  <div class="container ">
 
     <v-header></v-header>
 
-    <div class="container clearfix pageContain">
+    <div class="clearfix pageContain">
       <div class="contain_head clearfix">
         <v-photo :name="mobPhone.name" :color="form.color"></v-photo>
         <div class="contain_head_right">
@@ -131,6 +131,11 @@
   }
 </script>
 <style>
+  .mall-product{
+    /*position: absolute;*/
+    /*top: 0px;*/
+    /*left: 0px;*/
+  }
   .contain_head {
     width: 100%;
   }

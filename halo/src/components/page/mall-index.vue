@@ -1,8 +1,9 @@
 <template>
-  <div class="pageContain mallIndex">
+  <div class="mall-index">
+
     <v-header></v-header>
 
-    <div class="container">
+    <div>
       <div class="banner">
         <div class="carousel clearfix">
           <el-carousel height="600px" trigger="click" arrow="never">
@@ -175,11 +176,6 @@
   }
 </script>
 <style>
-
-  .mallIndex {
-    width: 1280px;
-  }
-
   .container {
     position: relative;
     padding: 0;
@@ -187,7 +183,7 @@
 
   .carousel {
     position: relative;
-    margin-top: -60px;
+    margin-top: 0px;
   }
 
   .banner {
@@ -201,7 +197,7 @@
     position: absolute;
     left: 40px;
     top: 90px;
-    z-index: 100;
+    z-index: 10;
     color: #515151;
   }
 

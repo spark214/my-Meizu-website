@@ -17,7 +17,7 @@
             <dl>
               <dt class="right_selecct_item_lab">颜色分类：</dt>
               <dd v-for="item in filterColor" class="right_selecct_item right_selecct_item_lab">
-                <a @click=""
+                <a @click="form.color=item.name"
                    :class="{selected:form.color==item.name}">
                   <img :src="item.img" width="32px"><span>{{item.name}}</span>
                 </a>
@@ -51,9 +51,9 @@
       <v-footer></v-footer>
 
     </div>
-    <!--<v-hover :brand="mobPhone.brand" :name="form.name" :nettype="form.nettype" :buyCount="form.buyCount"-->
-             <!--:price="form.price"-->
-             <!--:rom="form.rom" :colorName="form.colorName"></v-hover>-->
+    <v-hover :brand="ll" :name="common.name" :buyCount="form.buyCount"
+             :price="common.price"
+            :colorName="form.color"></v-hover>
 
   </div>
 </template>
@@ -81,14 +81,8 @@
           ],
         },
         form: {
-          name: '15',
-          color: 'while',
-          colorName: '汝窑白',
-          version: '魅族15',
-          price: 2499,
-          buyCount: 1,
-          nettype: '全网通公开版',
-          rom: '4GB+64GB',
+          color:'黑色',
+         buyCount:1
         },
         sumPrice: 0,
         selectColor: 0,
