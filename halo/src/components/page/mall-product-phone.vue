@@ -54,7 +54,7 @@
             </dl>
 
             <div class="right_button">
-              <el-button type="danger" size="medium" class="right_buynow">
+              <el-button type="danger" size="medium" class="right_buynow" @click="goRouter('/mallCart')">
                 立即购买
               </el-button>
               <el-button type="primary" size="medium" class="right_buynow">
@@ -122,6 +122,9 @@
     methods: {
       changePic(index) {
         this.selectPic = (index + 1);
+      },
+      goRouter(that) {
+        this.$router.push({path: "/" + that});
       },
 
     },

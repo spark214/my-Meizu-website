@@ -23,8 +23,16 @@ export default new Router({
       component:resolve => require(['../components/page/mall-product-other.vue'], resolve),
     },
     {
+      path:'/mallCart',
+      component:resolve => require(['../components/page/mall-cart.vue'], resolve),
+    },
+    {
       path:'/login',
-      component: resolve => require(['../components/page/Login.vue'], resolve),
+      component: resolve => require(['../components/page/login.vue'], resolve),
+    },
+    {
+      path:'/register',
+      component: resolve => require(['../components/page/register.vue'], resolve),
     },
     {
       path:'/404',

@@ -3,7 +3,7 @@
 
     <v-header></v-header>
 
-    <div>
+    <div class="pageContain">
       <div class="banner">
         <div class="carousel clearfix">
           <el-carousel height="600px" trigger="click" arrow="never">
@@ -175,10 +175,9 @@
     },
   }
 </script>
-<style>
-  .container {
-    position: relative;
-    padding: 0;
+<style scoped>
+  .pageContain{
+    top:0px;
   }
 
   .carousel {
