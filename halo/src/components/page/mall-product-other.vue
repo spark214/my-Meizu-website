@@ -35,7 +35,7 @@
             </dl>
 
             <div class="right_button">
-              <el-button type="danger" size="medium" class="right_buynow">
+              <el-button type="danger" size="medium" class="right_buynow" >
                 立即购买
               </el-button>
               <el-button type="primary" size="medium" class="right_buynow">
@@ -58,7 +58,7 @@
   </div>
 </template>
 <script>
-  import vHeader from '../common/header';
+  import vHeader from '../common/header/header';
   import vPhoto from '../common/photoShow';
   import bus from '../common/bus.js';
   import vSuport from '../common/suport';

@@ -11,7 +11,7 @@
   </div>
 </template>
 <script>
-  import vHeader from '../common/header';
+  import vHeader from '../common/header/header';
 
   export default {
     data(){

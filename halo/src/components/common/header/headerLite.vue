@@ -1,13 +1,13 @@
 <template>
   <div class="header clearfix">
-    <h class="logo"><img src="../../../static/img/halo-230-40-blue.png" width="120px" height="24px"></h>
+    <a class="logo" href="./index.html" target="_blank"><img src="../../../../static/img/halo-230-40-blue.png" width="120px" height="24px"></a>
 
     <div class="breadcrumb">
       <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item :class="{currStep:currStep=='购物车'}">购物车</el-breadcrumb-item>
-        <el-breadcrumb-item :class="{currStep:currStep=='确认订单'}">确认订单</el-breadcrumb-item>
-        <el-breadcrumb-item :class="{currStep:currStep=='在线支付'}">在线支付</el-breadcrumb-item>
-        <el-breadcrumb-item :class="{currStep:currStep=='完成'}">完成</el-breadcrumb-item>
+        <el-breadcrumb-item :class="{step:currStep=='购物车'}" >购物车</el-breadcrumb-item>
+        <el-breadcrumb-item :class="{step:currStep=='确认订单'}">确认订单</el-breadcrumb-item>
+        <el-breadcrumb-item :class="{step:currStep=='在线支付'}">在线支付</el-breadcrumb-item>
+        <el-breadcrumb-item :class="{step:currStep=='完成'}">完成</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
 
@@ -45,13 +45,12 @@
   export default {
     props: {
       currStep: {
-        type: [String]
+        type: [String,Number]
       },
     },
     data() {
       return {
         isLogin: true,
-        step: ["购物车","确认订单","在线支付","完成"],
         user: "tozlam",
 
 
@@ -67,14 +66,13 @@
           this.$router.push('/login');
         }
       },
-      computed:{
-      }
     }
   }
 </script>
 <style>
   .header {
     z-index: 100;
+    background-color: #fff;
   }
 
   .navs {
@@ -132,7 +130,6 @@
     width: 100%;
     height: 60px;
     top: 0;
-    background-color: transparent;
     border-bottom: 0.5px solid #dcdcdc;
   }
 
@@ -211,12 +208,13 @@
   }
 
   .breadcrumb {
+    width: 600px;
     position: relative;
     top: 25px;
     left: 15%;
   }
 
   .step {
-    font-weight: 700;
+    font-weight: 700 !important;
   }
 </style>

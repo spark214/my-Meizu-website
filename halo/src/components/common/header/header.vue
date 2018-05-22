@@ -1,6 +1,6 @@
 <template>
   <div class="header clearfix">
-    <h class="logo"><img src="../../../static/img/halo-230-40-blue.png" width="120px" height="24px"></h>
+    <a class="logo" href="./index.html"><img src="../../../../static/img/halo-230-40-blue.png" width="120px" height="24px"></a>
     <ul class="navs" id="navul">
       <li><a href="./index.html">首页</a></li>
       <li class="nav-product" id="nav-phone"><a>手机</a>
@@ -33,7 +33,7 @@
         <li>
           <el-dropdown trigger="hover" @command=" handleCommand" placement="bottom">
           <span class="el-dropdown-link">
-           <img src="../../../static/img/user.png" v-show="!isLogin" width="24px">
+           <img src="../../../../static/img/user.png" v-show="!isLogin" width="24px">
           <img :src="userIcon" v-show="isLogin" width="24" class="userIcon">
           </span>
             <el-dropdown-menu slot="dropdown">
@@ -49,15 +49,15 @@
         <li>
           <el-dropdown trigger="hover" @command=" handleCommand" placement="bottom">
           <span class="el-dropdown-link">
-        <img src="../../../static/img/shoppingCart.png" width="24px">
+        <img src="../../../../static/img/shoppingCart.png" width="24px">
           </span>
             <el-dropdown-menu slot="dropdown">
               <div class="shopcartDropdown" v-if="!isLogin">
-                <img src="../../../static/img/shopcartPanda.png">
+                <img src="../../../../static/img/shopcartPanda.png">
                 <span>登录后可显示<br>您账号中加入的商品哦</span>
               </div>
               <div class="shopcartDropdown" v-if="isLogin">
-                <img src="../../../static/img/shopcartPanda2.png">
+                <img src="../../../../static/img/shopcartPanda2.png">
                 <span>您的购物车还没有商品,<br>赶紧去选购吧~</span>
               </div>
             </el-dropdown-menu>
