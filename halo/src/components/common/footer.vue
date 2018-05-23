@@ -33,8 +33,7 @@
     width: 800px;
     position: relative;
     left: 50%;
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     margin-left: -380px;
   }
 
@@ -55,18 +54,20 @@
   }
 
   .contain_footer {
-    margin-top: 100px;
+    margin-top: 50px;
     width: 100%;
     border-bottom: 1px solid #DCDCDC;
+    background-color: #fff;
   }
 
   .copyright {
     text-align: center;
+    height: 50px;
+    line-height: 50px;
   }
 
   .copyright p {
     font-size: 14px;
     color: #999999;
-    margin-top: 20px;
   }
 </style>

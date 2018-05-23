@@ -19,7 +19,7 @@ body,
   position:relative;
   left: 50%;
   top: 60px;
-  transform: translateX(-50%);
+  margin-left: -620px;
 }
 .clearfix:after { content: ""; display: block; clear: both;}
 

@@ -3,7 +3,7 @@
     <v-header currStep="购物车"></v-header>
     <div class="pageContain">
       <div class="cart_container">
-        <el-table :data="product" clss="cart_table">
+        <el-table :data="product" clss="cart_table" id="cart_table" ref="multipleTable"  @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="80" align="center"></el-table-column>
           <el-table-column width="450" label="商品" class="table_product clearfix" align="center">
             <template scope="scope">
@@ -22,45 +22,51 @@
           </el-table-column>
           <el-table-column width="200" label="数量" align="center">
             <template scope="scope">
-              <el-input-number v-model="scope.row.num" :min="1" :max="10"></el-input-number>
+              <el-input-number v-model="scope.row.num" :min="1" :max="10" @change="scope.row.sum=scope.row.num*scope.row.price"></el-input-number>
             </template>
           </el-table-column>
           <el-table-column width="200" label="小计(元)" prop="sum" align="center">
             <template scope="scope">
-              <span style="color: rgb(224, 43, 65)" class="table_price">￥{{scope.row.sum}}.00</span>
+              <span style="color: rgb(224, 43, 65)" class="table_price" >￥{{scope.row.sum}}.00</span>
             </template>
           </el-table-column>
           </el-table-column>
-          <el-table-column width="110" label="操作" align="center" >
-            <template scope="scope">
-              <i class="el-icon-close" @click="dialogVisible = true" style="cursor:pointer;"></i>
+          <el-table-column width="110" label="操作" align="center">
+            <template slot-scope="scope">
+              <i class="el-icon-close" style="cursor:pointer;" @click="handleDel(scope.$index,scope.row)" id="deleteIcon"></i>
             </template>
           </el-table-column>
 
         </el-table>
-      </div>
-      <div  class="cart_footer">
-        <a>删除选中的商品</a>
-        <span></span>
-      </div>
 
+      </div>
+      <div class="cart_footer clearfix" :class="{fixed:barShow}">
+        <a @click="deleteSelected" >删除选中的商品</a>
+        <div class="footer_right">
+          <span> 合计(不含运费)： <span class="table_price" style="color: rgb(224, 43, 65)"  v-model="totalPrices">￥{{totalPrice}}.00</span></span>
+          <el-button size="small" type="primary">去结算</el-button>
+        </div>
+      </div>
+      <v-footer></v-footer>
     </div>
     <el-dialog
-    title="删除"
-    :visible.sync="dialogVisible"
-    width="30%"
+      title="删除"
+      :visible.sync="dialogVisible"
+      width="30%"
     >
-    <span>您确定要删除该商品吗？</span>
-    <span slot="footer" class="dialog-footer">
+      <span>您确定要删除该商品吗？</span>
+      <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+    <el-button type="primary" @click="deleteRow">确 定</el-button>
   </span>
-  </el-dialog>
+    </el-dialog>
+
   </div>
 
 </template>
 <script>
   import vHeader from '../common/header/headerLite';
+  import vFooter from '../common/footer';
 
   export default {
     data() {
@@ -83,55 +89,82 @@
             num: 1,
             sum: 2499,
             checked: true
-          }
+          },
+          {
+            name: "魅族PRO 6s",
+            version: "全网通公开版 星空黑 64GB",
+            img: "https://openfile.meizu.com/group1/M00/00/C8/Cix_s1hGFveAE3RcAAOqzSlfPuA022.png@240x240.jpg",
+            price: 2299,
+            num: 1,
+            sum: 2299,
+            checked: true
+          }, {
+            name: "魅族PRO 6s",
+            version: "全网通公开版 星空黑 64GB",
+            img: "https://openfile.meizu.com/group1/M00/00/C8/Cix_s1hGFveAE3RcAAOqzSlfPuA022.png@240x240.jpg",
+            price: 2299,
+            num: 1,
+            sum: 2299,
+            checked: true
+          },
+          {
+            name: "魅族PRO 6s",
+            version: "全网通公开版 星空黑 64GB",
+            img: "https://openfile.meizu.com/group1/M00/00/C8/Cix_s1hGFveAE3RcAAOqzSlfPuA022.png@240x240.jpg",
+            price: 2299,
+            num: 1,
+            sum: 2299,
+            checked: true
+          },
         ],
         allChecked: true,
         totalPrice: 0,
         productNum: 2,
-        dialogVisible: false
+        dialogVisible: false,
+        barShow: false,
+        idx: -1,
+        multipleSelection:[],
+        del_list:[],
       }
     },
     components: {
-      vHeader
+      vHeader, vFooter
     },
     methods: {
-      sum: function (index) {
-        this.product[index].sum = this.product[index].num * this.product[index].price;
-
-      },
-      minus(index) {
-        if (this.product[index].num > 1) {
-          this.product[index].num--;
-          this.sum(index);
+      handleScroll() {
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+        var detailPosition = document.getElementById("cart_table").offsetTop
+        var height = document.getElementById("cart_table").offsetHeight
+        if (scrollTop >  (height/3)) {
+          this.barShow = false;
+        }
+        else if(height<600){
+          this.barShow = false;
+        }
+        else {
+           this.barShow = true;
         }
 
       },
-      add(index) {
-        this.product[index].num++;
-        this.sum(index);
+      deleteSelected(){
+        const length = this.multipleSelection.length;
+        let str = '';
+        this.del_list = this.del_list.concat(this.multipleSelection);
+        this.multipleSelection = [];
       },
-      checked(index) {
-        if (this.product[index].checked == false) {
-          this.allChecked = false;
-          this.productNum--;
-        }
-        else
-          this.productNum++;
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
       },
-      all: function () {
-        this.allChecked = !this.allChecked;
-        for (var i = 0; i < this.product.length; i++) {
-          this.product[i].checked = this.allChecked;
-          if (this.allChecked == false) {
-            this.productNum = 0;
-          }
-          else
-            this.productNum = 2;
-        }
+      handleDel(index,row){
+        this.idx = index;
+        this.dialogVisible = true;
       },
-      submit() {
-        if (this.productNum != 0)
-          location.href = "shopping_check.html#" + this.productNum;
+      deleteRow(){
+        this.product.splice(this.idx, 1);
+        this.handleScroll();
+        this.$message.success('删除成功');
+        this.dialogVisible = false;
+
       },
 
     },
@@ -144,6 +177,16 @@
         }
         return this.totalPrice;
       }
+    },
+    mounted() {
+      setTimeout(() => {
+        this.handleScroll()
+      }, 300)
+      window.addEventListener('scroll', this.handleScroll)
+      window.addEventListener('resize', this.handleScroll)
+      document.getElementById('deleteIcon').addEventListener('click',this.handleScroll)
+
+
     }
   }
 </script>
@@ -195,5 +238,37 @@
 
   .el-table-column:hover {
     background-color: #fff !important;
+  }
+
+  .cart_footer {
+    font-size: 14px;
+    color: #999;
+    width: 1240px;
+    height: 70px;
+    line-height: 70px;
+    margin-top: 10px;
+    background-color: #fff;
+  }
+
+  .cart_footer > a {
+    float: left;
+    cursor: pointer;
+    margin-left: 30px;
+  }
+
+  .footer_right {
+    float: right;
+    margin-right: 20px;
+  }
+
+  .footer_right span {
+    margin-right: 10px;
+  }
+
+  .fixed {
+    position: fixed !important;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
   }
 </style>

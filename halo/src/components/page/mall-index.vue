@@ -171,6 +171,14 @@
           filterGoods[goodsIndex].push(item)
         })
         return filterGoods
+      },
+      totalPrices: function () {
+        this.totalPrice = 0;
+        for (var i = 0; i < this.product.length; i++) {
+          if (this.product[i].checked != false)
+            this.totalPrice += this.product[i].sum;
+        }
+        return this.totalPrice;
       }
     },
   }
