@@ -13,6 +13,9 @@ export default new Router({
     {
       path:'/mallIndex',
       component:resolve => require(['../components/page/mall-index.vue'], resolve),
+      meta:{
+        title:'Halo商城'
+      }
     },
     {
       path:'/mallProductPhone',
@@ -25,10 +28,16 @@ export default new Router({
     {
       path:'/mallCart',
       component:resolve => require(['../components/page/mall-cart.vue'], resolve),
+      meta:{
+        title:'Halo购物车'
+      }
     },
     {
       path:'/login',
       component: resolve => require(['../components/page/login.vue'], resolve),
+      meta:{
+        title:'Halo 登录'
+      }
     },
     {
       path:'/register',

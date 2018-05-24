@@ -2,51 +2,65 @@
   <div class="container">
     <v-header currStep="购物车"></v-header>
     <div class="pageContain">
-      <div class="cart_container">
-        <el-table :data="product" clss="cart_table" id="cart_table" ref="multipleTable"  @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="80" align="center"></el-table-column>
-          <el-table-column width="450" label="商品" class="table_product clearfix" align="center">
-            <template scope="scope">
-              <img :src="scope.row.img" width="100" height="100" class="table_product_img">
-              <div class="table_product_msg">
-                <p>{{scope.row.name}}</p>
-                <p>{{scope.row.version}}</p>
-              </div>
+      <div class="login_container" v-if="isLogin">
+        <div class="cart_container">
+          <el-table :data="product" clss="cart_table" id="cart_table" ref="multipleTable"  @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="80" align="center"></el-table-column>
+            <el-table-column width="450" label="商品" class="table_product clearfix" align="center">
+              <template scope="scope">
+                <img :src="scope.row.img" width="100" height="100" class="table_product_img">
+                <div class="table_product_msg">
+                  <p>{{scope.row.name}}</p>
+                  <p>{{scope.row.version}}</p>
+                </div>
 
-            </template>
-          </el-table-column>
-          <el-table-column width="200" label="单价(元)" align="center">
-            <template scope="scope">
-              <span class="table_price">￥{{scope.row.price}}.00</span>
-            </template>
-          </el-table-column>
-          <el-table-column width="200" label="数量" align="center">
-            <template scope="scope">
-              <el-input-number v-model="scope.row.num" :min="1" :max="10" @change="scope.row.sum=scope.row.num*scope.row.price"></el-input-number>
-            </template>
-          </el-table-column>
-          <el-table-column width="200" label="小计(元)" prop="sum" align="center">
-            <template scope="scope">
-              <span style="color: rgb(224, 43, 65)" class="table_price" >￥{{scope.row.sum}}.00</span>
-            </template>
-          </el-table-column>
-          </el-table-column>
-          <el-table-column width="110" label="操作" align="center">
-            <template slot-scope="scope">
-              <i class="el-icon-close" style="cursor:pointer;" @click="handleDel(scope.$index,scope.row)" id="deleteIcon"></i>
-            </template>
-          </el-table-column>
+              </template>
+            </el-table-column>
+            <el-table-column width="200" label="单价(元)" align="center">
+              <template scope="scope">
+                <span class="table_price">￥{{scope.row.price}}.00</span>
+              </template>
+            </el-table-column>
+            <el-table-column width="200" label="数量" align="center">
+              <template scope="scope">
+                <el-input-number v-model="scope.row.num" :min="1" :max="10" @change="scope.row.sum=scope.row.num*scope.row.price"></el-input-number>
+              </template>
+            </el-table-column>
+            <el-table-column width="200" label="小计(元)" prop="sum" align="center">
+              <template scope="scope">
+                <span style="color: rgb(224, 43, 65)" class="table_price" >￥{{scope.row.sum}}.00</span>
+              </template>
+            </el-table-column>
+            </el-table-column>
+            <el-table-column width="110" label="操作" align="center">
+              <template slot-scope="scope">
+                <i class="el-icon-close" style="cursor:pointer;" @click="handleDel(scope.$index,scope.row)" id="deleteIcon"></i>
+              </template>
+            </el-table-column>
 
-        </el-table>
+          </el-table>
 
-      </div>
-      <div class="cart_footer clearfix" :class="{fixed:barShow}">
-        <a @click="deleteSelected" >删除选中的商品</a>
-        <div class="footer_right">
-          <span> 合计(不含运费)： <span class="table_price" style="color: rgb(224, 43, 65)"  v-model="totalPrices">￥{{totalPrice}}.00</span></span>
-          <el-button size="small" type="primary">去结算</el-button>
+        </div>
+        <div class="cart_footer clearfix" :class="{fixed:barShow}">
+          <a @click="deleteSelected" >删除选中的商品</a>
+          <div class="footer_right">
+            <span> 合计(不含运费)： <span class="table_price" style="color: rgb(224, 43, 65)"  v-model="totalPrices">￥{{totalPrice}}.00</span></span>
+            <el-button size="small" type="primary">去结算</el-button>
+          </div>
         </div>
       </div>
+      <div class="nologin_container" v-else>
+        <div class="clearfix">
+          <img src="../../../static/img/noLoginPanda.png">
+              <div class="nologin_msg">
+                <h3>您还没有登录！</h3>
+                <p>登录后可显示您账号中已加入的商品哦~</p>
+                <el-button type="primary" size="medium" @click="goRouter('login')">去登陆</el-button>
+          </div>
+
+        </div>
+      </div>
+
       <v-footer></v-footer>
     </div>
     <el-dialog
@@ -125,12 +139,16 @@
         idx: -1,
         multipleSelection:[],
         del_list:[],
+        isLogin:false,
       }
     },
     components: {
       vHeader, vFooter
     },
     methods: {
+      goRouter(that) {
+        this.$router.push({path: "/" + that});
+      },
       handleScroll() {
         var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
         var detailPosition = document.getElementById("cart_table").offsetTop
@@ -185,7 +203,7 @@
       window.addEventListener('scroll', this.handleScroll)
       window.addEventListener('resize', this.handleScroll)
       document.getElementById('deleteIcon').addEventListener('click',this.handleScroll)
-
+      document.title = '页面标题'
 
     }
   }
@@ -195,11 +213,31 @@
     background-color: #F6F6F6;
   }
 
-  .cart_container {
+  .cart_container,.nologin_container {
     width: 100%;
     margin: 0 auto;
     margin-top: 20px;
     background: #fff;
+  }
+  .nologin_container{
+    height: 360px;
+    position: relative;
+
+  }
+  .nologin_container>div{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+  }
+  .nologin_container img{
+    float: left;
+  }
+  .nologin_container .nologin_msg{
+    float: left;
+    line-height: 40px;
+    margin-left: 30px;
+    color: #666;
   }
 
   .el-table {

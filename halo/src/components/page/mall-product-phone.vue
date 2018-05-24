@@ -31,7 +31,7 @@
               <dd v-for="item in mobPhone.color" class="right_selecct_item right_selecct_item_lab">
                 <a @click="form.color=item.name;form.colorName=item.colorName"
                    :class="{selected:form.color==item.name}">
-                  <img :src="'../../../static/img/'+mobPhone.name+'_'+item.name+'_2_680x680.jpg'" width="32px"><span>{{item.colorName}}</span>
+                  <img v-lazy="'../../../static/img/'+mobPhone.name+'_'+item.name+'_2_680x680.jpg'" width="32px"><span>{{item.colorName}}</span>
                 </a>
               </dd>
             </dl>

@@ -1,10 +1,10 @@
 <template>
   <div class="contain_head_img">
-    <img :src="imgurl[selectPic]" width="395px"
+    <img v-lazy="imgurl[selectPic]" width="395px"
     class="img_preview">
     <ul>
       <li v-for="(pic,picIndex) in imgurl">
-        <img :src="pic"
+        <img v-lazy="pic"
              width="75px" @click="changePic(picIndex)" :class="{selectPic:selectPic==(picIndex)}">
       </li>
     </ul>

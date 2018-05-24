@@ -9,7 +9,7 @@
 
     <section class="detail_section" v-show="sectionIndex==1">
       <p v-for="(item,index) in 13">
-        <img :src="'../../../static/img/'+name+'page_detail_'+(index+1)+'.jpg'">
+        <img v-lazy="'../../../static/img/'+name+'page_detail_'+(index+1)+'.jpg'">
       </p>
     </section>
 

@@ -19,7 +19,7 @@
               <dd v-for="item in filterColor" class="right_selecct_item right_selecct_item_lab">
                 <a @click="form.color=item.name"
                    :class="{selected:form.color==item.name}">
-                  <img :src="item.img" width="32px"><span>{{item.name}}</span>
+                  <img v-lazy="item.img" width="32px"><span>{{item.name}}</span>
                 </a>
               </dd>
             </dl>
