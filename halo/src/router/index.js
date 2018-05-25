@@ -42,6 +42,25 @@ export default new Router({
     {
       path:'/register',
       component: resolve => require(['../components/page/register.vue'], resolve),
+      meta:{
+        title:'Halo 注册'
+      },
+      children:[
+        {
+          path: '/',
+          redirect: '/phone'
+        },
+        {
+          path: '/phone',
+          component: resolve => require(['../components/common/register/phone.vue'], resolve),
+        },
+        {
+          path: '/sms',
+          component: resolve => require(['../components/common/register/sms.vue'], resolve),
+        },
+      ]
+
+
     },
     {
       path:'/404',
