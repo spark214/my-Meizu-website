@@ -53,10 +53,23 @@ export default new Router({
         {
           path: '/phone',
           component: resolve => require(['../components/common/register/phone.vue'], resolve),
+          meta:{
+            title:'Halo 注册'
+          },
         },
         {
           path: '/sms',
           component: resolve => require(['../components/common/register/sms.vue'], resolve),
+          meta:{
+            title:'Halo 注册'
+          },
+        },
+        {
+          path: '/userinfo',
+          component: resolve => require(['../components/common/register/userInfo.vue'], resolve),
+          meta:{
+            title:'Halo 注册'
+          },
         },
       ]
 

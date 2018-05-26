@@ -3,16 +3,20 @@
     <div class="phoneChecck">
       <el-form :model="loginForm" :rules="rules" ref="loginForm" class="form">
         <el-form-item prop="phone">
-          <el-input v-model="loginForm.phone" placeholder="手机号码"></el-input>
+          <el-input v-model="loginForm.phone" placeholder="手机号码" id="phone"></el-input>
         </el-form-item>
 
         <el-form-item prop="yzcode">
-          <el-input v-model="loginForm.yzcode" style="width: 195px" placeholder="验证码"></el-input>
-          <input type="button" id="code" @click="createCode" class="verification1" v-model="checkCode"/>
+          <el-input v-model="loginForm.yzcode" style="width: 195px" placeholder="验证码" id="yzcode"></el-input>
+          <el-tooltip class="item" effect="light" content="点击更换验证码" placement="bottom">
+            <input type="button" id="code" @click="createCode" class="verification1" v-model="checkCode"/>
+          </el-tooltip>
+
         </el-form-item>
       </el-form>
       <p class="tips">点击立即注册，即表示您同意并愿意遵守 Halo服务协议 和 法律声明</p>
-      <el-button type="primary" size="medium"><router-link to="/sms" style="color: white">立即注册</router-link></el-button>
+      <el-button type="primary" size="medium" @click="next('sms')">立即注册</el-button>
+      <a @click="goRouter('login')" class="login">登录</a>
     </div>
   </div>
 </template>
@@ -23,10 +27,10 @@
     data() {
       var validatePhone = (rule, value, callback) => {
         var reg = /^1[3|4|5|7|8]\d{9}$/;
-        if(value===''){
+        if (value === '') {
           callback(new Error('请输入手机号码'));
         }
-       else if (reg.exec(value) != null) {
+        else if (reg.exec(value) != null) {
           callback();
         }
         else {
@@ -40,6 +44,7 @@
           callback(new Error('请输入验证码'));
         }
         else if (check == this.checkCode) {
+          this.codeAva = true;
           callback();
 
         }
@@ -55,9 +60,10 @@
           yzcode: ''
         },
         checkCode: '',
+        codeAva: false,
         rules: {
           phone: [
-            {required: true, validator:validatePhone, trigger: "blur"}
+            {required: true, validator: validatePhone, trigger: "blur"}
           ],
           yzcode: [
             {required: true, validator: validatePass, trigger: 'blur'}
@@ -79,6 +85,18 @@
         this.loginForm.yzcode = '';
         this.checkCode = code;//把code值赋给验证码
       },
+      goRouter(that) {
+        this.$router.push({path: "/" + that});
+      },
+      next(that) {
+        if (this.loginForm.phone !== "" && this.loginForm.yzcode.toUpperCase() === this.checkCode)
+          this.$router.push({path: "/" + that});
+        else{
+          document.getElementById("phone").focus()
+          document.getElementById("yzcode").focus()
+
+        }
+      }
 
     },
     created() {
@@ -88,27 +106,36 @@
   }
 </script>
 <style scoped>
-  .tips{
+  .tips {
     font-size: 12px;
     line-height: 20px;
-    margin-top: 30px;
+    margin-top: 20px;
   }
-  .phoneChecck{
+
+  .phoneChecck {
     width: 90%;
     position: absolute;
     left: 50%;
     top: 0;
     transform: translateX(-50%);
   }
-  .el-button{
+
+  .el-button {
     margin-top: 20px;
   }
-  .verification1{
+
+  .verification1 {
     background-color: #fff;
     width: 100px;
     height: 32px;
     border: 1px solid #dcdcdc;
     border-radius: 5px;
+    cursor: pointer;
+  }
 
+  .login {
+    font-size: 14px;
+    color: #409EFF;
+    cursor: pointer;
   }
 </style>
