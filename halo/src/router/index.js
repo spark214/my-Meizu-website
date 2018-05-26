@@ -52,21 +52,21 @@ export default new Router({
         },
         {
           path: '/phone',
-          component: resolve => require(['../components/common/register/phone.vue'], resolve),
+          component: resolve => require(['../components/common/register/page/phone.vue'], resolve),
           meta:{
             title:'Halo 注册'
           },
         },
         {
           path: '/sms',
-          component: resolve => require(['../components/common/register/sms.vue'], resolve),
+          component: resolve => require(['../components/common/register/page/smsPage.vue'], resolve),
           meta:{
             title:'Halo 注册'
           },
         },
         {
           path: '/userinfo',
-          component: resolve => require(['../components/common/register/userInfo.vue'], resolve),
+          component: resolve => require(['../components/common/register/page/userInfo.vue'], resolve),
           meta:{
             title:'Halo 注册'
           },

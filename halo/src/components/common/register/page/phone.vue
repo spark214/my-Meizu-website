@@ -16,7 +16,7 @@
   </div>
 </template>
 <script>
-  import vCode from "./vCode";
+  import vCode from "../common/vCode";
 
   var code;
   export default {

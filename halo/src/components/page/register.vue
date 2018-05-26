@@ -20,7 +20,7 @@
   </div>
 </template>
 <script>
-  import rPhone from '../common/register/phone';
+  import rPhone from '../common/register/page/phone';
 
   var code;
   export default {

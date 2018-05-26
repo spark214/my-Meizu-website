@@ -5,25 +5,31 @@
         <el-container id="login_container">
           <el-header id="login_container_header">
             <div class="login_box_header">
-              <a  style="margin-right: 20px" @click="accLogin=true">账号登陆</a> |
-              <a  style="margin-left: 20px" @click="accLogin=false">验证码登陆</a>
+              <a style="margin-right: 20px" @click="accLogin=true" :class="{on:accLogin}">账号登陆</a> |
+              <a style="margin-left: 20px" @click="accLogin=false" :class="{on:!accLogin}">验证码登陆</a>
             </div>
           </el-header>
           <el-container id="login_container_main">
-            <el-form :model="loginForm" :rules="rules" ref="loginForm">
+            <el-form :model="loginForm" :rules="rules" ref="loginForm" class="form_main">
               <el-form-item prop="userId">
-                <el-input v-model="loginForm.userId" placeholder="Halo账号/手机号"></el-input>
+                <el-input v-model="loginForm.userId" placeholder="手机号"></el-input>
               </el-form-item>
-              <el-form-item prop="password">
-                <el-input placeholder="密码" type="password" v-model="loginForm.password" @keyup.enter.native="submitForm('loginForm')"></el-input>
+              <el-form-item prop="password" v-show="accLogin">
+                <el-input placeholder="密码" type="password" v-model="loginForm.password"
+                          @keyup.enter.native="submitForm('loginForm')"></el-input>
               </el-form-item>
-              <v-code @codeAva="getAva"></v-code>
-              <el-checkbox>记住密码</el-checkbox>
+              <v-sms v-show="!accLogin"></v-sms>
+
+              <v-code @codeAva="getAva" v-show="accLogin"></v-code>
+              <el-checkbox v-show="accLogin">记住密码</el-checkbox>
               <el-form-item>
                 <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
               </el-form-item>
+              <a @click="next('register')" class="login">注册</a>
             </el-form>
+
           </el-container>
+
         </el-container>
       </el-main>
       <el-footer style=" height: 40px;">&copy;2018 Halo Telecom Equipment Co., Ltd. All rights reserved.</el-footer>
@@ -31,35 +37,39 @@
   </div>
 </template>
 <script>
-  import vCode from "../common/register/vCode";
+  import vCode from "../common/register/common/vCode";
+  import vSms from "../common/register/common/sms";
+
   export default {
     data: function () {
       return {
         loginForm: {
           userId: "",
-          password: ""
+          password: "",
+          sms: ""
         },
         rules: {
           userId: [
-            {required: true, message: "请输入用户名", trigger: "blur"}
+            {required: true, message: "请输入手机号码", trigger: "blur"}
           ],
           password: [
             {required: true, message: "请输入密码", trigger: "blur"}
           ],
-          codeAva: false,
-          accLogin:true
-        }
+
+        },
+        codeAva: false,
+        accLogin: true,
       };
     },
     methods: {
       submitForm(form) {
         this.$refs[form].validate((valid) => {
           if (valid) {
-              // this.$axios.get(this.$rootUrl+"/message/list",{}).
-              // then((res)=>{
-              //   if(res.data[0].content==='demo'){
-                  localStorage.setItem('ms_userId',this.loginForm.userId);
-                  this.$router.push({path: '/'});
+            // this.$axios.get(this.$rootUrl+"/message/list",{}).
+            // then((res)=>{
+            //   if(res.data[0].content==='demo'){
+            localStorage.setItem('ms_userId', this.loginForm.userId);
+            this.$router.push({path: '/'});
             //     }else {
             //       console.log('error json!!');
             //       return false;
@@ -77,12 +87,12 @@
         this.codeAva = msg
       }
     },
-    components:{
-      vCode
+    components: {
+      vCode, vSms
     }
   }
 </script>
-<style>
+<style scoped>
   * {
     padding: 0;
     margin: 0;
@@ -130,12 +140,16 @@
     font-size: 16px;
     text-align: center;
     line-height: 120px;
+
   }
-  #login_container_header a{
-    color: #999;
+
+  #login_container_header a {
+    color: #999 ;
+    cursor: pointer;
   }
-  .on{
-    color:#008ec7;
+
+  .on {
+    color: #32A5E7 !important;
   }
 
   .el-input, .el-button {
@@ -163,5 +177,12 @@
     body {
       width: 1080px;
     }
+  }
+  .login{
+    position: relative;
+    top: -10px;
+    font-size: 14px;
+    color: #409EFF;
+    cursor: pointer;
   }
 </style>
