@@ -7,7 +7,7 @@
         <el-button @click="countDown" :class="{disabled:!canClick}"  >{{content}}</el-button>
       </el-form-item>
       <el-button type="primary" size="medium" @click="next('userinfo')">下一步</el-button>
-      <a @click="goRouter('login')" class="login">登录</a>
+      <a @click="next('login')" class="login">登录</a>
     </el-form>
   </div>
 </template>

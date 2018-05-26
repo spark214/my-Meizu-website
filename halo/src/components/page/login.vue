@@ -4,16 +4,20 @@
       <el-main id="login_main">
         <el-container id="login_container">
           <el-header id="login_container_header">
-            <p>Halo. 后台系统登录</p>
+            <div class="login_box_header">
+              <a  style="margin-right: 20px" @click="accLogin=true">账号登陆</a> |
+              <a  style="margin-left: 20px" @click="accLogin=false">验证码登陆</a>
+            </div>
           </el-header>
           <el-container id="login_container_main">
             <el-form :model="loginForm" :rules="rules" ref="loginForm">
               <el-form-item prop="userId">
-                <el-input v-model="loginForm.userId" placeholder="Halo. 员工ID"></el-input>
+                <el-input v-model="loginForm.userId" placeholder="Halo账号/手机号"></el-input>
               </el-form-item>
               <el-form-item prop="password">
                 <el-input placeholder="密码" type="password" v-model="loginForm.password" @keyup.enter.native="submitForm('loginForm')"></el-input>
               </el-form-item>
+              <v-code @codeAva="getAva"></v-code>
               <el-checkbox>记住密码</el-checkbox>
               <el-form-item>
                 <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
@@ -27,6 +31,7 @@
   </div>
 </template>
 <script>
+  import vCode from "../common/register/vCode";
   export default {
     data: function () {
       return {
@@ -41,6 +46,8 @@
           password: [
             {required: true, message: "请输入密码", trigger: "blur"}
           ],
+          codeAva: false,
+          accLogin:true
         }
       };
     },
@@ -65,7 +72,13 @@
             return false;
           }
         })
+      },
+      getAva(msg) {
+        this.codeAva = msg
       }
+    },
+    components:{
+      vCode
     }
   }
 </script>
@@ -104,7 +117,7 @@
 
   #login_container {
     width: 350px;
-    height: 400px;
+    height: 420px;
     background: white;
     position: relative;
     top: 100px;
@@ -112,11 +125,17 @@
   }
 
   #login_container_header {
-    height: 120px !important;
-    color: rgb(12, 187, 239);
-    font-size: 20px;
+    height: 100px !important;
+    color: #999;
+    font-size: 16px;
     text-align: center;
     line-height: 120px;
+  }
+  #login_container_header a{
+    color: #999;
+  }
+  .on{
+    color:#008ec7;
   }
 
   .el-input, .el-button {
