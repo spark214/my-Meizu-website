@@ -38,6 +38,7 @@
         let clock = window.setInterval(() => {
           this.totalTime--
           this.content = this.totalTime + "s后重新发送"
+          console.log(this.totalTime)
           if (this.totalTime <= 0) {
             window.clearInterval(clock)
             this.content = '重新发送验证码'
@@ -60,7 +61,7 @@
     color:#57a3f3;
     cursor: not-allowed;
   }
-  .el-button{
+  .el-button,.el-input{
     height: 35px;
     width: 100%;
   }

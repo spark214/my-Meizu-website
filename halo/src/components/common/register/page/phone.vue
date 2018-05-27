@@ -7,11 +7,14 @@
         </el-form-item>
 
         <v-code @codeAva="getAva"></v-code>
+        <p class="tips">点击立即注册，即表示您同意并愿意遵守 Halo服务协议 和 法律声明</p>
+        <el-button type="primary" size="medium" @click="next('sms')">立即注册</el-button>
+        <el-form-item>
+          <a @click="goRouter('login')" class="login">登录</a>
+        </el-form-item>
 
       </el-form>
-      <p class="tips">点击立即注册，即表示您同意并愿意遵守 Halo服务协议 和 法律声明</p>
-      <el-button type="primary" size="medium" @click="next('sms')">立即注册</el-button>
-      <a @click="goRouter('login')" class="login">登录</a>
+
     </div>
   </div>
 </template>

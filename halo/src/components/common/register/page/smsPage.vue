@@ -24,6 +24,11 @@
     margin-top: 20px;
     margin-bottom: 30px;
   }
+  .smsCheck{
+    width: 90%;
+    position: relative;
+    left: 5%;
+  }
 
 
 </style>

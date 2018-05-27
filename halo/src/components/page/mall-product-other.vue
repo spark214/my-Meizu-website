@@ -35,10 +35,10 @@
             </dl>
 
             <div class="right_button">
-              <el-button type="danger" size="medium" class="right_buynow" >
+              <el-button type="danger" size="medium" class="right_buynow">
                 立即购买
               </el-button>
-              <el-button type="primary" size="medium" class="right_buynow">
+              <el-button type="primary" size="medium" class="right_buynow" @click="addCart">
                 加入购物车
               </el-button>
             </div>
@@ -53,12 +53,12 @@
     </div>
     <v-hover :brand="ll" :name="common.name" :buyCount="form.buyCount"
              :price="common.price"
-            :colorName="form.color"></v-hover>
+             :colorName="form.color"></v-hover>
 
   </div>
 </template>
 <script>
-  import vHeader from '../common/header/header';
+  import vHeader from '../common/header/page/header';
   import vPhoto from '../common/photoShow';
   import bus from '../common/bus.js';
   import vSuport from '../common/suport';
@@ -81,11 +81,15 @@
           ],
         },
         form: {
-          color:'黑色',
-         buyCount:1
+          name: "",
+          buyCount: 1,
+          price: "",
+          desc: "",
+          img: ""
         },
         sumPrice: 0,
         selectColor: 0,
+        formcount: 0,
 
       }
     },
@@ -96,6 +100,31 @@
       changePic(index) {
         this.selectPic = (index + 1);
       },
+      addCart() {
+        this.form.name = this.common.name
+        this.form.desc = this.filterColor
+        this.form.price = this.common.price
+        this.formcount++;
+        var str = JSON.stringify(this.form)
+        document.cookie = "form=" + str;
+        document.cookie ="formcount="+this.formcount;
+      },
+      getCookie() {
+        if (document.cookie.length > 0) {
+          var hs_start = document.cookie.indexOf("formcount=")
+
+          if (hs_start == -1) {
+            this.formcount=0;
+          }
+          var hs_end = document.cookie.indexOf(";", hs_start);
+          if (hs_end != -1) {
+            this.formcount =document.cookie.substring(hs_start + 10, hs_end);
+          }
+          else {
+            this.formcount = document.cookie.substring(hs_start + 10);
+          }
+        }
+      }
 
     },
 
@@ -112,17 +141,22 @@
         }
         imgurl.push(this.common.imgUrl[this.selectColor].slice(currindex))
         return imgurl
-      },
+      }
+      ,
       filterColor() {
-        let color=[]
+        let color = []
         const item = this.common.color
         for (let i = 0; i < item.length; i++) {
           let index = item[i].lastIndexOf(":")
-          color.push({name:item[i].substr(index+1),img:item[i].slice(0, index)})
+          color.push({name: item[i].substr(index + 1), img: item[i].slice(0, index)})
         }
         return color
-      },
       }
+      ,
+    },
+    mounted(){
+      this.getCookie()
+    }
   }
 </script>
 <style>

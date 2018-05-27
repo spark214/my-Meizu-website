@@ -1,6 +1,6 @@
 <template>
   <div class="header clearfix">
-    <a class="logo" href="./index.html" target="_blank"><img src="../../../../static/img/halo-230-40-blue.png" width="120px" height="24px"></a>
+    <a class="logo" href="./index.html" target="_blank"><img src="../../../../../static/img/halo-230-40-blue.png" width="120px" height="24px"></a>
 
     <div class="breadcrumb">
       <el-breadcrumb separator-class="el-icon-arrow-right">

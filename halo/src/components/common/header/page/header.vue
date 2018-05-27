@@ -1,6 +1,7 @@
 <template>
   <div class="header clearfix">
-    <a class="logo" href="./index.html"><img src="../../../../static/img/halo-230-40-blue.png" width="120px" height="24px"></a>
+    <a class="logo" href="./index.html"><img src="../../../../../static/img/halo-230-40-blue.png" width="120px"
+                                             height="24px"></a>
     <ul class="navs" id="navul">
       <li><a href="./index.html">首页</a></li>
       <li class="nav-product" id="nav-phone"><a>手机</a>
@@ -33,35 +34,21 @@
         <li>
           <el-dropdown trigger="hover" @command=" handleCommand" placement="bottom">
           <span class="el-dropdown-link">
-           <img src="../../../../static/img/user.png" v-show="!isLogin" width="24px">
+           <img src="../../../../../static/img/user.png" v-show="!isLogin" width="24px">
           <img :src="userIcon" v-show="isLogin" width="24" class="userIcon">
           </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="login"v-if="!isLogin" >立即登录</el-dropdown-item>
-              <el-dropdown-item command="register" divided v-if="!isLogin" >立即注册</el-dropdown-item>
+              <el-dropdown-item command="login" v-if="!isLogin">立即登录</el-dropdown-item>
+              <el-dropdown-item command="register" divided v-if="!isLogin">立即注册</el-dropdown-item>
 
-              <el-dropdown-item command="loginout"v-if="isLogin">我的订单</el-dropdown-item>
+              <el-dropdown-item command="loginout" v-if="isLogin">我的订单</el-dropdown-item>
               <el-dropdown-item command="loginout" divided v-if="isLogin">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
 
         </li>
         <li>
-          <el-dropdown trigger="hover" @command=" handleCommand" placement="bottom">
-          <span class="el-dropdown-link">
-        <img src="../../../../static/img/shoppingCart.png" width="24px">
-          </span>
-            <el-dropdown-menu slot="dropdown">
-              <div class="shopcartDropdown" v-if="!isLogin">
-                <img src="../../../../static/img/shopcartPanda.png">
-                <span>登录后可显示<br>您账号中加入的商品哦</span>
-              </div>
-              <div class="shopcartDropdown" v-if="isLogin">
-                <img src="../../../../static/img/shopcartPanda2.png">
-                <span>您的购物车还没有商品,<br>赶紧去选购吧~</span>
-              </div>
-            </el-dropdown-menu>
-          </el-dropdown>
+          <v-cart></v-cart>
 
         </li>
       </ul>
@@ -71,6 +58,8 @@
   </div>
 </template>
 <script>
+  import vCart from "../common/cartShow";
+
   export default {
     data() {
       return {
@@ -98,6 +87,9 @@
 
       }
     },
+    components: {
+      vCart
+    },
     methods: {
       goRouter(that) {
         this.$router.push({path: "/" + that});
@@ -107,13 +99,14 @@
           localStorage.removeItem('ms_userId');
           this.$router.push('/login');
         }
-        else  if (command == 'login'){
+        else if (command == 'login') {
           this.$router.push('/login');
         }
-        else  if (command == 'register'){
+        else if (command == 'register') {
           this.$router.push('/register');
         }
       },
+
     }
   }
 </script>
@@ -258,16 +251,5 @@
     width: 50px;
     cursor: pointer;
   }
-  .shopcartDropdown{
-    width: 318px;
-    height: 120px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .shopcartDropdown span{
-    margin-left: 15px;
-    font-size: 12px;
-    color: #999;
-  }
+
 </style>

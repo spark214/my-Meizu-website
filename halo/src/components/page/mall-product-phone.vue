@@ -77,7 +77,7 @@
   </div>
 </template>
 <script>
-  import vHeader from '../common/header/header';
+  import vHeader from '../common/header/page/header';
   import vPhoto from '../common/photoShow';
   import bus from '../common/bus.js';
   import vSuport from '../common/suport';

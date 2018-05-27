@@ -79,7 +79,7 @@
 
 </template>
 <script>
-  import vHeader from '../common/header/headerLite';
+  import vHeader from '../common/header/page/headerLite';
   import vFooter from '../common/footer';
 
   export default {
@@ -139,13 +139,14 @@
         idx: -1,
         multipleSelection:[],
         del_list:[],
-        isLogin:false,
+        isLogin:true,
       }
     },
     components: {
       vHeader, vFooter
     },
     methods: {
+
       goRouter(that) {
         this.$router.push({path: "/" + that});
       },
@@ -197,13 +198,17 @@
       }
     },
     mounted() {
+      this.data()
       setTimeout(() => {
         this.handleScroll()
       }, 300)
       window.addEventListener('scroll', this.handleScroll)
       window.addEventListener('resize', this.handleScroll)
       document.getElementById('deleteIcon').addEventListener('click',this.handleScroll)
-      document.title = '页面标题'
+
+
+    },
+    created(){
 
     }
   }
