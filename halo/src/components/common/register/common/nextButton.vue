@@ -1,7 +1,9 @@
 <template>
   <div>
     <el-button type="primary" size="medium" @click="next('userinfo')">{{content}}</el-button>
+    <el-form-item>
     <a @click="next('login')" class="login">登录</a>
+    </el-form-item>
   </div>
 </template>
 <script>

@@ -37,8 +37,8 @@
           <img :src="userIcon" v-show="isLogin" width="24" class="userIcon">
           </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="loginout"v-if="!isLogin" @click="goRouter('login')">立即登录</el-dropdown-item>
-              <el-dropdown-item command="loginout" divided v-if="!isLogin"  @click="goRouter('register')">立即注册</el-dropdown-item>
+              <el-dropdown-item command="login"v-if="!isLogin" >立即登录</el-dropdown-item>
+              <el-dropdown-item command="register" divided v-if="!isLogin" >立即注册</el-dropdown-item>
 
               <el-dropdown-item command="loginout"v-if="isLogin">我的订单</el-dropdown-item>
               <el-dropdown-item command="loginout" divided v-if="isLogin">退出登录</el-dropdown-item>
@@ -106,6 +106,12 @@
         if (command == 'loginout') {
           localStorage.removeItem('ms_userId');
           this.$router.push('/login');
+        }
+        else  if (command == 'login'){
+          this.$router.push('/login');
+        }
+        else  if (command == 'register'){
+          this.$router.push('/register');
         }
       },
     }

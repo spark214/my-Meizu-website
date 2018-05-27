@@ -25,7 +25,9 @@
               <el-form-item>
                 <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
               </el-form-item>
-              <a @click="next('register')" class="login">注册</a>
+              <el-form-item>
+              <a @click="goRouter('register')" class="login">注册</a>
+              </el-form-item>
             </el-form>
 
           </el-container>
@@ -85,7 +87,11 @@
       },
       getAva(msg) {
         this.codeAva = msg
-      }
+      },
+      goRouter(that) {
+        this.$router.push({path: "/" + that});
+      },
+
     },
     components: {
       vCode, vSms
@@ -158,9 +164,10 @@
   }
 
   #login_container_main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: absolute;
+    left: 50%;
+    top: 65%;
+    transform: translate(-50%,-50%);
     line-height: 40px;
   }
 
