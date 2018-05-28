@@ -8,11 +8,12 @@
         </el-carousel-item>
       </el-carousel>
     </div>
+    <v-footer></v-footer>
   </div>
 </template>
 <script>
   import vHeader from '../common/header/page/header';
-
+  import vFooter from '../common/footer';
   export default {
     data(){
       return{
@@ -37,7 +38,7 @@
       }
     },
     components:{
-      vHeader
+      vHeader,vFooter
     },
     methods:{
       banner(){

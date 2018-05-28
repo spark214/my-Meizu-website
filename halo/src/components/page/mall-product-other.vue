@@ -38,7 +38,7 @@
               <el-button type="danger" size="medium" class="right_buynow">
                 立即购买
               </el-button>
-              <el-button type="primary" size="medium" class="right_buynow" @click="addCart">
+              <el-button type="primary" size="medium" class="right_buynow" @click="addCart;centerDialogVisible=true">
                 加入购物车
               </el-button>
             </div>
@@ -54,7 +54,16 @@
     <v-hover :brand="ll" :name="common.name" :buyCount="form.buyCount"
              :price="common.price"
              :colorName="form.color"></v-hover>
-
+    <el-dialog
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      @open="setTimeClose">
+      <div class="cartDialog">
+        <i class="el-icon-circle-check-outline"></i>
+        <span>已成功加入购物车</span>
+        <p @click="goRouter('mallcart')">去购物车结算 ></p>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -90,6 +99,7 @@
         sumPrice: 0,
         selectColor: 0,
         formcount: 0,
+        centerDialogVisible: false
 
       }
     },
@@ -107,23 +117,31 @@
         this.formcount++;
         var str = JSON.stringify(this.form)
         document.cookie = "form=" + str;
-        document.cookie ="formcount="+this.formcount;
+        document.cookie = "formcount=" + this.formcount;
       },
       getCookie() {
         if (document.cookie.length > 0) {
           var hs_start = document.cookie.indexOf("formcount=")
 
           if (hs_start == -1) {
-            this.formcount=0;
+            this.formcount = 0;
           }
           var hs_end = document.cookie.indexOf(";", hs_start);
           if (hs_end != -1) {
-            this.formcount =document.cookie.substring(hs_start + 10, hs_end);
+            this.formcount = document.cookie.substring(hs_start + 10, hs_end);
           }
           else {
             this.formcount = document.cookie.substring(hs_start + 10);
           }
         }
+      },
+      goRouter(that) {
+        this.$router.push({path: "/" + that});
+      },
+      setTimeClose() {
+        setTimeout(() => {
+         this.centerDialogVisible=false
+        }, 3000)
       }
 
     },
@@ -154,7 +172,7 @@
       }
       ,
     },
-    mounted(){
+    mounted() {
       this.getCookie()
     }
   }
@@ -336,6 +354,28 @@
   .selectedSection {
     border-bottom: 2px solid #31a5e7;
     color: #31a5e7;
+  }
+
+  .cartDialog i {
+    font-size: 25px;
+    color: #31a5e7;
+    position: relative;
+    top: 3px;
+  }
+
+  .cartDialog {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+  }
+
+  .cartDialog p {
+    margin-top: 10px;
+    margin-left: 18px;
+    color: #31a5e7;
+    cursor: pointer;
   }
 
 </style>
