@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="cartShow">
     <el-dropdown trigger="hover" @command=" handleCommand" placement="bottom">
           <span class="el-dropdown-link">
-        <img src="../../../../../static/img/shoppingCart.png" width="24px">
+        <img src="../../../../../static/img/shoppingCart.png" width="22px">
           </span>
       <el-dropdown-menu slot="dropdown">
         <div class="shopcartDropdown_none" v-if="!isLogin">
@@ -45,7 +45,7 @@
       return {
         form: {},
         isLogin: true,
-        havaCart: true,
+        havaCart: false,
       }
     },
     methods: {
@@ -72,6 +72,10 @@
   }
 </script>
 <style>
+  .cartShow{
+    width: 30px;
+
+  }
   .shopcartDropdown_none{
     width: 318px;
     height: 120px;
