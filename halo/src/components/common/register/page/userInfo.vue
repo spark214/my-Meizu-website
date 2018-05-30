@@ -13,12 +13,12 @@
         </el-form-item>
       </el-form>
 
-      <el-button type="primary" size="medium" @click="next('sms')">提交</el-button>
-      <a @click="goRouter('login')" class="login">登录</a>
+      <v-button content="提交" route="go"></v-button>
     </div>
   </div>
 </template>
 <script>
+  import vButton from '../common/nextButton';
 export default {
   data(){
     var validateUsername = (rule, value, callback) => {
@@ -47,10 +47,14 @@ export default {
       }
     }
   },
+  components:{
+    vButton
+  },
   methods:{
     goRouter(that) {
       this.$router.push({path: "/" + that});
     },
+
   }
 }
 </script>
@@ -72,5 +76,6 @@ export default {
     font-size: 14px;
     color: #409EFF;
     cursor: pointer;
+    position: absolute;
   }
 </style>

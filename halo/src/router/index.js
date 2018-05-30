@@ -40,6 +40,13 @@ export default new Router({
       }
     },
     {
+      path:'/user',
+      component: resolve => require(['../components/page/user.vue'], resolve),
+      meta:{
+        title:'账号管理'
+      }
+    },
+    {
       path:'/register',
       component: resolve => require(['../components/page/register.vue'], resolve),
       meta:{

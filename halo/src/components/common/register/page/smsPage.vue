@@ -2,7 +2,7 @@
   <div class="smsCheck">
     <p class="tips">我们已发送一条验证码至您的手机号码，请输入短信中的验证码</p>
     <v-sms></v-sms>
-    <v-button content="下一步"></v-button>
+    <v-button content="下一步" route="userInfo"></v-button>
   </div>
 </template>
 <script>
