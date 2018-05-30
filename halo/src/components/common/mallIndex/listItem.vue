@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-row :gutter="5">
+    <el-row :gutter="7">
       <el-col :span="6" v-for="item in item">
         <el-card shadow="hover" class="list_card" >
           <a @click="goRouter('mallProductPhone')">
