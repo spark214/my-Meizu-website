@@ -50,7 +50,7 @@
 
     },
     created(){
-      this.countDown()
+      // this.countDown()
     }
   }
 </script>

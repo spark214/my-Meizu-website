@@ -18,6 +18,7 @@
                 <el-input placeholder="密码" type="password" v-model="loginForm.password"
                           @keyup.enter.native="submitForm('loginForm')"></el-input>
               </el-form-item>
+
               <v-sms v-show="!accLogin"></v-sms>
 
               <v-code @codeAva="getAva" v-show="accLogin"></v-code>
