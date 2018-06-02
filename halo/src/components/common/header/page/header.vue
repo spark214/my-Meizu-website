@@ -26,7 +26,7 @@
         </dl>
       </li>
       <li><a @click="goRouter('mallIndex')">商城</a></li>
-      <li><a target="_blank">Flow.</a></li>
+      <li><a target="_blank" href="">Flow.</a></li>
       <li class="nav-search"><input type="text" placeholder="魅族15"><i class="el-icon-search"></i></li>
     </ul>
     <div class="login clearfix">

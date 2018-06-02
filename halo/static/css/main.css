@@ -24,7 +24,7 @@ body,
 .clearfix:after { content: ""; display: block; clear: both;}
 
 body {
-  font-family: "microsoft yahei",'PingFang SC', "Helvetica Neue", Helvetica,  arial, STHeiTi, sans-serif;
+  font-family: "微软雅黑",Arial,Helvetica,sans-serif;
 }
 
 a {
