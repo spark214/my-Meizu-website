@@ -33,9 +33,9 @@
       <ul>
         <li>
           <el-dropdown trigger="hover" @command=" handleCommand" placement="bottom">
-          <span class="el-dropdown-link">
+          <span class="el-dropdown-link" @click="goRouter('user')">
            <img src="../../../../../static/img/user.png" v-show="!isLogin" width="24px">
-          <img :src="userIcon" v-show="isLogin" width="24" class="userIcon">
+          <img :src="userIcon" v-show="isLogin" width="24" class="userIcon" >
           </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="login" v-if="!isLogin">立即登录</el-dropdown-item>

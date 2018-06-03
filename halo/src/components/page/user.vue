@@ -8,8 +8,9 @@
           <li :class="{on:select==2}" @click="select=2"><a>喜元</a></li>
         </ul>
       </div>
-      <v-manage v-show="select==1"></v-manage>
+      <v-manage v-show="select==1" @edit="selectEdit"></v-manage>
       <v-coin v-show="select==2"></v-coin>
+      <v-crop v-show="select==3"></v-crop>
     </div>
 
     <v-footer></v-footer>
@@ -20,14 +21,21 @@
   import vFooter from '../common/footer';
   import vManage from '../common/user/accountManage';
 import vCoin from '../common/user/hCoin';
+import vCrop from '../common/user/cropper';
   export default {
     data() {
       return {
         select:1,
       }
     },
+    methods:{
+      selectEdit(msg){
+        this.select=msg;
+
+      }
+    },
     components: {
-      vHeader, vFooter, vManage,vCoin
+      vHeader, vFooter, vManage,vCoin,vCrop
     },
 
   }

@@ -3,7 +3,7 @@
     <div class="pageContain_section">
       <div class="section_main clearfix">
         <img src="../../../../static/img/21.jpg" width="100px" @mouseenter="showEdit=true" @mouseout="showEdit=false">
-        <span class="editPortrait" v-show="showEdit" @mouseenter="showEdit=true"  @mouseout="showEdit=false">编辑头像</span>
+        <span class="editPortrait" v-show="showEdit" @mouseenter="showEdit=true"  @mouseout="showEdit=false" @click="editPortrait">编辑头像</span>
         <div class="section_main_desc">
           <p>21</p>
           <p class="section_main_desc_account">账号 : <span>21</span></p>
@@ -144,7 +144,7 @@
       totalTime: 60,
       canClick: true,
       mailStep: 0,
-      phoneStep:1,
+      phoneStep:0,
       showEdit:false,
       dialogVisible:false,
     }},
@@ -165,6 +165,9 @@
             this.canClick = true
           }
         }, 1000)
+      },
+      editPortrait(){
+        this.$emit('edit','3');
       },
 
     },

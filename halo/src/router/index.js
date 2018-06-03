@@ -33,6 +33,13 @@ export default new Router({
       }
     },
     {
+      path:'/crop',
+      component:resolve => require(['../components/page/cropper.vue'], resolve),
+      meta:{
+        title:'Halo购物车'
+      }
+    },
+    {
       path:'/login',
       component: resolve => require(['../components/page/login.vue'], resolve),
       meta:{

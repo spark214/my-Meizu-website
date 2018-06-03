@@ -6,6 +6,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import VueWechatTitle from 'vue-wechat-title';
 import Vuelazyload from 'vue-lazyload';
+import Cropper from 'cropperjs';
 
 Vue.use(VueWechatTitle)
 Vue.use(ElementUI, { size: 'small' });
