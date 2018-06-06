@@ -2,31 +2,36 @@
   <div class="crop">
 
 <div class="now_pro">
-  <h3>当前头像</h3>
-  <img src="../../../../static/img/21.jpg" width="100px">
+  <h3 class="title">当前头像</h3>
+  <img src="../../../../static/img/21.jpg" width="100px" style="margin-left: 10px">
 </div>
   <div id="demo">
-<h3>设置新头像</h3>
+<h3 class="title">设置新头像</h3>
     <div>
-    <div class="show">
-      <div class="picture" :style="'backgroundImage:url('+headerImage+')'">
-      </div>
+    <div class="show" style="margin-left: 10px">
+      <div class="picture" :style="'backgroundImage:url('+headerImage+')'"></div>
     </div>
     <div class="btn_box">
       <el-button class="choose_btn">选择图片</el-button>
       <input type="file" id="change" class="change" accept="image" @change="change">
     </div>
+      <div class="btn_ok">
+        <el-button type="primary" class="choose_btn" style="margin-bottom: 5px">保存</el-button><br>
+        <el-button class="choose_btn">取消</el-button>
+      </div>
 
   </div>
     <!-- 遮罩层 -->
     <div class="container" v-show="panel">
       <div>
-        <img id="image" :src="url" alt="Picture" width="300px">
-        <img  :src="url" alt="Picture" width="500px">
+        <img id="image" :src="url" alt="Picture" width="300px" class="imgs">
       </div>
 
-      <el-button type="primary" id="button" @click="crop">选定</el-button>
-
+      <el-button type="primary" id="button" @click="crop" style="width: 100px;">裁剪</el-button>
+      <div class="container_box">
+        <el-button class="choose_btn">重选</el-button>
+        <input type="file"  class="change" accept="image" @change="change">
+      </div>
     </div>
 
 
@@ -53,11 +58,20 @@
     mounted () {
       //初始化这个裁剪框
       var self = this;
-      var image = document.getElementById('image');
-      this.cropper = new Cropper(image, {
+      var image = document.getElementsByClassName("imgs")
+      this.cropper = new Cropper(image[0], {
         aspectRatio: 1,
         viewMode: 1,
-        background:false,
+        background:true,
+        zoomable:true,
+        ready: function () {
+          self.croppable = true;
+        }
+      });
+      this.cropper = new Cropper(image[1], {
+        aspectRatio: 1,
+        viewMode: 1,
+        background:true,
         zoomable:true,
         ready: function () {
           self.croppable = true;
@@ -136,11 +150,22 @@
 </script>
 
 <style>
-
+  .crop{
+    margin-left: 5px;
+  }
+.title{
+  color: #666666;
+  font-size: 18px;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  border-bottom: 0.5px solid #dcdcdc;
+}
   #demo #button {
-    position: absolute;
-    right: 10px;
-    top: 10px;
+    position: relative;
+    right: 00px;
+    top:10px;
   }
   #demo .show {
     width: 100px;
@@ -163,9 +188,8 @@
     overflow: hidden;
     z-index: 99;
     position: relative;
-    padding-top: 60px;
-    left: 50px;
-    top: 60px;
+    left: 260px;
+    top: -280px;
     right: 0;
     bottom: 0;
     background:#fff;
@@ -174,20 +198,35 @@
   }
 
   #demo #image {
+    width: 100%;
     max-width: 100%;
   }
 .btn_box{
   position: relative;
+  margin-top: 10px;
+  margin-left: 10px;
+  margin-bottom: 20px;
 }
-  #change{
-    height: 30px;
-    opacity: 0;
-position: absolute;
-    left:0px;
-cursor: pointer;
-  }
+.choose_btn{
+  width: 100px !important;
+}
+.btn_ok{
+  margin-bottom: 50px;
+  margin-left: 10px;
+}
+.container_box{
+position: relative;
+  left: 120px;
+  top: -21px;
+}
+
 .change{
   width: 80px;
+  height: 30px;
+  opacity: 0;
+  position: absolute;
+  left:0px;
+  cursor: pointer;
 }
   .cropper-view-box,.cropper-face {
     border-radius: 50%;

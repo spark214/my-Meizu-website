@@ -1,5 +1,5 @@
 <template>
-  <div class="errorPage pageContain">
+  <div class="errorPage">
     <button @click="back">Go Back</button>
   </div>
 </template>

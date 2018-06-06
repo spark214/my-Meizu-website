@@ -11,7 +11,7 @@
     <div class="sideBar" @mouseover="evtSideLeave">
       <div class="side-left">
         <ul class="side">
-          <li class="side-item" @mouseenter="evtSideEnter(item.type)" v-for="item in sideItems">
+          <li class="side-item" @mouseenter="evtSideEnter(item.type)" v-for="item in sideItems" @click="goRouter('mallList')">
             {{item.content}}
           </li>
         </ul>
@@ -147,7 +147,10 @@ export default {
     },
     evtSideLeave() {
       this.goodsStatus = false
-    }
+    },
+    goRouter(that) {
+      this.$router.push({path: "/" + that});
+    },
   },
   computed: {
     filterCurrGoods: function () {
@@ -157,7 +160,7 @@ export default {
         filterGoods[goodsIndex].push(item)
       })
       return filterGoods
-    },
+    }
   }
 }
 </script>

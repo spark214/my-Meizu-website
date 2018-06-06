@@ -1,6 +1,6 @@
 <template>
   <div class="header clearfix">
-    <a class="logo" href="./index.html"><img src="../../../../../static/img/halo-230-40-blue.png" width="120px"
+    <a class="logo" href="./index.html"><img src="http://p9f6ljki4.bkt.clouddn.com/halo-230-40-blue.png" width="120px"
                                              height="24px"></a>
     <ul class="navs" id="navul">
       <li><a href="./index.html">首页</a></li>
@@ -64,22 +64,22 @@
     data() {
       return {
         mobPhone: [
-          {name: '魅族15', url: '../../../static/img/15_black_2_480x480.png'},
-          {name: '魅族PRO 7', url: '../../../static/img/pro7_black_2_480x480.jpg'},
-          {name: '魅蓝E3', url: '../../../static/img/e3_black_2_480x480.png'},
-          {name: '魅蓝S6', url: '../../../static/img/s6_black_2_480x480.png'},
+          {name: '魅族15', url: 'https://openfile.meizu.com/group1/M00/04/57/Cgbj0VrxPbKAPw-1AAJWqasMn_A309.png'},
+          {name: '魅族PRO 7', url: 'https://openfile.meizu.com/group1/M00/01/C7/Cgbj0Vl4OYOAGRToAAJwA8hDe5Y164.png'},
+          {name: '魅蓝E3', url: 'https://openfile.meizu.com/group1/M00/04/57/Cgbj0VrxPw-AagPuAAI1cwVNeY8122.png'},
+          {name: '魅蓝S6', url: 'https://openfile.meizu.com/group1/M00/04/49/Cgbj0FrxPy6Ae3lKAAHGS6FCfDA943.png'},
         ],
         earPhone: [
-          {name: '魅族Hebe', url: '../../../static/img/hebe_red_480x480.png'},
-          {name: '魅蓝EP52', url: '../../../static/img/ep52_red_480x480.png'},
-          {name: '魅蓝Flow', url: '../../../static/img/flow_black_480x480.png'},
-          {name: '魅族Live', url: '../../../static/img/live_while_480x480.png'},
+          {name: '魅族Halo', url: 'https://openfile.meizu.com/group1/M00/04/49/Cgbj0FrxQ9OASHrkAAHd8RyFtJk439.png'},
+          {name: '魅蓝EP52', url: 'https://openfile.meizu.com/group1/M00/04/49/Cgbj0FrxQ9OATl4OAAFfnIyp_wU418.png'},
+          {name: '魅蓝Flow', url: 'https://openfile.meizu.com/group1/M00/04/49/Cgbj0FrxQ9OANS4SAAESYJ5J8G4662.png'},
+          {name: '魅族Live', url: 'https://openfile.meizu.com/group1/M00/04/57/Cgbj0VrxQ9OAPp2AAAHX9602H_I285.png'},
         ],
         fitting: [
-          {name: '魅蓝双向快充移动电源', url: '../../../static/img/m10_while_480x480.png'},
-          {name: '魅蓝酷MA萌移动电源', url: '../../../static/img/kuma-m10_while_480x480.png'},
-          {name: '魅族手环', url: '../../../static/img/mzband_black_480x480.png'},
-          {name: '魅蓝酷MA萌旅行套装', url: '../../../static/img/everyday_all_480x480.png'},
+          {name: '魅蓝双向快充移动电源', url: 'https://openfile.meizu.com/group1/M00/04/49/Cgbj0FrxRYSAa6YQAABMFFMVjEk568.png'},
+          {name: '魅族无线充电器', url: 'https://openfile.meizu.com/group1/M00/04/15/Cgbj0VrcXw2AL0tBAApTh_xwKKk709.png'},
+          {name: '魅族手环', url: 'https://openfile.meizu.com/group1/M00/04/57/Cgbj0VrxRYSAAVeoAAGI27DZUHE458.png'},
+          {name: '魅蓝酷MA萌旅行套装', url: 'https://openfile.meizu.com/group1/M00/04/58/Cgbj0VrxTr2AR8UeAALz4Fjd8wQ600.png'},
         ],
         isLogin: false,
         userIcon: "../../../static/img/21.jpg",

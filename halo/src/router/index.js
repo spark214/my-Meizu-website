@@ -33,10 +33,10 @@ export default new Router({
       }
     },
     {
-      path:'/crop',
-      component:resolve => require(['../components/page/cropper.vue'], resolve),
+      path:'/mallList',
+      component:resolve => require(['../components/page/mall-list.vue'], resolve),
       meta:{
-        title:'Halo购物车'
+        title:'Halo商城'
       }
     },
     {
@@ -84,10 +84,25 @@ export default new Router({
           meta:{
             title:'Halo 注册'
           },
+        }
+    ]
         },
-      ]
-
-
+        {
+          path: '/member',
+          component: resolve => require(['../components/page/member.vue'], resolve),
+          meta: {
+            title: 'Halo 会员管理'
+          },
+          children: [
+            {
+              path: '/',
+              redirect: '/index'
+            },
+            {
+              path: '/index',
+              component: resolve => require(['../components/common/member/page/index.vue'], resolve),
+            },
+          ]
     },
     {
       path:'/404',

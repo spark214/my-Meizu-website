@@ -125,7 +125,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: url("../../../static/img/login_banner.png");
+    background: url("http://p9f6ljki4.bkt.clouddn.com/login_banner.png");
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;

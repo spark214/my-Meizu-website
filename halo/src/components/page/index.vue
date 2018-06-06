@@ -19,17 +19,17 @@
       return{
         banner:[
           {
-            backgroundImage: "url(" + require("../../../static/img/Banner_15.jpg") + ")",
+            backgroundImage: "url(http://p9f6ljki4.bkt.clouddn.com/Banner_15.jpg)",
             backgroundRepeat: "no-repeat",
             backgroundPosition:"center",
             backgroundSize:"cover",
 
            },
-          {backgroundImage: "url(" + require("../../../static/img/Banner_Ep52.jpg") + ")",
+          {backgroundImage: "url(http://p9f6ljki4.bkt.clouddn.com/Banner_Ep52.jpg)",
             backgroundRepeat: "no-repeat",
             backgroundPosition:"center",
          },
-          {backgroundImage: "url(" + require("../../../static/img/Banner_POP.jpg") + ")",
+          {backgroundImage: "url(http://p9f6ljki4.bkt.clouddn.com/Banner_POP.jpg)",
             backgroundRepeat: "no-repeat",
             backgroundPosition:"center",
             backgroundSize:"cover",

@@ -60,7 +60,6 @@
 
     },
     mounted(){
-      alert(imgurl)
     }
   }
 </script>

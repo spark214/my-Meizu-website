@@ -4,7 +4,7 @@
     <div class="pageContain">
       <div class="pageContain_header">
         <ul>
-          <li :class="{on:select==1}" @click="select=1"><a>账号管理</a></li>
+          <li :class="{on:select==1||select==3}" @click="select=1"><a>账号管理</a></li>
           <li :class="{on:select==2}" @click="select=2"><a>喜元</a></li>
         </ul>
       </div>
