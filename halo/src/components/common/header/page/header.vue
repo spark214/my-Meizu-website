@@ -171,7 +171,7 @@
     height: 60px;
     top: 0;
     background-color: transparent;
-    border-bottom: 0.5px solid #dcdcdc;
+    border-bottom: 0.5px solid #f3f3f3;
   }
 
   .header:hover {

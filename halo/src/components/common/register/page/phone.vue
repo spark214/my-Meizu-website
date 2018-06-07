@@ -3,7 +3,7 @@
     <div class="phoneChecck">
       <el-form :model="loginForm" :rules="rules" ref="loginForm" class="form">
         <el-form-item prop="phone">
-          <el-input v-model="loginForm.phone" placeholder="手机号码" id="phone"></el-input>
+          <el-input v-model="loginForm.phone" placeholder="手机号码" id="phone" @blur="submitForm('loginForm')"></el-input>
         </el-form-item>
 
         <v-code @codeAva="getAva"></v-code>
@@ -31,7 +31,7 @@
           callback(new Error('请输入手机号码'));
         }
         else if (reg.exec(value) != null) {
-          callback();
+        callback();
         }
         else {
           callback(new Error('无效手机号码'));
@@ -54,6 +54,37 @@
       vCode
     },
     methods: {
+      // submitForm(form) {
+      //   alert("s");
+      //   var data=this.loginForm.phone;
+      //   var url=this.$rootUrl+"/api/halo/auths/verifyPhone";
+      //   const options = {
+      //     method: 'GET',
+      //     headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      //     data:this.loginForm.phone ,
+      //     url:url,
+      //   };
+      //   this.$refs[form].validate((valid) => {
+      //     if (valid) {
+      //       this.$axios(options).
+      //       then((res)=>{
+      //         alert("s");
+      //         if(res.data[0].errorCode=='0'){
+      //       // localStorage.setItem('ms_userId', this.loginForm.userId);
+      //       this.$router.push({path: '/'});
+      //           }else {
+      //             console.log('error json!!');
+      //             return false;
+      //           }
+      //       } )
+      //
+      //
+      //     } else {
+      //       console.log('error submit!!');
+      //       return false;
+      //     }
+      //   })
+      // },
       goRouter(that) {
         this.$router.push({path: "/" + that});
       },

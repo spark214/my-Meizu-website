@@ -96,11 +96,14 @@ export default new Router({
           children: [
             {
               path: '/',
-              redirect: '/index'
+              redirect: '/mIndex'
             },
             {
-              path: '/index',
+              path: '/mIndex',
               component: resolve => require(['../components/common/member/page/index.vue'], resolve),
+              meta: {
+                title: 'Halo 会员管理'
+              },
             },
           ]
     },

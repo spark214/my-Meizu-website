@@ -130,7 +130,7 @@
     width: 100%;
     height: 60px;
     top: 0;
-    border-bottom: 0.5px solid #dcdcdc;
+    border-bottom: 0.5px solid #f3f3f3;
   }
 
   .header:hover {

@@ -68,7 +68,7 @@
       submitForm(form) {
         this.$refs[form].validate((valid) => {
           if (valid) {
-            // this.$axios.get(this.$rootUrl+"/message/list",{}).
+            // this.$axios.get(this.$rootUrl+"/auths/verifyPhone",{}).
             // then((res)=>{
             //   if(res.data[0].content==='demo'){
             localStorage.setItem('ms_userId', this.loginForm.userId);
