@@ -8,7 +8,7 @@
       </el-carousel>
     </div>
 
-    <div class="sideBar" @mouseover="evtSideLeave">
+    <div class="sideBar" @mouseleave="evtSideLeave">
       <div class="side-left">
         <ul class="side">
           <li class="side-item" @mouseenter="evtSideEnter(item.type)" v-for="item in sideItems" @click="goRouter('mallList')">
@@ -16,7 +16,7 @@
           </li>
         </ul>
       </div>
-      <div class="side-detail" v-show="goodsStatus">
+      <div class="side-detail" v-show="goodsStatus" @mouseenter="evtSideEnter(item.type)">
         <ul class="detail-item" v-for="goods in filterCurrGoods">
           <li class="datail-goods" v-for="item in goods">
             <a class="goods-link">
@@ -190,7 +190,7 @@ export default {
     position: absolute;
     left: 40px;
     top: 56px;
-    z-index: 10;
+    z-index: 1000;
     color: #515151;
   }
 
@@ -202,7 +202,7 @@ export default {
   }
 
   .side-item {
-    width: 80%;
+    width: 100%;
     height: 62.5px;
     cursor: pointer;
   }
@@ -217,7 +217,7 @@ export default {
     justify-content: flex-start;
     left: 235px;
     top: 0;
-    z-index: 100;
+    z-index: 1000;
     border: 1px solid #e0e0e0;
   }
 

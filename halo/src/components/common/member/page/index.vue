@@ -2,21 +2,21 @@
   <div>
     <div class="user_info clearfix">
       <div class="info_img">
-        <img src="../../../../../static/img/21.jpg" width="135px">
+        <img :src="msg.img" width="135px">
       </div>
       <div class="info_welcome">
-        <h4>221</h4>
+        <h4>{{msg.id}}</h4>
         <p>欢迎您回来!</p>
       </div>
       <div class="info_msg">
         <ul>
           <li><span class="info_msg_title">Halo.账号：</span><span>{{msg.id}}</span></li>
           <li><span class="info_msg_title">绑定手机号：</span><span>{{filterPhone}}</span></li>
-          <li><span class="info_msg_title">绑定邮箱：</span><span>{{filterMail}}</span></li>
+          <li v-if="msg.mail!==''"><span class="info_msg_title">绑定邮箱：</span><span>{{filterMail}}</span></li>
         </ul>
       </div>
       <div class="info_enter">
-        <a class="enter_btn">修改个人信息 > </a>
+        <a class="enter_btn" @click="goRouter('user')">修改个人信息 > </a>
       </div>
 
     </div>
@@ -25,20 +25,26 @@
       <div class="user_order_title">
         <p>订单状态</p>
       </div>
-      <div class="user_order_content">
-        <div class="order_pay">
+      <div class="user_order_content clearfix">
+        <div class="order_pay clearfix  order_box">
           <div class="order_pay_icon order_icon">
             <img src="../../../../../static/img/wallet.png">
           </div>
-          <p>代付款订单：<span class="order_pay_num">0</span></p>
-          <p class="order_seeall">查看全部待付款订单 ></p>
+          <div class="order_info">
+            <p>代付款订单：<span class="order_pay_num">{{unpay}}</span></p>
+            <p class="order_seeall">查看全部待付款订单 ></p>
+          </div>
+
         </div>
-        <div class="order_send">
+        <div class="order_send clearfix order_box">
           <div class="order_send_icon order_icon">
             <img src="../../../../../static/img/send.png">
           </div>
-          <p>待发货订单：<span class="order_send_num">0</span></p>
-          <p class="order_seeall">查看全部待发货订单 ></p>
+          <div class="order_info clearfix">
+            <p>待发货订单：<span class="order_send_num">{{unsend}}</span></p>
+            <p class="order_seeall">查看全部待发货订单 ></p>
+          </div>
+
         </div>
       </div>
     </div>
@@ -51,11 +57,18 @@
         msg: {
           id: "zijian21",
           phone: "13192256005",
-          mail: "707624560@qq.com"
-        }
+          mail: "707624560@qq.com",
+          img:"../../../../../static/img/21.jpg"
+        },
+        unpay:0,
+        unsend:0
       }
     },
-    methods: {},
+    methods: {
+      goRouter(that) {
+        this.$router.push({path: "/" + that});
+      },
+    },
     computed: {
       filterMail() {
         var mail = this.msg.mail.replace(/(.{2}).+(.{2}@.+)/g, '$1****$2')
@@ -88,9 +101,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-
-  .info_img img {
   }
 
   .info_welcome {
@@ -151,18 +161,54 @@
   .user_order_title p {
     margin-left: 20px;
   }
-  .order_icon{
+
+  .order_icon {
     width: 80px;
     height: 80px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
+    float: left;
   }
-  .order_pay_icon{
-    background-color:rgb(245,99,19);
+
+  .order_pay_icon {
+    background-color: rgb(245, 99, 19);
   }
-  .order_send_icon{
+
+  .order_send_icon {
     background-color: #00a7ea;
+  }
+
+  .order_pay p, .order_send p {
+    color: #666666;
+    font-size: 17px;
+  }
+
+  .order_info {
+    float: left;
+    margin-top: 15px;
+    margin-left: 30px;
+  }
+
+  .order_seeall {
+    font-size: 14px !important;
+    color: #999 !important;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+
+  .order_box {
+    margin: 30px 0 50px 100px;
+    float: left;
+  }
+  .order_pay_num{
+    color:rgb(245, 99, 19) ;
+  }
+  .order_send_num{
+    color: #00a7ea;
+  }
+  .order_seeall:hover,.enter_btn:hover{
+    color: #00a7ea !important;
   }
 </style>

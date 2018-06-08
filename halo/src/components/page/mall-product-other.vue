@@ -35,7 +35,7 @@
             </dl>
 
             <div class="right_button">
-              <el-button type="danger" size="medium" class="right_buynow">
+              <el-button type="danger" size="medium" class="right_buynow"  @click="goRouter('mallCart')">
                 立即购买
               </el-button>
               <el-button type="primary" size="medium" class="right_buynow" @click="addCart;centerDialogVisible=true">
@@ -51,9 +51,9 @@
       <v-footer></v-footer>
 
     </div>
-    <v-hover :brand="ll" :name="common.name" :buyCount="form.buyCount"
-             :price="common.price"
-             :colorName="form.color"></v-hover>
+    <!--<v-hover :brand="ll" :name="common.name" :buyCount="form.buyCount"-->
+             <!--:price="common.price"-->
+             <!--:colorName="form.color"></v-hover>-->
     <el-dialog
       :visible.sync="centerDialogVisible"
       width="30%"

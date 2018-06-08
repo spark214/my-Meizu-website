@@ -33,7 +33,7 @@
       <ul>
         <li>
           <el-dropdown trigger="hover" @command=" handleCommand" placement="bottom">
-          <span class="el-dropdown-link" @click="goRouter('user')">
+          <span class="el-dropdown-link" @click="goRouter('member')">
            <img src="../../../../../static/img/user.png" v-show="!isLogin" width="24px">
           <img :src="userIcon" v-show="isLogin" width="24" class="userIcon" >
           </span>

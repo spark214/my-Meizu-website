@@ -5,7 +5,7 @@
 
     <div class="clearfix pageContain">
       <div class="contain_head clearfix">
-        <v-photo :name="mobPhone.name" :color="form.color"></v-photo>
+        <v-photo :imgurl="filterImg"></v-photo>
         <div class="contain_head_right">
           <h1>{{mobPhone.brand+mobPhone.name}}</h1>
           <p class="right_slogan">{{mobPhone.slogan}}</p>
@@ -28,8 +28,8 @@
             </dl>
             <dl>
               <dt class="right_selecct_item_lab">颜色分类：</dt>
-              <dd v-for="item in mobPhone.color" class="right_selecct_item right_selecct_item_lab">
-                <a @click="form.color=item.name;form.colorName=item.colorName"
+              <dd v-for="(item,index) in mobPhone.color" class="right_selecct_item right_selecct_item_lab">
+                <a @click="form.color=item.name;form.colorName=item.colorName;selectColor=index"
                    :class="{selected:form.color==item.name}">
                   <img v-lazy="'../../../static/img/'+mobPhone.name+'_'+item.name+'_2_680x680.jpg'" width="32px"><span>{{item.colorName}}</span>
                 </a>
@@ -54,10 +54,10 @@
             </dl>
 
             <div class="right_button">
-              <el-button type="danger" size="medium" class="right_buynow" @click="goRouter('/mallCart')">
+              <el-button type="danger" size="medium" class="right_buynow" @click="goRouter('mallCart')">
                 立即购买
               </el-button>
-              <el-button type="primary" size="medium" class="right_buynow">
+              <el-button type="primary" size="medium" class="right_buynow" @click="centerDialogVisible=true">
                 加入购物车
               </el-button>
             </div>
@@ -73,7 +73,16 @@
     <v-hover :brand="mobPhone.brand" :name="form.name" :nettype="form.nettype" :buyCount="form.buyCount"
              :price="form.price"
              :rom="form.rom" :colorName="form.colorName"></v-hover>
-
+    <el-dialog
+      :visible.sync="centerDialogVisible"
+      width="30%"
+      @open="setTimeClose">
+      <div class="cartDialog">
+        <i class="el-icon-circle-check-outline"></i>
+        <span>已成功加入购物车</span>
+        <p @click="goRouter('mallcart')">去购物车结算 ></p>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -96,11 +105,16 @@
             version: ["魅族15", "魅族15Plus", "魅族M15"],
             nettype: ["全网通公开版", "移动定制版"],
             color: [
-              {colorName: '雅金', name: 'gold'},
               {colorName: '汝窑白', name: 'while'},
-              {colorName: '砚墨', name: 'black'}
+              {colorName: '砚墨', name: 'black'},
+              {colorName: '雅金', name: 'gold'}
             ],
             rom: [{size: '4GB+64GB', price: '2499'}, {size: '4GB+128GB', price: '2699'}],
+            "imgUrl": [
+              "https://openfile.meizu.com/group1/M00/04/19/Cgbj0VrcbkeAGLvaAAkeRww1CzQ341.png680x680.jpg,https://openfile.meizu.com/group1/M00/04/0A/Cgbj0FrcbkKAbf63AAXVQzrAU6E631.png680x680.jpg,https://openfile.meizu.com/group1/M00/04/0A/Cgbj0FrcbkGAPaiGAAEkDlyYfyk487.png680x680.jpg,https://openfile.meizu.com/group1/M00/04/19/Cgbj0VrcbkKAUTagAAG14T9MUOI402.png680x680.jpg",
+              "https://openfile.meizu.com/group1/M00/04/1A/Cgbj0VrcblGASw1bAAw5XLlyeCA103.png680x680.jpg,https://openfile.meizu.com/group1/M00/04/0B/Cgbj0Frcbk-AeEorAAXY_9lHYR4332.png680x680.jpg,https://openfile.meizu.com/group1/M00/04/19/Cgbj0VrcbkiAaSirAAXItYvB5Xo133.png680x680.jpg,https://openfile.meizu.com/group1/M00/04/19/Cgbj0Vrcbk6AYrRNAAHbf4qjn34636.png680x680.jpg",
+              "https://openfile.meizu.com/group1/M00/04/0B/Cgbj0Frcbl-AW590AA3GJO-oXOo441.png680x680.jpg,https://openfile.meizu.com/group1/M00/04/1A/Cgbj0Vrcbl6ALqcjAAYgIzzUyi0930.png680x680.jpg,https://openfile.meizu.com/group1/M00/04/1A/Cgbj0VrcblWANIwFAAdqQqzT4iU606.png680x680.jpg,https://openfile.meizu.com/group1/M00/04/0B/Cgbj0FrcblyANwakAAIXb_XuaD8791.png680x680.jpg"
+            ],
           },
         form: {
           name: '15',
@@ -113,6 +127,8 @@
           rom: '4GB+64GB',
         },
         sumPrice: 0,
+        selectColor: 0,
+        centerDialogVisible: false
 
       }
     },
@@ -129,16 +145,32 @@
 
     },
 
-    computed: {},
+    computed: {
+      filterImg() {
+        let imgurl = []
+        let currindex = 0
+        let nextindex = this.mobPhone.imgUrl[this.selectColor].indexOf(",", currindex)
+
+        while (nextindex > 0) {
+          imgurl.push(this.mobPhone.imgUrl[this.selectColor].slice(currindex, nextindex))
+          currindex = nextindex + 1
+          nextindex = this.mobPhone.imgUrl[this.selectColor].indexOf(",", currindex)
+        }
+        imgurl.push(this.mobPhone.imgUrl[this.selectColor].slice(currindex))
+        return imgurl
+      }
+      ,
+    },
 
   }
 </script>
 <style>
-  .mall-product{
+  .mall-product {
     /*position: absolute;*/
     /*top: 0px;*/
     /*left: 0px;*/
   }
+
   .contain_head {
     width: 100%;
   }

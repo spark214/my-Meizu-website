@@ -20,10 +20,16 @@ export default new Router({
     {
       path:'/mallProductPhone',
       component:resolve => require(['../components/page/mall-product-phone.vue'], resolve),
+      meta:{
+        title:'Halo.'
+      }
     },
     {
       path:'/mallProductOther',
       component:resolve => require(['../components/page/mall-product-other.vue'], resolve),
+      meta:{
+        title:'Halo.'
+      }
     },
     {
       path:'/mallCart',
@@ -104,6 +110,27 @@ export default new Router({
               meta: {
                 title: 'Halo 会员管理'
               },
+            },
+            {
+              path: '/mAddress',
+              component: resolve => require(['../components/common/member/page/address.vue'], resolve),
+              meta: {
+                title: '地址管理-Halo.商城'
+              },
+            },
+            {
+              path: '/myOrder',
+              component: resolve => require(['../components/common/member/page/myOrder.vue'], resolve),
+              name:'我的订单',
+              meta: {
+                title: '我的订单-Halo.商城'
+              },
+              children:[
+                {
+                  path: '/orderTable',
+                  component: resolve => require(['../components/common/member/common/orderTable.vue'], resolve),
+                },
+              ]
             },
           ]
     },
