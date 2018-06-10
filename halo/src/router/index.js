@@ -60,6 +60,13 @@ export default new Router({
       }
     },
     {
+      path:'/mallCheck',
+      component: resolve => require(['../components/page/mall-check.vue'], resolve),
+      meta:{
+        title:'确认订单-Halo.商城'
+      }
+      },
+    {
       path:'/register',
       component: resolve => require(['../components/page/register.vue'], resolve),
       meta:{

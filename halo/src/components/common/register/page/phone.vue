@@ -54,37 +54,37 @@
       vCode
     },
     methods: {
-      // submitForm(form) {
-      //   alert("s");
-      //   var data=this.loginForm.phone;
-      //   var url=this.$rootUrl+"/api/halo/auths/verifyPhone";
-      //   const options = {
-      //     method: 'GET',
-      //     headers: { 'content-type': 'application/x-www-form-urlencoded' },
-      //     data:this.loginForm.phone ,
-      //     url:url,
-      //   };
-      //   this.$refs[form].validate((valid) => {
-      //     if (valid) {
-      //       this.$axios(options).
-      //       then((res)=>{
-      //         alert("s");
-      //         if(res.data[0].errorCode=='0'){
-      //       // localStorage.setItem('ms_userId', this.loginForm.userId);
-      //       this.$router.push({path: '/'});
-      //           }else {
-      //             console.log('error json!!');
-      //             return false;
-      //           }
-      //       } )
-      //
-      //
-      //     } else {
-      //       console.log('error submit!!');
-      //       return false;
-      //     }
-      //   })
-      // },
+      submitForm(form) {
+        alert("sss");
+        var data=this.loginForm.phone;
+        var url=this.$rootUrl+"/api/halo/registers/verifyPhone/"+data;
+        const options = {
+          method: 'GET',
+          headers: { 'content-type': 'application/x-www-form-urlencoded' },
+          url:url,
+          data:{}
+        };
+        this.$refs[form].validate((valid) => {
+          if (valid) {
+            this.$axios(options).
+            then((res)=>{
+              alert("s");
+              if(res.data[0].errorCode=='0'){
+            // localStorage.setItem('ms_userId', this.loginForm.userId);
+            this.$router.push({path: '/'});
+                }else {
+                  console.log('error json!!');
+                  return false;
+                }
+            } )
+
+
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        })
+      },
       goRouter(that) {
         this.$router.push({path: "/" + that});
       },
