@@ -1,8 +1,9 @@
 <template>
   <div class="mallCheck">
-<v-header></v-header>
+    <v-header></v-header>
     <div class="pageContain">
-<v-address></v-address>
+      <v-address></v-address>
+      <v-ordermsg></v-ordermsg>
     </div>
     <v-footer></v-footer>
   </div>
@@ -11,23 +12,27 @@
   import vHeader from '../common/header/page/header';
   import vFooter from '../common/footer';
   import vAddress from '../common/mallCheck/address';
-  export default {
-    data(){return{
+  import vOrdermsg from '../common/mallCheck/orderMsg';
 
-    }},
-    components:{
-      vHeader,vFooter,vAddress
+  export default {
+    data() {
+      return {}
+    },
+    components: {
+      vHeader, vFooter, vAddress,vOrdermsg
     }
   }
 </script>
 <style scoped>
-  .header{
+  .header {
     background: white;
   }
-.mallCheck{
-  background: #f8f8f8;
-}
-  .pageContain{
+
+  .mallCheck {
+    background: #f8f8f8;
+  }
+
+  .pageContain {
     padding-top: 20px;
     padding-bottom: 20px;
   }
