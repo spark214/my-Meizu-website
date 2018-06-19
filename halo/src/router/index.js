@@ -126,6 +126,34 @@ export default new Router({
               },
             },
             {
+              path: '/advice',
+              component: resolve => require(['../components/common/member/page/advice.vue'], resolve),
+              meta: {
+                title: '建议反馈-Halo.商城'
+              },
+            },
+            {
+              path: '/insurance',
+              component: resolve => require(['../components/common/member/page/insurance.vue'], resolve),
+              meta: {
+                title: 'Halo.商城'
+              },
+            },
+            {
+              path: '/mcycle',
+              component: resolve => require(['../components/common/member/page/mcycle.vue'], resolve),
+              meta: {
+                title: 'Halo.商城'
+              },
+            },
+            {
+              path: '/orderDetail',
+              component: resolve => require(['../components/common/member/page/orderDetail.vue'], resolve),
+              meta: {
+                title: '订单详情-Halo.商城'
+              },
+            },
+            {
               path: '/myOrder',
               component: resolve => require(['../components/common/member/page/myOrder.vue'], resolve),
               name:'我的订单',
@@ -134,8 +162,28 @@ export default new Router({
               },
               children:[
                 {
-                  path: '/orderTable',
-                  component: resolve => require(['../components/common/member/common/orderTable.vue'], resolve),
+                  path: '/',
+                  redirect: '/allOrder'
+                },
+                {
+                  path: '/allOrder',
+                  component: resolve => require(['../components/common/member/page/orderPage/allOrder.vue'], resolve),
+                },
+                {
+                  path: '/otherOrder',
+                  component: resolve => require(['../components/common/member/page/orderPage/otherOrder.vue'], resolve),
+                },
+                {
+                  path: '/unpayOrder',
+                  component: resolve => require(['../components/common/member/page/orderPage/unpayOrder.vue'], resolve),
+                },
+                {
+                  path: '/unsentOrder',
+                  component: resolve => require(['../components/common/member/page/orderPage/unsentOrder.vue'], resolve),
+                },
+                {
+                  path: '/sentOrder',
+                  component: resolve => require(['../components/common/member/page/orderPage/sentOrder.vue'], resolve),
                 },
               ]
             },

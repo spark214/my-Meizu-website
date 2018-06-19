@@ -18,11 +18,11 @@
           </div>
 
           <div class="receiverMsg_li_bottom">
-            <a>修改</a>
+            <a @click="dialogUpdateVisible=true;updateSelected=index">修改</a>
             <a>删除</a>
           </div>
         </li>
-        <li id="addMsg" v-show="receiver.length<10" @click="dialogFormVisible = true">
+        <li id="addMsg" v-show="receiver.length<10" @click="dialogAddVisible = true">
           <div>
             <div><i class="el-icon-circle-plus-outline"></i></div>
             <p>添加新地址</p>
@@ -31,26 +31,27 @@
         </li>
       </ul>
     </div>
-    <el-dialog title="添加收货地址" :visible.sync="dialogFormVisible" class="addAddr">
-      <el-form >
-        <el-form-item label="收货人姓名" :label-width="formLabelWidth">
-          <el-input  auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="收货人电话" :label-width="formLabelWidth">
-          <el-input  auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="详细地址" :label-width="formLabelWidth">
-          <el-input  auto-complete="off"></el-input>
-        </el-form-item>
-      </el-form>
+    <el-dialog title="添加收货地址" class="addAddr"
+               :visible.sync="dialogAddVisible"
+               :before-close="handleClose">
+      <v-write :form="form" :type="0"></v-write>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button @click="dialogAddVisible = false">取 消</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="修改地址" class="addAddr"
+               :visible.sync="dialogUpdateVisible"
+              :before-close="handleClose">
+<v-write :form="receiver[updateSelected]" :type="0"></v-write>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogUpdateVisible = false">取 消</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
+import vWrite from '../../common/member/common/addressWrite';
+import bus from '../../common/bus';
   export default {
     data() {
       return {
@@ -61,8 +62,15 @@
           {name: "ToZLam", tel: "13411942184", addr: "广东省汕头市龙湖区泰星路", selected: false},
           {name: "ToZLam", tel: "13411942184", addr: "广东省汕头市龙湖区泰星路", selected: false},
         ],
-        dialogFormVisible:false
+        dialogAddVisible:false,
+        dialogUpdateVisible:false,
+        form:{name:"",tel:"",addr:"",checked:""},
+        updateSelected:-1,
+
       }
+    },
+    components:{
+      vWrite
     },
     methods: {
       receiverOn: function (index) {
@@ -73,6 +81,24 @@
         }
         this.receiver[index].selected = true;
       },
+      addressHandleChange (value) {
+        console.log(CodeToText[value[0]])
+        console.log(CodeToText[value[1]])
+        console.log(CodeToText[value[2]])
+      },
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      }
+    },
+    created(){
+      bus.$on('dialogVisible',msg=>{
+        this.dialogAddVisible=msg;
+        this.dialogUpdateVisible=msg;
+      })
     }
   }
 </script>
@@ -189,5 +215,8 @@
     background-repeat: no-repeat;
     content: "";
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAJBAMAAAAbVLtZAAAAJFBMVEUAAAD6+fn6+fn6+fn6+fn6+fn6+fn6+fn6+fn6+fn6+fn6+fl911MYAAAAC3RSTlMAcmL5TYuwloNhPwGhwdUAAAA1SURBVAjXYwADZQcwxbRbgIELSGtvZGCQDgBzGZy3grkMLNZBIC5QYPdGsGLO3QUQzW0gAgBJ7gno+zgkXwAAAABJRU5ErkJggg==");
+  }
+  .dialog-footer{
+    margin-top: -20px;
   }
 </style>

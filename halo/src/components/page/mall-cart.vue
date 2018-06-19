@@ -157,7 +157,7 @@
         if (scrollTop >  (height/3)) {
           this.barShow = false;
         }
-        else if(height<600){
+        else if(height<500){
           this.barShow = false;
         }
         else {
@@ -198,7 +198,7 @@
       }
     },
     mounted() {
-      this.data()
+      // this.data()
       setTimeout(() => {
         this.handleScroll()
       }, 300)
@@ -286,7 +286,7 @@
   .cart_footer {
     font-size: 14px;
     color: #999;
-    width: 1240px;
+    width: 100%;
     height: 70px;
     line-height: 70px;
     margin-top: 10px;

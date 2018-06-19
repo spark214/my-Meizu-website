@@ -3,28 +3,28 @@
     <div class="myOrder_header">
       <ul class="clearfix">
         <li>
-          <router-link to="orderTable" exact>全部订单</router-link>
+          <router-link to="allOrder" exact>全部订单</router-link>
         </li>
         <li>
-          <router-link to="orderTable" exact>待付款</router-link>
+          <router-link to="unpayOrder" exact>待付款</router-link>
         </li>
         <li>
-          <router-link to="orderTable" exact>待发货</router-link>
+          <router-link to="unsentOrder" exact>待发货</router-link>
         </li>
         <li>
-          <router-link to="orderTable" exact>已发货</router-link>
+          <router-link to="sentOrder" exact>已发货</router-link>
         </li>
         <li>
-          <router-link to="orderTable" exact>其他</router-link>
+          <router-link to="otherOrder" exact>其他</router-link>
         </li>
       </ul>
     </div>
     <div class="order_table_header">
       <ul class="clearfix">
-        <li style="width: 620px">订单明细</li>
-        <li style="width: 120px">金额</li>
-        <li style="width: 120px">状态</li>
-        <li style="width: 120px">操作</li>
+        <li style="width: 500px">订单明细</li>
+        <li style="width: 200px">金额</li>
+        <li style="width: 140px">状态</li>
+        <li style="width: 140px">操作</li>
       </ul>
     </div>
     <div class="myOrder_content">
@@ -39,8 +39,7 @@
 </script>
 <style scoped>
   .order_container {
-    margin-left: 20px;
-    margin-top: 20px;
+
   }
 .myOrder_header{
   border-bottom: 0.5px solid #fcfcfc;

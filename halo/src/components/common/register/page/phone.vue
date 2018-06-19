@@ -55,7 +55,6 @@
     },
     methods: {
       submitForm(form) {
-        alert("sss");
         var data=this.loginForm.phone;
         var url=this.$rootUrl+"/api/halo/registers/verifyPhone/"+data;
         const options = {
@@ -67,11 +66,9 @@
         this.$refs[form].validate((valid) => {
           if (valid) {
             this.$axios(options).
-            then((res)=>{
-              alert("s");
-              if(res.data[0].errorCode=='0'){
-            // localStorage.setItem('ms_userId', this.loginForm.userId);
-            this.$router.push({path: '/'});
+            then((res)=>{;
+              if(res.data.phone!==''){
+            this.$router.push({path: '/sms'});
                 }else {
                   console.log('error json!!');
                   return false;

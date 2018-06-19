@@ -85,7 +85,37 @@
     methods:{
       test(){
         console.log(typeof this.types);
+      },
+      getData(){
+        var url=this.$rootUrl+"/api/halo/registers/verifyPhone/"+data;
+        const options = {
+          method: 'GET',
+          headers: { 'content-type': 'application/x-www-form-urlencoded' },
+          url:url,
+          data:{}
+        };
+        this.$refs[form].validate((valid) => {
+          if (valid) {
+            this.$axios(options).
+            then((res)=>{;
+              if(res.data.phone!==''){
+                this.$router.push({path: '/sms'});
+              }else {
+                console.log('error json!!');
+                return false;
+              }
+            } )
+
+
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        })
       }
+    },
+    created(){
+
     }
   }
 </script>

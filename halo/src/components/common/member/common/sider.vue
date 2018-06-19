@@ -34,10 +34,10 @@
         item:[
           {name:'我的订单',route:'myOrder'},
           {name:'地址管理',route:'mAddress'},
-          {name:'建议反馈',route:'mIndex'},
+          {name:'建议反馈',route:'advice'},
           {name:'退款/退换货跟踪',route:'mIndex'},
-          {name:'意外保',route:'mIndex'},
-          {name:'以旧换新',route:'mIndex'},
+          {name:'意外保',route:'insurance'},
+          {name:'以旧换新',route:'mcycle'},
         ]
       }
     },

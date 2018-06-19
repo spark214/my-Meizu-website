@@ -4,6 +4,7 @@
     <div class="pageContain">
       <v-address></v-address>
       <v-ordermsg></v-ordermsg>
+      <v-payment></v-payment>
     </div>
     <v-footer></v-footer>
   </div>
@@ -13,13 +14,14 @@
   import vFooter from '../common/footer';
   import vAddress from '../common/mallCheck/address';
   import vOrdermsg from '../common/mallCheck/orderMsg';
+  import vPayment from '../common/mallCheck/payment';
 
   export default {
     data() {
       return {}
     },
     components: {
-      vHeader, vFooter, vAddress,vOrdermsg
+      vHeader, vFooter, vAddress,vOrdermsg,vPayment
     }
   }
 </script>
