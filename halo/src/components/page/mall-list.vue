@@ -2,8 +2,8 @@
   <div class="mallList">
     <v-header></v-header>
     <div class="pageContain mallList_container" @mouseenter="test">
-      <v-selector :types="types" :brands="brands"></v-selector>
-      <v-grid :item="phoneItem"></v-grid>
+      <v-selector></v-selector>
+      <v-grid ></v-grid>
     </div>
     <v-footer></v-footer>
   </div>
@@ -74,49 +74,13 @@
             selectPic: 0
           },
         ],
-        types: ["手机","智能硬件"],
-        brands: ["全部", "魅族", "魅蓝"]
       }
 
     },
     components: {
       vHeader, vGrid, vFooter, vSelector
     },
-    methods:{
-      test(){
-        console.log(typeof this.types);
-      },
-      getData(){
-        var url=this.$rootUrl+"/api/halo/registers/verifyPhone/"+data;
-        const options = {
-          method: 'GET',
-          headers: { 'content-type': 'application/x-www-form-urlencoded' },
-          url:url,
-          data:{}
-        };
-        this.$refs[form].validate((valid) => {
-          if (valid) {
-            this.$axios(options).
-            then((res)=>{;
-              if(res.data.phone!==''){
-                this.$router.push({path: '/sms'});
-              }else {
-                console.log('error json!!');
-                return false;
-              }
-            } )
 
-
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        })
-      }
-    },
-    created(){
-
-    }
   }
 </script>
 <style scoped>
