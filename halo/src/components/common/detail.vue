@@ -8,8 +8,8 @@
     </div>
 
     <section class="detail_section" v-show="sectionIndex==1">
-      <p v-for="(item,index) in 13">
-        <img v-lazy="'../../../static/img/'+name+'page_detail_'+(index+1)+'.jpg'">
+      <p v-html="common">
+        {{common}}
       </p>
     </section>
 
@@ -27,13 +27,10 @@
 </template>
 <script>
   export default {
-    props: {
-      name:{
-        type:[String]
-      }
-    },
-    data(){
-      return{
+
+    data() {
+      return {
+        common:[],
         questions: [
           {title: "魅族15 系列解锁方式是怎样的？", answer: "支持指纹识别解锁以及面部识别解锁；指纹解锁键位于手机屏幕下方。"},
           {title: "魅族15 系列是否保留 mBack 实体按键？形状？", answer: "非物理按键，可识别轻触及按压，操作逻辑和 mBack 相同。7mm 直径圆圈。"},
@@ -43,8 +40,33 @@
 
       }
     },
-    methods:{
+    methods: {
+      getData() {
+        var proId = this.$route.query.proId
+        var url = this.$rootUrl + "/api/halo/items/" + proId;
 
+        const options = {
+          method: 'GET',
+          headers: {'content-type': 'application/x-www-form-urlencoded'},
+          url: url,
+          data: {}
+        };
+
+        this.$axios(options).then((res) => {
+          if (res.data.data) {
+            var src = res.data.data.itemDetail.detailImg
+            this.common=src.replace(/data-original/g,"src")
+          }
+        })
+      }
+    },
+    created() {
+      this.getData()
+    },
+    watch: {
+      '$route'(to, from) {
+        this.getData()
+      }
     }
   }
 </script>

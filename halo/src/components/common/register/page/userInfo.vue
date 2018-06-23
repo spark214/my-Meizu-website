@@ -8,53 +8,80 @@
         </el-form-item>
 
         <p class="tips">密码长度为 8-16 位，至少包含字母、数字和符号中的两种类型</p>
-        <el-form-item prop="password">
-          <el-input type="password" v-model="loginForm.password" placeholder="密码" id="password"></el-input>
+        <el-form-item prop="pwd">
+          <el-input type="password" v-model="loginForm.pwd" placeholder="密码" id="password"></el-input>
         </el-form-item>
+        <el-button type="primary" size="medium" @click="next()">提交</el-button>
       </el-form>
 
-      <v-button content="提交" route="go"></v-button>
     </div>
   </div>
 </template>
 <script>
   import vButton from '../common/nextButton';
+  import qs from 'qs';
 export default {
-  data(){
+
+  data() {
     var validateUsername = (rule, value, callback) => {
-      if(this.loginForm.username===""){
+      if (this.loginForm.username === "") {
         callback(new Error('请填写用户名'));
       }
       else callback()
     };
     var validatePassword = (rule, value, callback) => {
       var reg = /^(?!^\\d+$)(?!^[a-zA-Z]+$)(?!^[_#@]+$).{8,}/;
-      if(reg.exec(value)!=null)  callback();
+      if (reg.exec(value) != null) callback();
       else callback(new Error("密码格式不准确"));
     };
-    return{
-      loginForm:{
-        username:"",
-        password:""
+    return {
+      loginForm: {
+        phone: "",
+        username: "",
+        pwd: ""
       },
-      rules:{
+      rules: {
         username: [
           {required: true, validator: validateUsername, trigger: "blur"}
         ],
-        password:[
+        password: [
           {required: true, validator: validatePassword, trigger: "blur"}
         ]
       }
     }
   },
-  components:{
+  components: {
     vButton
   },
-  methods:{
+  methods: {
     goRouter(that) {
       this.$router.push({path: "/" + that});
     },
+    next() {
+      this.loginForm.phone = this.$route.query.phone
+      var url = this.$rootUrl + "/api/halo/registers/registerByPhone";
+      const options = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        url: url,
+        data: this.loginForm
+      };
+      this.$axios(options).then((res) => {
+        if (res.data.data) {
+          if (res.data.errorCode == 0) {
+            sessionStorage.setItem('accessToken',res.data.data.access_token)
+            this.$router.go(-3);
+          }
+          else {
+            this.$message.error(res.data.msg);
+          }
+        }
+      })
 
+    }
+  },
+  created(){
+    this.loginForm.phone = this.$route.query.phone
   }
 }
 </script>

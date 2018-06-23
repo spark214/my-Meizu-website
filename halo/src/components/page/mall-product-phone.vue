@@ -5,45 +5,45 @@
 
     <div class="clearfix pageContain">
       <div class="contain_head clearfix">
-        <v-photo :imgurl="filterImg"></v-photo>
+        <v-photo ></v-photo>
         <div class="contain_head_right">
-          <h1>{{mobPhone.brand+mobPhone.name}}</h1>
-          <p class="right_slogan">{{mobPhone.slogan}}</p>
+          <h1>{{common.name}}</h1>
+          <p class="right_slogan">{{common.title}}</p>
           <div class="right_price">
             <a>价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格：</a>
-            <span>￥{{form.price}}.00</span>
+            <span>￥{{form.price.toFixed(2)}}</span>
           </div>
           <div class="right_selecct">
-            <dl>
+            <dl v-if="common.version!==undefined">
               <dt class="right_selecct_rom_lab">版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：</dt>
-              <dd v-for="item in mobPhone.version" class="right_selecct_rom_lab">
-                <el-button :class="{selected:form.version==item}" size="small">{{item}}</el-button>
+              <dd v-for="item in common.version" class="right_selecct_rom_lab">
+                <el-button  size="small" @click="goProduct(item.id)" :class="{selected:common.name==item.type}">{{item.type}}</el-button>
               </dd>
             </dl>
             <dl>
               <dt class="right_selecct_rom_lab">网络类型：</dt>
-              <dd v-for="item in mobPhone.nettype" class="right_selecct_rom_lab" @click="form.nettype=item">
-                <el-button :class="{selected:form.nettype==item}">{{item}}</el-button>
+              <dd v-for="item in common.nettype" class="right_selecct_rom_lab" @click="form.nettype=item">
+                <el-button  :class="{selected:form.nettype==item}">{{item}}</el-button>
               </dd>
             </dl>
             <dl>
               <dt class="right_selecct_item_lab">颜色分类：</dt>
-              <dd v-for="(item,index) in mobPhone.color" class="right_selecct_item right_selecct_item_lab">
-                <a @click="form.color=item.name;form.colorName=item.colorName;selectColor=index"
+              <dd v-for="(item,index) in filterColor" class="right_selecct_item right_selecct_item_lab">
+                <a @click="changeColor(item.name,index)"
                    :class="{selected:form.color==item.name}">
-                  <img v-lazy="'../../../static/img/'+mobPhone.name+'_'+item.name+'_2_680x680.jpg'" width="32px"><span>{{item.colorName}}</span>
+                  <img v-lazy="item.img" width="32px"><span>{{item.name}}</span>
                 </a>
               </dd>
             </dl>
             <dl>
               <dt class="right_selecct_rom_lab">内存容量：</dt>
-              <dd v-for="(item,index) in mobPhone.rom" class=" right_selecct_rom_lab"
+              <dd v-for="(item,index) in common.rom" class=" right_selecct_rom_lab"
                   @click="form.rom=item.size;form.price=item.price">
                 <el-button :class="{selected:form.rom==item.size}">{{item.size}}</el-button>
               </dd>
             </dl>
           </div>
-          <v-suport :brand="mobPhone.brand"></v-suport>
+          <v-suport :brand="common.name"></v-suport>
           <div class="right_count">
             <dl>
               <dt class="right_selecct_item_lab">数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：</dt>
@@ -65,14 +65,14 @@
         </div>
       </div>
 
-      <v-detail :name="mobPhone.name"></v-detail>
+      <v-detail></v-detail>
 
       <v-footer></v-footer>
 
     </div>
-    <v-hover :brand="mobPhone.brand" :name="form.name" :nettype="form.nettype" :buyCount="form.buyCount"
+    <v-hover :name="common.name" :nettype="form.nettype" :buyCount="form.buyCount"
              :price="form.price"
-             :rom="form.rom" :colorName="form.colorName"></v-hover>
+             :rom="form.rom" :colorName="form.color"></v-hover>
     <el-dialog
       :visible.sync="centerDialogVisible"
       width="30%"
@@ -97,34 +97,13 @@
   export default {
     data() {
       return {
-        mobPhone:
-          {
-            brand: '魅族',
-            name: '15',
-            slogan: '2000万暗光双摄， AI智能美颜',
-            version: ["魅族15", "魅族15Plus", "魅族M15"],
-            nettype: ["全网通公开版", "移动定制版"],
-            color: [
-              {colorName: '汝窑白', name: 'while'},
-              {colorName: '砚墨', name: 'black'},
-              {colorName: '雅金', name: 'gold'}
-            ],
-            rom: [{size: '4GB+64GB', price: '2499'}, {size: '4GB+128GB', price: '2699'}],
-            "imgUrl": [
-              "https://openfile.meizu.com/group1/M00/04/19/Cgbj0VrcbkeAGLvaAAkeRww1CzQ341.png680x680.jpg,https://openfile.meizu.com/group1/M00/04/0A/Cgbj0FrcbkKAbf63AAXVQzrAU6E631.png680x680.jpg,https://openfile.meizu.com/group1/M00/04/0A/Cgbj0FrcbkGAPaiGAAEkDlyYfyk487.png680x680.jpg,https://openfile.meizu.com/group1/M00/04/19/Cgbj0VrcbkKAUTagAAG14T9MUOI402.png680x680.jpg",
-              "https://openfile.meizu.com/group1/M00/04/1A/Cgbj0VrcblGASw1bAAw5XLlyeCA103.png680x680.jpg,https://openfile.meizu.com/group1/M00/04/0B/Cgbj0Frcbk-AeEorAAXY_9lHYR4332.png680x680.jpg,https://openfile.meizu.com/group1/M00/04/19/Cgbj0VrcbkiAaSirAAXItYvB5Xo133.png680x680.jpg,https://openfile.meizu.com/group1/M00/04/19/Cgbj0Vrcbk6AYrRNAAHbf4qjn34636.png680x680.jpg",
-              "https://openfile.meizu.com/group1/M00/04/0B/Cgbj0Frcbl-AW590AA3GJO-oXOo441.png680x680.jpg,https://openfile.meizu.com/group1/M00/04/1A/Cgbj0Vrcbl6ALqcjAAYgIzzUyi0930.png680x680.jpg,https://openfile.meizu.com/group1/M00/04/1A/Cgbj0VrcblWANIwFAAdqQqzT4iU606.png680x680.jpg,https://openfile.meizu.com/group1/M00/04/0B/Cgbj0FrcblyANwakAAIXb_XuaD8791.png680x680.jpg"
-            ],
-          },
+        common:[],
         form: {
-          name: '15',
-          color: 'while',
-          colorName: '汝窑白',
-          version: '魅族15',
-          price: 2499,
+          color: '',
+          price:0 ,
           buyCount: 1,
-          nettype: '全网通公开版',
-          rom: '4GB+64GB',
+          nettype: '',
+          rom: '',
         },
         sumPrice: 0,
         selectColor: 0,
@@ -136,31 +115,65 @@
       vHeader, vPhoto, vSuport, vDetail, vFooter, vHover
     },
     methods: {
-      changePic(index) {
-        this.selectPic = (index + 1);
+      changeColor(name,index) {
+        this.form.color=name
+        this.selectColor = index;
+        bus.$emit("pic",this.selectColor)
       },
       goRouter(that) {
         this.$router.push({path: "/" + that});
       },
+      goProduct(id) {
+        if (id <= 10)
+          this.$router.push({path: "/mallProductPhone", query: {proId: id}})
+        else
+          this.$router.push({path: "/mallProductOther", query: {proId: id}})
+      },
+      getData() {
+        var proId = this.$route.query.proId
+        var url = this.$rootUrl + "/api/halo/items/" + proId;
+
+        const options = {
+          method: 'GET',
+          headers: {'content-type': 'application/x-www-form-urlencoded'},
+          url: url,
+          data: {}
+        };
+
+        this.$axios(options).then((res) => {
+          if (res.data.data) {
+            this.common = JSON.parse(res.data.data.itemDetail.specificationJson)
+            this.form.rom=this.common.rom[0].size
+            this.form.price=this.common.rom[0].price
+            this.form.nettype=this.common.nettype[0]
+
+          }
+        })
+      }
+
 
     },
 
     computed: {
-      filterImg() {
-        let imgurl = []
-        let currindex = 0
-        let nextindex = this.mobPhone.imgUrl[this.selectColor].indexOf(",", currindex)
-
-        while (nextindex > 0) {
-          imgurl.push(this.mobPhone.imgUrl[this.selectColor].slice(currindex, nextindex))
-          currindex = nextindex + 1
-          nextindex = this.mobPhone.imgUrl[this.selectColor].indexOf(",", currindex)
+      filterColor() {
+        let color = []
+        const item = this.common.color
+        for (let i = 0; i < item.length; i++) {
+          let index = item[i].lastIndexOf(":")
+          color.push({name: item[i].substr(index + 1), img: item[i].slice(0, index)})
         }
-        imgurl.push(this.mobPhone.imgUrl[this.selectColor].slice(currindex))
-        return imgurl
+        return color
       }
       ,
     },
+    created() {
+      this.getData()
+    },
+    watch: {
+      '$route'(to, from) {
+        this.getData()
+      }
+    }
 
   }
 </script>

@@ -11,7 +11,8 @@
     <div class="sideBar" @mouseleave="evtSideLeave">
       <div class="side-left">
         <ul class="side">
-          <li class="side-item" @mouseenter="evtSideEnter(item.type)" v-for="item in sideItems" @click="goRouter('mallList')">
+          <li class="side-item" @mouseenter="evtSideEnter(item.type)" v-for="item in sideItems"
+              @click="goRouter('mallList')">
             {{item.content}}
           </li>
         </ul>
@@ -32,137 +33,122 @@
   </div>
 </template>
 <script>
-export default {
-  data(){
-    return{
-      banner: [
-        {
-          backgroundImage: "url(//p9f6ljki4.bkt.clouddn.com/mallIndex-halo-1240x500.jpg)",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
+  export default {
+    data() {
+      return {
+        banner: [
+          {
+            backgroundImage: "url(//p9f6ljki4.bkt.clouddn.com/mallIndex-halo-1240x500.jpg)",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
 
-        },
-        {
-          backgroundImage: "url(//p9f6ljki4.bkt.clouddn.com/mallIndex-mz15-1240x500.jpg)",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-        },
-        {
-          backgroundImage: "url(//p9f6ljki4.bkt.clouddn.com/mallIndex-pop-1240x500.jpg)",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-        },
-      ],
-     currGoods: [],
-       goodsStatus: false,
-      sideItems: [
-      {type: 'phone', content: '手机'},
-      {type: 'device', content: '智能设备'},
-      {type: 'wear', content: '智能穿戴'},
-      {type: 'game', content: '游戏设备'},
-      {type: 'hear', content: '数码影音'},
-      {type: 'fitting', content: '手机配件/移动电源'},
-      {type: 'storage', content: '移动存储/办公设备'},
-      {type: 'hobby', content: '生活周边'}
-    ],
-      phone: [
-      {
-        sourceUrl: '//www.mi.com/mi5/',
-        buyUrl: '//item.mi.com/buyphone/mi5',
-        imgUrl: 'http://c1.mifile.cn/f/i/15/goods/list/mi5bar80.jpg?width=40&height=40',
-        name: '小米手机5',
-        buyStatus: true
-      },
-      {
-        sourceUrl: '//www.mi.com/mimax/',
-        buyUrl: '//item.mi.com/buyphone/mimax',
-        imgUrl: 'http://c1.mifile.cn/f/i/15/goods/sidebar/maxbar80.jpg?width=40&height=40',
-        name: '小米Max',
-        buyStatus: true
-      },
-      {
-        sourceUrl: '//www.mi.com/note3/pro/',
-        buyUrl: '//item.mi.com/buyphone/note3',
-        imgUrl: 'http://c1.mifile.cn/f/i/15/goods/sidebar/note3.jpg?width=40&height=40',
-        name: '小米Note3',
-        buyStatus: true
-      },
-      {
-        sourceUrl: '//www.mi.com/hongmi3s/',
-        buyUrl: '//item.mi.com/buyphone/hongmi3s',
-        imgUrl: 'http://c1.mifile.cn/f/i/g/2015/video/hm3s80x80.jpg?width=40&height=40',
-        name: '红米手机3S',
-        buyStatus: true
-      },
-      {
-        sourceUrl: '//www.mi.com/redmipro/',
-        buyUrl: '//item.mi.com/buyphone/redmipro/',
-        imgUrl: 'http://c1.mifile.cn/f/i/15/goods/sidebar/hongmi3.jpg?width=40&height=40',
-        name: '红米Pro',
-        buyStatus: true
-      },
-      {
-        sourceUrl: '//www.mi.com/hongmi3/',
-        buyUrl: '//item.mi.com/buyphone/hongmi3/',
-        imgUrl: 'http://c1.mifile.cn/f/i/15/goods/list/mi5bar80.jpg?width=40&height=40',
-        name: '红米手机3',
-        buyStatus: true
-      },
-      {
-        sourceUrl: '//www.mi.com/hongmi3x/',
-        buyUrl: '//item.mi.com/buyphone/hongmi3x',
-        imgUrl: 'http://c1.mifile.cn/f/i/g/2015/video/3X80.jpg?width=40&height=40',
-        name: '红米手机3X',
-        buyStatus: true
-      },
-      {
-        sourceUrl: '//heyue.mi.com/',
-        buyUrl: '//item.mi.com/buyphone/mi5',
-        imgUrl: 'http://c1.mifile.cn/f/i/15/goods/sidebar/heyue.jpg?width=40&height=40',
-        name: '合约机',
-        buyStatus: false
-      },
-      {
-        sourceUrl: '//www.mi.com/compare/',
-        buyUrl: '//item.mi.com/buyphone/mi5',
-        imgUrl: 'http://c1.mifile.cn/f/i/15/goods/sidebar/compare.jpg?width=40&height=40',
-        name: '对比手机',
-        buyStatus: false
-      },
-      {
-        sourceUrl: '//www.mi.com/mimobile/',
-        buyUrl: '//item.mi.com/buyphone/mi5',
-        imgUrl: 'http://c1.mifile.cn/f/i/15/goods/sidebar/mimobile.jpg?width=40&height=40',
-        name: '小米移动 电话卡',
-        buyStatus: false
+          },
+          {
+            backgroundImage: "url(//p9f6ljki4.bkt.clouddn.com/mallIndex-mz15-1240x500.jpg)",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+          },
+          {
+            backgroundImage: "url(//p9f6ljki4.bkt.clouddn.com/mallIndex-pop-1240x500.jpg)",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+          },
+        ],
+        currGoods: [],
+        goodsStatus: false,
+        sideItems: [
+          {type: 'phone', content: '手机'},
+          {type: 'device', content: '智能设备'},
+          {type: 'wear', content: '智能穿戴'},
+          {type: 'game', content: '游戏设备'},
+          {type: 'hear', content: '数码影音'},
+          {type: 'fitting', content: '手机配件/移动电源'},
+          {type: 'storage', content: '移动存储/办公设备'},
+          {type: 'hobby', content: '生活周边'}
+        ],
+        phone: [
+          {
+            proId: 1,
+            imgUrl: '//openfile.meizu.com/group1/M00/04/1F/Cgbj0VrciICAchSAAAvT_qZZSA0067_180x180.png',
+            name: '魅族15',
+          },
+          {
+            proId: 2,
+            imgUrl: '//openfile.meizu.com/group1/M00/04/10/Cgbj0FrciDGAFKL5AAxI8Fi80MA698_180x180.png',
+            name: '魅族15 Plus',
+          },
+          {
+            proId: 3,
+            imgUrl: '//openfile.meizu.com/group1/M00/04/19/Cgbj0VrcbhmAHzm7AAMI5v4clPg365.png',
+            name: '魅族M15',
+          },
+          {
+            proId: 6,
+            imgUrl: '//openfile.meizu.com/group1/M00/01/B8/Cgbj0Fl4NtOAU4aRAAvVzqN22Ug687.png',
+            name: '魅族PRO 7',
+          },
+          {
+            proId: 7,
+            imgUrl: '//openfile.meizu.com/group1/M00/01/C9/Cgbj0Vl4OdOAGsDfAAuYs_pyDV0706.png',
+            name: '魅族PRO 7 Plus',
+          },
+          {
+            proId: 1,
+            imgUrl: '//openfile.meizu.com/group1/M00/01/DC/Cgbj0FmdIJmAeVGmAAxAuuJkLGk921.png@480x480.jpg',
+            name: '魅蓝Note6',
+          },
+          {
+            proId: 4,
+            imgUrl: '//openfile.meizu.com/group1/M00/02/2F/Cgbj0VnCGzWAWqh8AAwk2MA0gtk390.png',
+            name: '魅蓝6',
+          },
+          {
+            proId: 1,
+            imgUrl: '//openfile.meizu.com/group1/M00/00/2C/Cgbj0VkAUNmAeTU2AAklK6hJr4k492.png',
+            name: '魅蓝Note6',
+          },
+          {
+            proId: 1,
+            imgUrl: '//openfile.meizu.com/group1/M00/03/03/Cgbj0VpfCpuAF571AAwckbZIp2U479_180x180.png',
+            name: '魅蓝Note6',
+          },
+          {
+            proId: 10,
+            imgUrl: '//openfile.meizu.com/group1/M00/03/65/Cgbj0VqyCueAWj7qAAqHKrdRwcQ675_180x180.png',
+            name: '魅蓝E3',
+          },
+        ],
+        wear:[{
+          proId: 10,
+          imgUrl: '//openfile.meizu.com/group1/M00/00/13/Cgbj0VjkorqAGxuXAAOqzSlfPuA747_180x180.png',
+          name: '魅族手环',
+        }]
+
       }
-    ],
-
-  }
-  },
-  methods:{
-    evtSideEnter(currType) {
-      this.currGoods = this[currType]
-      this.goodsStatus = true
     },
-    evtSideLeave() {
-      this.goodsStatus = false
+    methods: {
+      evtSideEnter(currType) {
+        this.currGoods = this[currType]
+        this.goodsStatus = true
+      },
+      evtSideLeave() {
+        this.goodsStatus = false
+      },
+      goRouter(that) {
+        this.$router.push({path: "/" + that});
+      },
     },
-    goRouter(that) {
-      this.$router.push({path: "/" + that});
-    },
-  },
-  computed: {
-    filterCurrGoods: function () {
-      let filterGoods = [[], [], [], [], []]
-      this.currGoods.forEach(function (item, index) {
-        let goodsIndex = Math.floor(index / 6)
-        filterGoods[goodsIndex].push(item)
-      })
-      return filterGoods
+    computed: {
+      filterCurrGoods: function () {
+        let filterGoods = [[], [], [], [], []]
+        this.currGoods.forEach(function (item, index) {
+          let goodsIndex = Math.floor(index / 6)
+          filterGoods[goodsIndex].push(item)
+        })
+        return filterGoods
+      }
     }
   }
-}
 </script>
 <style>
   .carousel {
@@ -172,12 +158,13 @@ export default {
 
   .banner {
     position: relative;
-    top:30px
+    top: 30px
 
   }
-  .banner-content{
+
+  .banner-content {
     position: relative;
-    top:10%;
+    top: 10%;
     left: -31%;
     width: 2005px;
     height: 500px;
@@ -206,7 +193,8 @@ export default {
     height: 62.5px;
     cursor: pointer;
   }
-  .side-item:hover{
+
+  .side-item:hover {
     color: #409EFF;
   }
 

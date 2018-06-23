@@ -12,11 +12,12 @@
           <el-container id="login_container_main">
             <el-form :model="loginForm" :rules="rules" ref="loginForm" class="form_main">
               <el-form-item prop="userId">
-                <el-input v-model="loginForm.userId" placeholder="手机号"></el-input>
+                <el-input v-model="loginForm.phone" placeholder="手机号" @change="vp()"></el-input>
+                <p style="color:#e22841;font-size: 12px">{{errormsg}}</p>
               </el-form-item>
-              <el-form-item prop="password" v-show="accLogin">
-                <el-input placeholder="密码" type="password" v-model="loginForm.password"
-                          @keyup.enter.native="submitForm('loginForm')"></el-input>
+              <el-form-item prop="pwd" v-show="accLogin">
+                <el-input placeholder="密码" type="password" v-model="loginForm.pwd"
+                          @keyup.enter.native=""></el-input>
               </el-form-item>
 
               <v-sms v-show="!accLogin"></v-sms>
@@ -24,7 +25,7 @@
               <v-code @codeAva="getAva" v-show="accLogin"></v-code>
               <el-checkbox v-show="accLogin">记住密码</el-checkbox>
               <el-form-item>
-                <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
+                <el-button type="primary" @click="check()">登录</el-button>
               </el-form-item>
               <el-form-item>
               <a @click="goRouter('register')" class="login">注册</a>
@@ -42,14 +43,13 @@
 <script>
   import vCode from "../common/register/common/vCode";
   import vSms from "../common/register/common/sms";
-
+  import qs from 'qs';
   export default {
     data: function () {
       return {
         loginForm: {
-          userId: "",
-          password: "",
-          sms: ""
+          phone: "",
+          pwd: "",
         },
         rules: {
           userId: [
@@ -62,27 +62,44 @@
         },
         codeAva: false,
         accLogin: true,
+        errormsg:""
       };
     },
     methods: {
-      submitForm(form) {
-        this.$refs[form].validate((valid) => {
-          if (valid) {
-            // this.$axios.get(this.$rootUrl+"/auths/verifyPhone",{}).
-            // then((res)=>{
-            //   if(res.data[0].content==='demo'){
-            localStorage.setItem('ms_userId', this.loginForm.userId);
-            this.$router.push({path: '/'});
-            //     }else {
-            //       console.log('error json!!');
-            //       return false;
-            //     }
-            // } )
-            //
+      vp() {
+        var data = this.loginForm.phone;
+        var url = this.$rootUrl + "/api/halo/auths/verifyPhone/" + data;
+        const options = {
+          method: 'GET',
+          url: url,
+          data: {}
+        };
 
-          } else {
-            console.log('error submit!!');
-            return false;
+            this.$axios(options).then((res) => {
+              if (res.data.errorCode == 0) {
+
+              } else {
+                this.errormsg = res.data.msg;
+              }
+            })
+      },
+      check(){
+        var url = this.$rootUrl + "/api/halo/auths/loginByPwd";
+        const options = {
+          method: 'POST',
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          url: url,
+          data: qs.stringify(this.loginForm)
+        };
+        this.$axios(options).then((res) => {
+          if (res.data.data) {
+            if (res.data.errorCode == 0) {
+              sessionStorage.setItem('accessToken',res.data.data.access_token)
+
+            }
+            else {
+             this.errormsg=res.data.msg;
+            }
           }
         })
       },

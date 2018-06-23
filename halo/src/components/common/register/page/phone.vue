@@ -3,12 +3,12 @@
     <div class="phoneChecck">
       <el-form :model="loginForm" :rules="rules" ref="loginForm" class="form">
         <el-form-item prop="phone">
-          <el-input v-model="loginForm.phone" placeholder="手机号码" id="phone" @blur="submitForm('loginForm')"></el-input>
+          <el-input v-model="loginForm.phone" placeholder="手机号码" id="phone"></el-input>
         </el-form-item>
 
         <v-code @codeAva="getAva"></v-code>
         <p class="tips">点击立即注册，即表示您同意并愿意遵守 Halo服务协议 和 法律声明</p>
-        <el-button type="primary" size="medium" @click="next('sms')">立即注册</el-button>
+        <el-button type="primary" size="medium" @click="next('sms','loginForm')">立即注册</el-button>
         <el-form-item>
           <a @click="goRouter('login')" class="login">登录</a>
         </el-form-item>
@@ -16,6 +16,16 @@
       </el-form>
 
     </div>
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible">
+      <p>{{errormsg}}</p>
+      <p>去登录</p>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="goRouter('login')">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -31,7 +41,7 @@
           callback(new Error('请输入手机号码'));
         }
         else if (reg.exec(value) != null) {
-        callback();
+          callback()
         }
         else {
           callback(new Error('无效手机号码'));
@@ -48,6 +58,8 @@
           ]
         },
         codeAva: false,
+        errormsg: "",
+        dialogVisible: false,
       }
     },
     components: {
@@ -55,40 +67,39 @@
     },
     methods: {
       submitForm(form) {
-        var data=this.loginForm.phone;
-        var url=this.$rootUrl+"/api/halo/registers/verifyPhone/"+data;
+        var data = this.loginForm.phone;
+        var url = this.$rootUrl + "/api/halo/registers/verifyPhone/" + data;
         const options = {
           method: 'GET',
-          headers: { 'content-type': 'application/x-www-form-urlencoded' },
-          url:url,
-          data:{}
+          headers: {'content-type': 'application/x-www-form-urlencoded'},
+          url: url,
+          data: {}
         };
         this.$refs[form].validate((valid) => {
           if (valid) {
-            this.$axios(options).
-            then((res)=>{;
-              if(res.data.phone!==''){
-            this.$router.push({path: '/sms'});
-                }else {
-                  console.log('error json!!');
-                  return false;
-                }
-            } )
+            this.$axios(options).then((res) => {
+              if (res.data.errorCode == 0) {
+                this.$router.push({path: '/sms', query: {phone: data}});
+              } else {
+                this.errormsg = res.data.msg;
+                this.dialogVisible = true
+              }
 
-
+            })
           } else {
             console.log('error submit!!');
             return false;
           }
         })
       },
+
       goRouter(that) {
         this.$router.push({path: "/" + that});
       },
-      next(that) {
+      next(that, form) {
 
         if (this.loginForm.phone !== "" && this.codeAva) {
-          this.$router.push({path: "/" + that});
+          this.submitForm(form)
         }
         else {
           document.getElementById("phone").focus()

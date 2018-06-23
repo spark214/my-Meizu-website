@@ -8,7 +8,7 @@
       </el-breadcrumb>
     </div>
 
-    <div class="selector">
+    <div class="selector" v-if="cateId>=0">
       <div class="selector_type clearfix selector_box" v-show="cateId==0">
         <span>分类：</span>
         <ul class="clearfix">
@@ -18,7 +18,7 @@
       <div class="selector_brand clearfix selector_box">
         <span>品牌：</span>
         <ul class="clearfix">
-          <li v-for="(item,index) in brands" class="itemfloat">{{item.brandName}}</li>
+          <li v-for="(item,index) in brands" class="itemfloat" @click="goBrand(item.id)">{{item.brandName}}</li>
         </ul>
       </div>
     </div>
@@ -43,12 +43,17 @@
         brands: [],
         filter: 0,
         filterPrice: 0,
-        cateId: 0
+        cateId: 0,
+        brandId:0
       }
     },
     methods: {
       goCate(id) {
         this.$router.push({path: "/mallList", query: {cateId: id}})
+      },
+      goBrand(id) {
+        var cateId = this.$route.query.cateId
+        this.$router.push({path: "/mallList", query: {cateId:cateId,brandId: id}})
       },
       filterprice() {
         this.filter = 2;
@@ -113,7 +118,8 @@
     created() {
       this.cateId = this.$route.query.cateId
       if (this.$route.query.cateId === undefined) this.cateId = 0
-      this.getData(this.cateId)
+      if (this.cateId >= 0)
+        this.getData(this.cateId)
     },
     watch: {
       '$route'(to, from) {

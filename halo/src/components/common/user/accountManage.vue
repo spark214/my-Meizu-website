@@ -181,6 +181,9 @@
         var phone = this.phoneForm.old.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
         return phone;
       }
+    },
+    created(){
+
     }
   }
 </script>

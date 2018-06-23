@@ -27,7 +27,7 @@
       </li>
       <li><a @click="goRouter('mallIndex')">商城</a></li>
       <li><a target="_blank" href="">Flow.</a></li>
-      <li class="nav-search"><input type="text" placeholder="魅族15"><i class="el-icon-search"></i></li>
+      <li class="nav-search"><input type="text" placeholder="魅族15" value="" id="searchInput"><i class="el-icon-search" @click="goSearch"></i></li>
     </ul>
     <div class="login clearfix">
       <ul>
@@ -93,6 +93,10 @@
     methods: {
       goRouter(that) {
         this.$router.push({path: "/" + that});
+      },
+      goSearch(){
+        var name=document.getElementById("searchInput").value
+        this.$router.push({path: "/mallList", query: {name: name,cateId:-1}})
       },
       handleCommand(command) {
         if (command == 'loginout') {

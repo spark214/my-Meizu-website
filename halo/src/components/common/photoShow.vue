@@ -1,9 +1,9 @@
 <template>
   <div class="contain_head_img">
-    <img v-lazy="imgurl[selectPic]" width="395px"
-    class="img_preview">
+    <img v-lazy="imgurl[picS][selectPic]" width="395px"
+         class="img_preview">
     <ul>
-      <li v-for="(pic,picIndex) in imgurl">
+      <li v-for="(pic,picIndex) in imgurl[picS]">
         <img v-lazy="pic"
              width="75px" @click="changePic(picIndex)" :class="{selectPic:selectPic==(picIndex)}">
       </li>
@@ -42,24 +42,57 @@
   import bus from './bus.js';
 
   export default {
-    props:{
-      imgurl:{
-        type:[Array]
-      }
-    },
-    data(){
-      return{
-        selectPic: 0,
 
+    data() {
+      return {
+        common: [],
+        selectPic: 0,
+        imgurl: [],
+        picS:0
       }
     },
-    methods:{
+    methods: {
       changePic(index) {
         this.selectPic = (index);
       },
+      getData() {
+        var proId = this.$route.query.proId
+        var url = this.$rootUrl + "/api/halo/items/" + proId;
+
+        const options = {
+          method: 'GET',
+          headers: {'content-type': 'application/x-www-form-urlencoded'},
+          url: url,
+          data: {}
+        };
+
+        this.$axios(options).then((res) => {
+          this.imgurl=new Array()
+           var common=JSON.parse(res.data.data.itemDetail.specificationJson)
+          for(let i=0;i<common.imgUrl.length;i++){
+             this.imgurl[i]=new Array(i)
+              this.imgurl[i]=common.imgUrl[i].split(',')
+
+          }
+        console.log(this.imgurl)
+
+        })
+      }
 
     },
-    mounted(){
+    computed: {
+
+    },
+    created() {
+      bus.$on("pic",msg=>{
+        this.picS=msg
+      })
+      this.getData()
+    },
+    watch: {
+      '$route'(to, from) {
+        this.getData()
+      }
     }
   }
 </script>

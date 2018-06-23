@@ -5,7 +5,7 @@
 
     <div class="container clearfix pageContain">
       <div class="contain_head clearfix">
-        <v-photo :imgurl="filterImg"></v-photo>
+        <v-photo ></v-photo>
         <div class="contain_head_right">
           <h1>{{common.name}}</h1>
           <p class="right_slogan">{{common.title}}</p>
@@ -15,13 +15,13 @@
           </div>
           <div class="right_selecct">
             <dl>
-              <dt class="right_selecct_item_lab">颜色分类：</dt>
-              <dd v-for="item in filterColor" class="right_selecct_item right_selecct_item_lab">
-                <a @click="form.color=item.name"
-                   :class="{selected:form.color==item.name}">
-                  <img v-lazy="item.img" width="32px"><span>{{item.name}}</span>
-                </a>
-              </dd>
+            <dt class="right_selecct_item_lab">颜色分类：</dt>
+            <dd v-for="(item,index) in filterColor" class="right_selecct_item right_selecct_item_lab">
+              <a @click="changeColor(item.name,index)"
+                 :class="{selected:form.color==item.name}">
+                <img v-lazy="item.img" width="32px"><span>{{item.name}}</span>
+              </a>
+            </dd>
             </dl>
           </div>
           <v-suport :brand="common.name"></v-suport>
@@ -35,7 +35,7 @@
             </dl>
 
             <div class="right_button">
-              <el-button type="danger" size="medium" class="right_buynow"  @click="goRouter('mallCart')">
+              <el-button type="danger" size="medium" class="right_buynow" @click="goRouter('mallCart')">
                 立即购买
               </el-button>
               <el-button type="primary" size="medium" class="right_buynow" @click="addCart;centerDialogVisible=true">
@@ -46,14 +46,14 @@
         </div>
       </div>
 
-      <!--<v-detail :name=""></v-detail>-->
+      <v-detail></v-detail>
 
       <v-footer></v-footer>
 
     </div>
     <!--<v-hover :brand="ll" :name="common.name" :buyCount="form.buyCount"-->
-             <!--:price="common.price"-->
-             <!--:colorName="form.color"></v-hover>-->
+    <!--:price="common.price"-->
+    <!--:colorName="form.color"></v-hover>-->
     <el-dialog
       :visible.sync="centerDialogVisible"
       width="30%"
@@ -79,18 +79,10 @@
     data() {
       return {
         "common": {
-          "name": "魅族手环",
-          "title": "腕间流动的心率专家",
-          "price": 169,
-          "color": [
-            "https://openfile.meizu.com/group1/M00/00/C8/Cix_s1hGFveAE3RcAAOqzSlfPuA022.png@240x240.jpg:黑色"
-          ],
-          "imgUrl": [
-            "https://openfile.meizu.com/group1/M00/00/C8/Cix_s1hGFveAE3RcAAOqzSlfPuA022.png680x680.jpg,https://openfile.meizu.com/group1/M00/00/C8/CnQOjVhGFveAQPDGAAPhPu3QlRw570.png680x680.jpg,https://openfile.meizu.com/group1/M00/00/C8/CnQOjVhGFveAE13JAAK1qX5uOUc838.png680x680.jpg,https://openfile.meizu.com/group1/M00/00/C8/Cix_s1hGFvmAKqehAAEitg7s_D0643.png680x680.jpg"
-          ],
-        },
+          imgurl:[]
+      },
         form: {
-          name: "",
+          color:'',
           buyCount: 1,
           price: "",
           desc: "",
@@ -107,60 +99,40 @@
       vHeader, vPhoto, vSuport, vDetail, vFooter, vHover
     },
     methods: {
-      changePic(index) {
-        this.selectPic = (index + 1);
-      },
-      addCart() {
-        this.form.name = this.common.name
-        this.form.desc = this.filterColor
-        this.form.price = this.common.price
-        this.formcount++;
-        var str = JSON.stringify(this.form)
-        document.cookie = "form=" + str;
-        document.cookie = "formcount=" + this.formcount;
-      },
-      getCookie() {
-        if (document.cookie.length > 0) {
-          var hs_start = document.cookie.indexOf("formcount=")
-
-          if (hs_start == -1) {
-            this.formcount = 0;
-          }
-          var hs_end = document.cookie.indexOf(";", hs_start);
-          if (hs_end != -1) {
-            this.formcount = document.cookie.substring(hs_start + 10, hs_end);
-          }
-          else {
-            this.formcount = document.cookie.substring(hs_start + 10);
-          }
-        }
+      changeColor(name,index) {
+        this.form.color=name
+        this.selectColor = index;
+        bus.$emit("pic",this.selectColor)
       },
       goRouter(that) {
         this.$router.push({path: "/" + that});
       },
       setTimeClose() {
         setTimeout(() => {
-         this.centerDialogVisible=false
+          this.centerDialogVisible = false
         }, 3000)
+      },
+      getData() {
+        var proId = this.$route.query.proId
+        var url = this.$rootUrl + "/api/halo/items/" + proId;
+
+        const options = {
+          method: 'GET',
+          headers: {'content-type': 'application/x-www-form-urlencoded'},
+          url: url,
+          data: {}
+        };
+
+        this.$axios(options).then((res) => {
+          if (res.data.data) {
+            this.common = JSON.parse(res.data.data.itemDetail.specificationJson)
+          }
+        })
       }
 
     },
 
     computed: {
-      filterImg() {
-        let imgurl = []
-        let currindex = 0
-        let nextindex = this.common.imgUrl[this.selectColor].indexOf(",", currindex)
-
-        while (nextindex > 0) {
-          imgurl.push(this.common.imgUrl[this.selectColor].slice(currindex, nextindex))
-          currindex = nextindex + 1
-          nextindex = this.common.imgUrl[this.selectColor].indexOf(",", currindex)
-        }
-        imgurl.push(this.common.imgUrl[this.selectColor].slice(currindex))
-        return imgurl
-      }
-      ,
       filterColor() {
         let color = []
         const item = this.common.color
@@ -172,9 +144,10 @@
       }
       ,
     },
-    mounted() {
-      this.getCookie()
+    created() {
+      this.getData()
     }
+
   }
 </script>
 <style>

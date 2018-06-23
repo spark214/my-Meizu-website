@@ -2,11 +2,11 @@
   <div>
     <el-button type="primary" size="medium" @click="next()">{{content}}</el-button>
     <el-form-item>
-      <a @click="next('login')" class="login">登录</a>
     </el-form-item>
   </div>
 </template>
 <script>
+  import bus from "../../../common/bus";
   export default {
     props: {
       content: {
@@ -16,14 +16,38 @@
         type: [String]
       }
     },
+    data(){return{
+      form:{
+        phone:"",
+        code: ''
+      }
+    }},
     methods: {
       next() {
-        if (this.route == 'go')
+        if (this.route == 'go'){
+          var url = this.$rootUrl + "/api/halo/registers/registerByPhone";
+          const option = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            url: url,
+            data: qs.stringify(this.loginForm)
+          };
+          this.$axios(option).then((res) => {
+            if (res.data.data) {
+              if (res.data.errorCode == 0) {
+                sessionStorage.setItem('accessToken',res.data.data.access_token)
+              }
+              else {
+                this.$message.error(res.data.msg);
+              }
+            }
+          })
           this.$router.go(-3);
-        else
-          this.$router.push({path: "/" + this.route});
+        }
+
+
+        }
       }
-    }
   }
 </script>
 <style>

@@ -5,7 +5,7 @@
         <a href="login.html"><span>现在购买</span></a>
       </div>
       <div class="bar-desc">
-        <span>{{brand+name}}&nbsp;<span
+        <span>{{name}}&nbsp;<span
           class="bar-desc-price">￥{{buyCount*price}}.00</span></span>
         <br>
         <label>{{nettype}} <a class="bar-color">{{colorName}}</a> {{rom}}</label>
@@ -16,9 +16,6 @@
 <script>
   export default {
     props: {
-      brand: {
-        type: [String, Number]
-      },
       name: {
         type: [String, Number]
       },
