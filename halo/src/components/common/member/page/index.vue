@@ -2,21 +2,21 @@
   <div>
     <div class="user_info clearfix">
       <div class="info_img">
-        <img :src="msg.img" width="135px">
+        <img :src="avatar" width="135px">
       </div>
       <div class="info_welcome">
-        <h4>{{msg.id}}</h4>
+        <h4>{{msg.username}}</h4>
         <p>欢迎您回来!</p>
       </div>
       <div class="info_msg">
         <ul>
-          <li><span class="info_msg_title">Halo.账号：</span><span>{{msg.id}}</span></li>
+          <li><span class="info_msg_title">Halo.账号：</span><span>{{msg.username}}</span></li>
           <li><span class="info_msg_title">绑定手机号：</span><span>{{filterPhone}}</span></li>
           <li v-if="msg.mail!==''"><span class="info_msg_title">绑定邮箱：</span><span>{{filterMail}}</span></li>
         </ul>
       </div>
       <div class="info_enter">
-        <a class="enter_btn" @click="goRouter('user')">修改个人信息 > </a>
+        <a class="enter_btn" @click="goUser">修改个人信息 > </a>
       </div>
 
     </div>
@@ -54,30 +54,60 @@
   export default {
     data() {
       return {
-        msg: {
-          id: "zijian21",
-          phone: "13192256005",
-          mail: "707624560@qq.com",
-          img:"../../../../../static/img/21.jpg"
-        },
+        msg: {},
         unpay:0,
-        unsend:0
+        unsend:0,
+        avatar:""
       }
     },
     methods: {
+      goUser(){
+        this.$router.push({path: '/user', query: {phone: this.msg.phone}});
+      },
       goRouter(that) {
         this.$router.push({path: "/" + that});
       },
+      getData(){
+          var url = this.$rootUrl + "/api/halo/users/";
+          var token = sessionStorage.getItem('accessToken');
+          const options = {
+            method: 'GET',
+            headers: {'access_token': token},
+            url: url,
+            data: {}
+          };
+          this.$axios(options).then((res) => {
+            if (res.data.data) {
+              if (res.data.errorCode == 0) {
+                this.msg = res.data.data.userinfo
+                if(this.msg.avatar==""){
+                  this.avatar= "//image-res.mzres.com/image/uc/80f8d55d49464e3e90d72f6679cbf970z?t=946656000000"
+                }
+                else{
+                  this.avatar= this.msg.avatar
+                }
+              }
+
+            }
+          })
+
+      }
     },
     computed: {
       filterMail() {
-        var mail = this.msg.mail.replace(/(.{2}).+(.{2}@.+)/g, '$1****$2')
+        if(this.msg.email===undefined){
+          return null;
+        }
+        var mail = this.msg.email.replace(/(.{2}).+(.{2}@.+)/g, '$1****$2')
         return mail;
       },
       filterPhone() {
         var phone = this.msg.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
         return phone;
       }
+    },
+    created(){
+      this.getData()
     }
   }
 </script>

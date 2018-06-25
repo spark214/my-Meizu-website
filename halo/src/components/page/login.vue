@@ -95,7 +95,7 @@
           if (res.data.data) {
             if (res.data.errorCode == 0) {
               sessionStorage.setItem('accessToken',res.data.data.access_token)
-
+              this.$router.push({path: "/"});
             }
             else {
              this.errormsg=res.data.msg;

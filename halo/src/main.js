@@ -12,6 +12,8 @@ Vue.use(VueWechatTitle)
 Vue.use(ElementUI, { size: 'small' });
 Vue.prototype.$axios = axios;
 axios.defaults.withCredentials=true;
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.headers.patch['Content-Type'] = 'application/x-www-form-urlencoded';
 Vue.prototype.$rootUrl = '/proxy';
 Vue.use(Vuelazyload, {
   loading: require('../static/img/lazyloadPanda.gif')

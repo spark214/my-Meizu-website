@@ -11,6 +11,9 @@
               <keep-alive>
                 <router-view></router-view>
               </keep-alive>
+              <el-form-item>
+                <a @click="" class="login">登录</a>
+              </el-form-item>
             </div>
           </el-container>
         </el-container>
@@ -152,5 +155,12 @@
     body {
       width: 1080px;
     }
+  }
+  .login {
+    font-size: 14px;
+    color: #409EFF;
+    cursor: pointer;
+    position: absolute;
+
   }
 </style>

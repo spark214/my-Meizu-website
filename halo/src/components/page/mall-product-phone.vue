@@ -5,7 +5,7 @@
 
     <div class="clearfix pageContain">
       <div class="contain_head clearfix">
-        <v-photo ></v-photo>
+        <v-photo></v-photo>
         <div class="contain_head_right">
           <h1>{{common.name}}</h1>
           <p class="right_slogan">{{common.title}}</p>
@@ -17,19 +17,21 @@
             <dl v-if="common.version!==undefined">
               <dt class="right_selecct_rom_lab">版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：</dt>
               <dd v-for="item in common.version" class="right_selecct_rom_lab">
-                <el-button  size="small" @click="goProduct(item.id)" :class="{selected:common.name==item.type}">{{item.type}}</el-button>
+                <el-button size="small" @click="goProduct(item.id)" :class="{selected:common.name==item.type}">
+                  {{item.type}}
+                </el-button>
               </dd>
             </dl>
             <dl>
               <dt class="right_selecct_rom_lab">网络类型：</dt>
               <dd v-for="item in common.nettype" class="right_selecct_rom_lab" @click="form.nettype=item">
-                <el-button  :class="{selected:form.nettype==item}">{{item}}</el-button>
+                <el-button :class="{selected:form.nettype==item}">{{item}}</el-button>
               </dd>
             </dl>
             <dl>
               <dt class="right_selecct_item_lab">颜色分类：</dt>
               <dd v-for="(item,index) in filterColor" class="right_selecct_item right_selecct_item_lab">
-                <a @click="changeColor(item.name,index)"
+                <a @click="changeColor(item.name,index);form.imgUrl=item.img"
                    :class="{selected:form.color==item.name}">
                   <img v-lazy="item.img" width="32px"><span>{{item.name}}</span>
                 </a>
@@ -54,10 +56,10 @@
             </dl>
 
             <div class="right_button">
-              <el-button type="danger" size="medium" class="right_buynow" @click="goRouter('mallCart')">
+              <el-button type="danger" size="medium" class="right_buynow" @click="buyNow">
                 立即购买
               </el-button>
-              <el-button type="primary" size="medium" class="right_buynow" @click="centerDialogVisible=true">
+              <el-button type="primary" size="medium" class="right_buynow" @click="addCart">
                 加入购物车
               </el-button>
             </div>
@@ -77,10 +79,13 @@
       :visible.sync="centerDialogVisible"
       width="30%"
       @open="setTimeClose">
-      <div class="cartDialog">
+      <div class="cartDialog" v-if="form.color!=''">
         <i class="el-icon-circle-check-outline"></i>
         <span>已成功加入购物车</span>
-        <p @click="goRouter('mallcart')">去购物车结算 ></p>
+        <p @click="goRouter('mallcart')" style="cursor: pointer">去购物车结算 ></p>
+      </div>
+      <div v-else>
+        <p style="color: #cc0000">请选择商品颜色!</p>
       </div>
     </el-dialog>
   </div>
@@ -93,17 +98,18 @@
   import vDetail from '../common/detail';
   import vFooter from '../common/footer';
   import vHover from '../common/hoverBar';
-
+  import qs from 'qs';
   export default {
     data() {
       return {
-        common:[],
+        common: [],
         form: {
           color: '',
-          price:0 ,
+          price: 0,
           buyCount: 1,
           nettype: '',
           rom: '',
+          imgUrl: ""
         },
         sumPrice: 0,
         selectColor: 0,
@@ -115,10 +121,40 @@
       vHeader, vPhoto, vSuport, vDetail, vFooter, vHover
     },
     methods: {
-      changeColor(name,index) {
-        this.form.color=name
+      addCart() {
+        if(this.form.color!=""){
+          let buyForm = {
+            "id": this.$route.query.proId,
+            "imgUrl": this.form.imgUrl,
+            "description": this.common.name + " " + this.form.nettype + " " + this.form.color + " " + this.form.rom,
+            "price":this.form.price,
+            "amount":this.form.buyCount
+          }
+          var token = sessionStorage.getItem('accessToken');
+          var url = this.$rootUrl + "/api/halo/carts/";
+          const options = {
+            method: 'POST',
+            headers: {'access_token': token},
+            url: url,
+            data: buyForm
+          };
+          this.$axios(options).then((res) => {
+            if (res.data.data) {
+              if (res.data.errorCode == 0) {
+                this.centerDialogVisible=true
+              }
+            }
+          })
+        }
+        else{
+          this.centerDialogVisible=true
+        }
+
+      },
+      changeColor(name, index) {
+        this.form.color = name
         this.selectColor = index;
-        bus.$emit("pic",this.selectColor)
+        bus.$emit("pic", this.selectColor)
       },
       goRouter(that) {
         this.$router.push({path: "/" + that});
@@ -143,9 +179,9 @@
         this.$axios(options).then((res) => {
           if (res.data.data) {
             this.common = JSON.parse(res.data.data.itemDetail.specificationJson)
-            this.form.rom=this.common.rom[0].size
-            this.form.price=this.common.rom[0].price
-            this.form.nettype=this.common.nettype[0]
+            this.form.rom = this.common.rom[0].size
+            this.form.price = this.common.rom[0].price
+            this.form.nettype = this.common.nettype[0]
 
           }
         })
@@ -361,5 +397,7 @@
     border-bottom: 2px solid #31a5e7;
     color: #31a5e7;
   }
-
+.cartDialog{
+  color: #00a7ea;
+}
 </style>

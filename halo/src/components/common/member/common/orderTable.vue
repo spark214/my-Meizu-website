@@ -2,8 +2,8 @@
   <div class="orderTable_conatiner">
     <div v-for="(item,index) in datas" class="orderTable">
       <div class="table_header">
-        <span class="table_header_title">下单时间:</span> <span class="table_header_num">{{item.orderTime}}</span>
-        <span class="table_header_title">订单号:</span> <span class="table_header_num">{{item.orderId}}</span>
+        <span class="table_header_title">下单时间:</span> <span class="table_header_num">{{item.gmtUpdated}}</span>
+        <span class="table_header_title">订单号:</span> <span class="table_header_num">{{item.id}}</span>
       </div>
 
       <table class="order_table" id="cart_table">
@@ -12,13 +12,12 @@
             <div v-for="its in item.msg" class="table_product_detail clearfix table_product_border">
               <img :src="its.img" width="100" height="100" class="table_product_img">
               <div class="table_product_msg">
-                <p>{{its.name}}</p>
-                <p>{{its.version}}</p> ×<span>{{its.num}}</span>
+                <p>{{its.title}}</p> ×<span>{{its.number}}</span>
               </div>
             </div>
           </td>
           <td width="200px" class="table_product_border">
-            <span style="color: rgb(224, 43, 65)" class="table_price ">￥{{item.price}}.00</span>
+            <span style="color: rgb(224, 43, 65)" class="table_price ">￥{{item.total.toFixed(2)}}</span>
           </td>
           <td width="140px" :rowspan="item.msg.length" class="table_product_border">
             <span>{{orderStatus}}</span>

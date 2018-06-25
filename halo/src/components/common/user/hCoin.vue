@@ -1,7 +1,7 @@
 <template>
   <div class="coin">
     <div class="coin_header">
-      <span>喜元 </span> <span class="hcoin_num">{{coin}}</span>
+      <span>喜元 </span> <span class="hcoin_num">{{coin.toFixed(2)}}</span>
     </div>
     <div class="coin_tips">
       <span :class="{warning:(form.num==100||form.diynum>=100)}">说明：喜元余额仅可购买应用、游戏等Flow.增值服务，不可用于购买手机、配件，支付维修费用或取现</span>
@@ -11,8 +11,10 @@
       <div class="charge_box">
         <div class="charge_box_num clearfix">
           <span>充值金额</span>
-          <a class="charge_num" :class="{on:form.num==20}" @click="form.num='20';diy=false;form.diynum='';warning()">20元</a>
-          <a class="charge_num" :class="{on:form.num==50}" @click="form.num='50';diy=false;form.diynum='';warning()">50元</a>
+          <a class="charge_num" :class="{on:form.num==20}"
+             @click="form.num='20';diy=false;form.diynum='';warning()">20元</a>
+          <a class="charge_num" :class="{on:form.num==50}"
+             @click="form.num='50';diy=false;form.diynum='';warning()">50元</a>
           <a class="charge_num" :class="{on:form.num==100}" @click="form.num='100';diy=false;form.diynum='';warning()">100元</a>
           <input type="text" class="charge_num" placeholder="金额" v-model="form.diynum"
                  style="text-align: center;font-size:16px" :class="{on:diy==true}" @click="diySelect" @blur="warning">
@@ -25,48 +27,100 @@
         </div>
       </div>
       <div class="coin_button">
-        <el-button type="primary" size="middum">立即充值</el-button>
+        <el-button type="primary" size="middum" @click="charge">立即充值</el-button>
       </div>
 
     </div>
   </div>
 </template>
 <script>
+  import qs from 'qs';
   export default {
     data() {
       return {
-        coin: "20.00",
+        coin: "",
         form: {
-          num: "20",
-          diynum: "",
+          num: 20,
+          diynum:"",
           pay: "ali"
         },
         diy: false,
-        content:""
+        content: "",
+        hcoin:{
+          number: 0
+        }
+
       }
     },
     methods: {
+      charge() {
+        this.filterNum()
+        var url = this.$rootUrl + "/api/halo/users/coin";
+        var token = sessionStorage.getItem('accessToken');
+        const options = {
+          method: 'PATCH',
+          headers: {'access_token': token,'Content-Type':'application/x-www-form-urlencoded'},
+          url: url,
+          data:qs.stringify(this.hcoin)
+        };
+        this.$axios(options).then((res) => {
+          if (res.data.data) {
+            if (res.data.errorCode == 0) {
+              if(res.data.data.msg) {
+                this.getData()
+              }
+            }
+          }
+        })
+      },
+      filterNum() {
+        if (this.diy) {
+          this.hcoin.number = parseInt(this.form.diynum)
+        }
+        else{
+          this.hcoin.number=parseInt(this.form.num)
+        }
+      },
       diySelect() {
         this.form.num = ''
         this.diy = true
       },
-    warning(){
-        if(this.diy==true){
-          if(this.form.diynum===""){
-            this.content="金额不能为空"
+      warning() {
+        if (this.diy == true) {
+          if (this.form.diynum === "") {
+            this.content = "金额不能为空"
             alert(this.content)
           }
-          else if(this.form.diynum>100||this.form.diynum<1)
-          {
-            this.content="金额范围为1-100"
+          else if (this.form.diynum > 100 || this.form.diynum < 1) {
+            this.content = "金额范围为1-100"
           }
-          else{
-            this.content=""
+          else {
+            this.content = ""
           }
         }
-        else  this.content=""
-      }
+        else this.content = ""
       },
+      getData() {
+        var url = this.$rootUrl + "/api/halo/users/coin";
+        var token = sessionStorage.getItem('accessToken');
+        const options = {
+          method: 'GET',
+          headers: {'access_token': token},
+          url: url,
+          data: {}
+        };
+        this.$axios(options).then((res) => {
+          if (res.data.data) {
+            if (res.data.errorCode == 0) {
+              this.coin = res.data.data.coin
+            }
+          }
+        })
+      }
+    },
+    created() {
+      this.getData()
+    }
   }
 </script>
 <style scoped>
@@ -134,7 +188,8 @@
     color: #666666;
     margin-right: 30px;
   }
-  .diy_tips{
+
+  .diy_tips {
     position: relative;
     top: 15px;
     color: rgb(244, 74, 7) !important;

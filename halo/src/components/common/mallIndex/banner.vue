@@ -12,7 +12,7 @@
       <div class="side-left">
         <ul class="side">
           <li class="side-item" @mouseenter="evtSideEnter(item.type)" v-for="item in sideItems"
-              @click="goRouter('mallList')">
+              @click="goList(item.id)">
             {{item.content}}
           </li>
         </ul>
@@ -21,7 +21,7 @@
         <ul class="detail-item" v-for="goods in filterCurrGoods">
           <li class="datail-goods" v-for="item in goods">
             <a class="goods-link">
-              <img :src="item.imgUrl">
+              <img :src="item.imgUrl" width="40px">
               <div class="goods-link-name">
                 {{item.name}}
               </div>
@@ -57,14 +57,14 @@
         currGoods: [],
         goodsStatus: false,
         sideItems: [
-          {type: 'phone', content: '手机'},
-          {type: 'device', content: '智能设备'},
-          {type: 'wear', content: '智能穿戴'},
-          {type: 'game', content: '游戏设备'},
-          {type: 'hear', content: '数码影音'},
-          {type: 'fitting', content: '手机配件/移动电源'},
-          {type: 'storage', content: '移动存储/办公设备'},
-          {type: 'hobby', content: '生活周边'}
+          {type: 'phone', content: '手机', id: '1'},
+          {type: 'device', content: '智能设备', id: '2'},
+          {type: 'wear', content: '智能穿戴', id: '3'},
+          {type: 'game', content: '游戏设备', id: '4'},
+          {type: 'hear', content: '数码影音', id: '5'},
+          {type: 'fitting', content: '手机配件/移动电源', id: '6'},
+          {type: 'storage', content: '移动存储/办公设备', id: '7'},
+          {type: 'hobby', content: '生活周边', id: '8'}
         ],
         phone: [
           {
@@ -93,7 +93,7 @@
             name: '魅族PRO 7 Plus',
           },
           {
-            proId: 1,
+            proId: 5,
             imgUrl: '//openfile.meizu.com/group1/M00/01/DC/Cgbj0FmdIJmAeVGmAAxAuuJkLGk921.png@480x480.jpg',
             name: '魅蓝Note6',
           },
@@ -118,11 +118,13 @@
             name: '魅蓝E3',
           },
         ],
-        wear:[{
-          proId: 10,
-          imgUrl: '//openfile.meizu.com/group1/M00/00/13/Cgbj0VjkorqAGxuXAAOqzSlfPuA747_180x180.png',
-          name: '魅族手环',
-        }]
+        wear: [
+          {
+            proId: 10,
+            imgUrl: '//openfile.meizu.com/group1/M00/00/13/Cgbj0VjkorqAGxuXAAOqzSlfPuA747_180x180.png',
+            name: '魅族手环',
+          }
+        ]
 
       }
     },
@@ -137,6 +139,9 @@
       goRouter(that) {
         this.$router.push({path: "/" + that});
       },
+      goList(id) {
+        this.$router.push({path: "/mallList", query: {cateId: id}})
+      }
     },
     computed: {
       filterCurrGoods: function () {

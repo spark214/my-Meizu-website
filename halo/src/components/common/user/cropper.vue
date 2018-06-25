@@ -1,69 +1,72 @@
 <template>
   <div class="crop">
 
-<div class="now_pro">
-  <h3 class="title">当前头像</h3>
-  <img src="../../../../static/img/21.jpg" width="100px" style="margin-left: 10px">
-</div>
-  <div id="demo">
-<h3 class="title">设置新头像</h3>
-    <div>
-    <div class="show" style="margin-left: 10px">
-      <div class="picture" :style="'backgroundImage:url('+headerImage+')'"></div>
+    <div class="now_pro">
+      <h3 class="title">当前头像</h3>
+      <img :src="avatar" width="100px" style="margin-left: 10px">
     </div>
-    <div class="btn_box">
-      <el-button class="choose_btn">选择图片</el-button>
-      <input type="file" id="change" class="change" accept="image" @change="change">
-    </div>
-      <div class="btn_ok">
-        <el-button type="primary" class="choose_btn" style="margin-bottom: 5px">保存</el-button><br>
-        <el-button class="choose_btn">取消</el-button>
-      </div>
-
-  </div>
-    <!-- 遮罩层 -->
-    <div class="container" v-show="panel">
+    <div id="demo">
+      <h3 class="title">设置新头像</h3>
       <div>
-        <img id="image" :src="url" alt="Picture" width="300px" class="imgs">
+        <div class="show" style="margin-left: 10px">
+          <div class="picture" :style="'backgroundImage:url('+headerImage+')'"></div>
+        </div>
+        <div class="btn_box">
+          <el-button class="choose_btn">选择图片</el-button>
+          <input type="file" id="change" class="change" accept="image" @change="change" name="imgFile">
+        </div>
+        <div class="btn_ok">
+          <el-button type="primary" class="choose_btn" style="margin-bottom: 5px" @click="save">保存</el-button>
+          <br>
+          <el-button class="choose_btn">取消</el-button>
+        </div>
+
+      </div>
+      <!-- 遮罩层 -->
+      <div class="container" v-show="panel">
+        <div>
+          <img id="image" :src="url" alt="Picture" width="300px" class="imgs">
+        </div>
+
+        <el-button type="primary" id="button" @click="crop" style="width: 100px;">裁剪</el-button>
+        <div class="container_box">
+          <el-button class="choose_btn">重选</el-button>
+          <input type="file" class="change" accept="image" @change="change">
+        </div>
       </div>
 
-      <el-button type="primary" id="button" @click="crop" style="width: 100px;">裁剪</el-button>
-      <div class="container_box">
-        <el-button class="choose_btn">重选</el-button>
-        <input type="file"  class="change" accept="image" @change="change">
-      </div>
+
     </div>
-
-
-  </div>
   </div>
 </template>
 
 <script>
-  import Cropper from 'cropperjs'
-  export default {
-    components: {
+  import Cropper from 'cropperjs';
+  import qs from 'qs';
 
-    },
-    data () {
+  export default {
+    components: {},
+    data() {
       return {
-        headerImage:'',
-        picValue:'',
-        cropper:'',
-        croppable:false,
-        panel:false,
-        url:''
+        headerImage: '',
+        picValue: '',
+        cropper: '',
+        croppable: false,
+        panel: false,
+        url: '',
+        file: {},
+        avatar: ""
       }
     },
-    mounted () {
+    mounted() {
       //初始化这个裁剪框
       var self = this;
       var image = document.getElementsByClassName("imgs")
       this.cropper = new Cropper(image[0], {
         aspectRatio: 1,
         viewMode: 1,
-        background:true,
-        zoomable:true,
+        background: true,
+        zoomable: true,
         ready: function () {
           self.croppable = true;
         }
@@ -71,26 +74,71 @@
       this.cropper = new Cropper(image[1], {
         aspectRatio: 1,
         viewMode: 1,
-        background:true,
-        zoomable:true,
+        background: true,
+        zoomable: true,
         ready: function () {
           self.croppable = true;
         }
       });
     },
     methods: {
-      getObjectURL (file) {
-        var url = null ;
-        if (window.createObjectURL!=undefined) { // basic
-          url = window.createObjectURL(file) ;
-        } else if (window.URL!=undefined) { // mozilla(firefox)
-          url = window.URL.createObjectURL(file) ;
-        } else if (window.webkitURL!=undefined) { // webkit or chrome
-          url = window.webkitURL.createObjectURL(file) ;
-        }
-        return url ;
+      getData() {
+        var url = this.$rootUrl + "/api/halo/users/";
+        var token = sessionStorage.getItem('accessToken');
+        const options = {
+          method: 'GET',
+          headers: {'access_token': token},
+          url: url,
+          data: {}
+        };
+        this.$axios(options).then((res) => {
+          if (res.data.data) {
+            if (res.data.errorCode == 0) {
+              var avatar = res.data.data.userinfo.avatar
+              if (avatar == "") {
+                this.avatar = "//image-res.mzres.com/image/uc/80f8d55d49464e3e90d72f6679cbf970z?t=946656000000"
+              }
+              else {
+                this.avatar = avatar
+              }
+            }
+
+          }
+        })
       },
-      change (e) {
+      save() {
+        let param = new FormData()
+        param.append("imgFile", this.file)
+        var url = this.$rootUrl + "/api/halo/users/avatar";
+        var token = sessionStorage.getItem('accessToken');
+        let config = {
+          headers: {'access_token': token, 'Content-Type': 'multipart/form-data'},
+          processData: false,
+          contentType: false
+        }
+        this.$axios.post(url, param, config).then((res) => {
+          if (res.data.data) {
+            if (res.data.errorCode == 0) {
+              if (res.data.data.avatarUrl) {
+                this.getData()
+              }
+            }
+          }
+        })
+      },
+      getObjectURL(file) {
+        var url = null;
+        if (window.createObjectURL != undefined) { // basic
+          url = window.createObjectURL(file);
+        } else if (window.URL != undefined) { // mozilla(firefox)
+          url = window.URL.createObjectURL(file);
+        } else if (window.webkitURL != undefined) { // webkit or chrome
+          url = window.webkitURL.createObjectURL(file);
+        }
+        return url;
+      },
+      change(e) {
+        this.file = e.target.files[0]
         let files = e.target.files || e.dataTransfer.files;
         if (!files.length) return;
         this.panel = true;
@@ -98,13 +146,13 @@
 
         this.url = this.getObjectURL(this.picValue);
         //每次替换图片要重新得到新的url
-        if(this.cropper){
+        if (this.cropper) {
           this.cropper.replace(this.url);
         }
         this.panel = true;
 
       },
-      crop () {
+      crop() {
         this.panel = false;
         var croppedCanvas;
         var roundedCanvas;
@@ -115,7 +163,6 @@
         }
         // Crop
         croppedCanvas = this.cropper.getCroppedCanvas();
-        console.log(this.cropper)
         // Round
         roundedCanvas = this.getRoundedCanvas(croppedCanvas);
 
@@ -123,7 +170,7 @@
         this.postImg()
 
       },
-      getRoundedCanvas (sourceCanvas) {
+      getRoundedCanvas(sourceCanvas) {
 
         var canvas = document.createElement('canvas');
         var context = canvas.getContext('2d');
@@ -137,36 +184,41 @@
         context.drawImage(sourceCanvas, 0, 0, width, height);
         context.globalCompositeOperation = 'destination-in';
         context.beginPath();
-        context.rect(0, 0, Math.min(width, height) ,Math.min(width, height) );
+        context.rect(0, 0, Math.min(width, height), Math.min(width, height));
         context.fill();
 
         return canvas;
       },
-      postImg () {
-        //这边写图片的上传
+      postImg() {
       }
+    },
+    created() {
+      this.getData()
     }
   }
 </script>
 
 <style>
-  .crop{
+  .crop {
     margin-left: 5px;
   }
-.title{
-  color: #666666;
-  font-size: 18px;
-  margin-top: 30px;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  padding-left: 10px;
-  border-bottom: 0.5px solid #dcdcdc;
-}
+
+  .title {
+    color: #666666;
+    font-size: 18px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    border-bottom: 0.5px solid #dcdcdc;
+  }
+
   #demo #button {
     position: relative;
     right: 00px;
-    top:10px;
+    top: 10px;
   }
+
   #demo .show {
     width: 100px;
     height: 100px;
@@ -175,6 +227,7 @@
     /*border-radius: 50%;*/
     border: 1px solid #d5d5d5;
   }
+
   #demo .picture {
     width: 100%;
     height: 100%;
@@ -183,6 +236,7 @@
     background-repeat: no-repeat;
     background-size: cover;
   }
+
   #demo .container {
     width: 300px;
     overflow: hidden;
@@ -192,7 +246,7 @@
     top: -280px;
     right: 0;
     bottom: 0;
-    background:#fff;
+    background: #fff;
     margin-bottom: 100px;
     padding-bottom: 50px;
   }
@@ -201,34 +255,39 @@
     width: 100%;
     max-width: 100%;
   }
-.btn_box{
-  position: relative;
-  margin-top: 10px;
-  margin-left: 10px;
-  margin-bottom: 20px;
-}
-.choose_btn{
-  width: 100px !important;
-}
-.btn_ok{
-  margin-bottom: 50px;
-  margin-left: 10px;
-}
-.container_box{
-position: relative;
-  left: 120px;
-  top: -21px;
-}
 
-.change{
-  width: 80px;
-  height: 30px;
-  opacity: 0;
-  position: absolute;
-  left:0px;
-  cursor: pointer;
-}
-  .cropper-view-box,.cropper-face {
+  .btn_box {
+    position: relative;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 20px;
+  }
+
+  .choose_btn {
+    width: 100px !important;
+  }
+
+  .btn_ok {
+    margin-bottom: 50px;
+    margin-left: 10px;
+  }
+
+  .container_box {
+    position: relative;
+    left: 120px;
+    top: -21px;
+  }
+
+  .change {
+    width: 80px;
+    height: 30px;
+    opacity: 0;
+    position: absolute;
+    left: 0px;
+    cursor: pointer;
+  }
+
+  .cropper-view-box, .cropper-face {
     border-radius: 50%;
   }
 

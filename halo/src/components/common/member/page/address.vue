@@ -2,7 +2,7 @@
   <div>
     <div class="addressWrite">
       <h3 class="write_title">{{content}}</h3>
-      <v-write :form="form" :type="1" :length="addrDate.length"></v-write>
+      <v-write :form="form" :type="type" :length="addrDate.length" @ok="updateDate"></v-write>
     </div>
     <div class="addressHave">
       <h3 class="addressWrite">已有地址</h3>
@@ -21,16 +21,16 @@
           prop="name"
           width="150"></el-table-column>
         <el-table-column
-          prop="addr"
+          prop="address"
           width="450"></el-table-column>
         <el-table-column
-          prop="tel"
+          prop="phone"
           width="200"></el-table-column>
         <el-table-column
           width="200">
           <template slot-scope="scope">
             <span class="blue" @click="updateAddr(scope.$index, scope.row)">修改</span>
-            <span style="color:#ccc;cursor: pointer">删除</span>
+            <span style="color:#ccc;cursor: pointer" @click="delAddr(scope.$index, scope.row)">删除</span>
             <span class="blue">设为默认</span>
           </template>
         </el-table-column>
@@ -45,26 +45,72 @@
     data() {
       return {
         content: "新增收货地址",
-        form: {name: "", tel: "", addr: "", checked: ""},
-        addrDate: [
-          {name: "林梓键", tel: "13192256005", addr: "广东省汕头市金平区", checked: true},
-          {name: "林先生", tel: "13411942184", addr: "广东省汕头市金平区", checked: false},
-          {name: "林贰壹", tel: "13192256005", addr: "广东省汕头市金平区", checked: false},
-        ],
+        form: {id:"",name: "", phone: "", address: ""},
+        addrDate: [],
         updateSelected: -1,
+        type:1
       }
     },
     components: {
       vWrite,
     },
     methods: {
+      updateDate(msg){
+        if(msg==1){
+          this.getData()
+        }
+      },
+      delAddr(index, row){
+        var id=this.addrDate[index].id
+        var url = this.$rootUrl + "/api/halo/addresses/"+id;
+        var token = sessionStorage.getItem('accessToken');
+        const options = {
+          method: 'DELETE',
+          headers: {'access_token': token},
+          url: url,
+          data: {}
+        };
+        this.$axios(options).then((res) => {
+          if (res.data.data) {
+            if (res.data.errorCode == 0) {
+              this.getData()
+            }
+          }
+        })
+      },
       updateAddr(index, row) {
         this.form = this.addrDate[index]
         this.content="修改收货地址"
+        this.type=2
+      },
+      getData(){
+        var url = this.$rootUrl + "/api/halo/addresses/";
+        var token = sessionStorage.getItem('accessToken');
+        const options = {
+          method: 'GET',
+          headers: {'access_token': token},
+          url: url,
+          data: {}
+        };
+        this.$axios(options).then((res) => {
+          if (res.data.data) {
+            if (res.data.errorCode == 0) {
+              this.addrDate = res.data.data.address
+            }
+          }
+        })
       }
     },
     updated() {
       window.scroll(0, 0);
+    },
+    created(){
+      this.getData()
+    },
+    watch: {
+      '$route'(to, from) {
+        this.getData()
+      }
     }
   }
 </script>
