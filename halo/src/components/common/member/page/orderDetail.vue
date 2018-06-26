@@ -98,6 +98,24 @@
         alltotal:0
       }
     },
+    methods:{
+      getData(){
+        // var url = this.$rootUrl + "/api/halo/orders/"+this.id+"/products";
+        // var token = sessionStorage.getItem('accessToken');
+        // const options = {
+        //   method: 'GET',
+        //   headers: {'access_token': token},
+        //   url: url,
+        //   data: {}
+        // };
+        //
+        // this.$axios(options).then((res) => {
+        //   if (res.data.errorCode==0) {
+        //
+        //   }
+        // })
+      }
+    },
     computed:{
       totalPrices(){
         for(let i=0;i<this.orderDetail.products.length;i++){
@@ -123,6 +141,9 @@
           case 5:return "交易关闭";break;
         }
       }
+    },
+    created(){
+      this.getData()
     }
   }
 </script>

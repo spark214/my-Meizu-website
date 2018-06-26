@@ -3,7 +3,8 @@
     <v-header></v-header>
     <div class="pageContain">
       <v-address></v-address>
-      <v-ordermsg></v-ordermsg>
+      <v-ordermsgs v-if="type=1"></v-ordermsgs>
+      <v-ordermsgs v-else></v-ordermsgs>
       <v-payment></v-payment>
     </div>
     <v-footer></v-footer>
@@ -14,15 +15,22 @@
   import vFooter from '../common/footer';
   import vAddress from '../common/mallCheck/address';
   import vOrdermsg from '../common/mallCheck/orderMsg';
+  import vOrdermsgs from '../common/mallCheck/orderMsgs';
   import vPayment from '../common/mallCheck/payment';
 
   export default {
     data() {
-      return {}
+      return {
+        type:0
+      }
     },
     components: {
-      vHeader, vFooter, vAddress,vOrdermsg,vPayment
+      vHeader, vFooter, vAddress,vOrdermsg,vPayment,vOrdermsgs
+    },
+    created(){
+      this.type = this.$route.query.type
     }
+
   }
 </script>
 <style scoped>

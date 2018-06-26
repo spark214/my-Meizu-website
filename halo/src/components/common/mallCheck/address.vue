@@ -1,16 +1,16 @@
 <template>
   <div class="mallCheck_address">
-    <h4  class="receiverMsg_title">收货人信息</h4>
+    <h4 class="receiverMsg_title">收货人信息</h4>
     <div class="receiverMsg_box clearfix">
       <ul>
         <li id="hasMsg" v-for="(item,index) in receiver" style="font-size: 12px" class="receiverMsg_box_li clearfix"
             v-show="receiver.length!=0" @click="receiverOn(index)">
-          <div class="receiverMsg_li_box" :class="{'receiverMsg_selected':item.selected}" >
+          <div class="receiverMsg_li_box" :class="{'receiverMsg_selected':item.selected}">
             <div style="border-bottom: 1px solid #EFEFEF" class="clearfix">
               <span v-text="item.name" id="receiverName"></span>
-              <span v-text="item.tel" id="receiverTel" class="clearfix"></span>
+              <span v-text="item.phone" id="receiverTel" class="clearfix"></span>
             </div>
-            <p v-text="item.addr" id="receiverAddr"></p>
+            <p v-text="item.address" id="receiverAddr"></p>
 
             <div class="receiverMsg_box_checked" v-show="item.selected">
               <div class="receiverMsg_box_tick"></div>
@@ -19,7 +19,7 @@
 
           <div class="receiverMsg_li_bottom">
             <a @click="dialogUpdateVisible=true;updateSelected=index">修改</a>
-            <a>删除</a>
+            <a @click="delAddr(index)">删除</a>
           </div>
         </li>
         <li id="addMsg" v-show="receiver.length<10" @click="dialogAddVisible = true">
@@ -31,57 +31,77 @@
         </li>
       </ul>
     </div>
+
     <el-dialog title="添加收货地址" class="addAddr"
                :visible.sync="dialogAddVisible"
                :before-close="handleClose">
-      <v-write :form="form" :type="0"></v-write>
+      <v-write :form="form" :type="3"  :length="receiver.length"></v-write>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogAddVisible = false">取 消</el-button>
       </div>
     </el-dialog>
+
     <el-dialog title="修改地址" class="addAddr"
                :visible.sync="dialogUpdateVisible"
-              :before-close="handleClose">
-<v-write :form="receiver[updateSelected]" :type="0"></v-write>
+               :before-close="handleClose">
+      <v-write :form="receiver[updateSelected]" :type="4"  :length="receiver.length"></v-write>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogUpdateVisible = false">取 消</el-button>
       </div>
     </el-dialog>
+
   </div>
 </template>
 <script>
-import vWrite from '../../common/member/common/addressWrite';
-import bus from '../../common/bus';
+  import vWrite from '../../common/member/common/addressWrite';
+  import bus from '../../common/bus';
+
   export default {
     data() {
       return {
-        receiver: [
-          {name: "林梓键", tel: "13192256005", addr: "广东省珠海市香洲区北理工", selected: true},
-          {name: "ToZLam", tel: "13411942184", addr: "广东省汕头市龙湖区泰星路", selected: false},
-          {name: "ToZLam", tel: "13411942184", addr: "广东省汕头市龙湖区泰星路", selected: false},
-          {name: "ToZLam", tel: "13411942184", addr: "广东省汕头市龙湖区泰星路", selected: false},
-          {name: "ToZLam", tel: "13411942184", addr: "广东省汕头市龙湖区泰星路", selected: false},
-        ],
-        dialogAddVisible:false,
-        dialogUpdateVisible:false,
-        form:{name:"",tel:"",addr:"",checked:""},
-        updateSelected:-1,
+        receiver: [],
+        dialogAddVisible: false,
+        dialogUpdateVisible: false,
+        form: {},
+        updateSelected: -1,
 
       }
     },
-    components:{
+    components: {
       vWrite
     },
     methods: {
+      delAddr(index){
+        var id=this.receiver[index].id
+        var url = this.$rootUrl + "/api/halo/addresses/"+id;
+        var token = sessionStorage.getItem('accessToken');
+        const options = {
+          method: 'DELETE',
+          headers: {'access_token': token},
+          url: url,
+          data: {}
+        };
+        this.$axios(options).then((res) => {
+          if (res.data.data) {
+            if (res.data.errorCode == 0) {
+              this.getData()
+            }
+          }
+        })
+      },
       receiverOn: function (index) {
-
         for (var i = 0; i < this.receiver.length; i++) {
           this.receiver[i].selected = false;
-
         }
         this.receiver[index].selected = true;
+        this.form = {
+          "name":this.receiver[index].name,
+          "phone":this.receiver[index].phone,
+          "address":this.receiver[index].address
+        }
+        sessionStorage.setItem('receiver',JSON.stringify(this.form));
       },
-      addressHandleChange (value) {
+      addressHandleChange(value) {
         console.log(CodeToText[value[0]])
         console.log(CodeToText[value[1]])
         console.log(CodeToText[value[2]])
@@ -91,22 +111,53 @@ import bus from '../../common/bus';
           .then(_ => {
             done();
           })
-          .catch(_ => {});
+          .catch(_ => {
+          });
+      },
+      getData() {
+        var url = this.$rootUrl + "/api/halo/addresses/";
+        var token = sessionStorage.getItem('accessToken');
+        const options = {
+          method: 'GET',
+          headers: {'access_token': token},
+          url: url,
+          data: {}
+        };
+        this.$axios(options).then((res) => {
+          if (res.data.data) {
+            if (res.data.errorCode == 0) {
+              this.receiver = res.data.data.address
+            }
+          }
+        })
+        this.receiver.forEach((val, index) => {
+          val["selected"] = false;
+        })
+        this.receiver[0].selected = true;
+        this.form = {
+          "name":this.receiver[0].name,
+          "phone":this.receiver[0].phone,
+          "address":this.receiver[0].address
+        }
+        sessionStorage.setItem('receiver',JSON.stringify(this.form));
       }
     },
-    created(){
-      bus.$on('dialogVisible',msg=>{
-        this.dialogAddVisible=msg;
-        this.dialogUpdateVisible=msg;
+    created() {
+      bus.$on('dialogVisible', msg => {
+        this.dialogAddVisible = msg;
+        this.dialogUpdateVisible = msg;
+        this.getData()
       })
+      this.getData()
     }
   }
 </script>
 <style>
-  .mallCheck_address{
+  .mallCheck_address {
     width: 100%;
     background: white;
   }
+
   .receiverMsg, .orderMsg, .paymentMsg {
     width: 95%;
     margin: 0 auto;
@@ -134,30 +185,36 @@ import bus from '../../common/bus';
     box-sizing: border-box;
     margin-top: 10px;
   }
-.receiverMsg_li_box{
-  border: 1px solid #EFEFEF;
-  height: 144px;
-  position: relative;
-  box-sizing: border-box;
-}
-  .receiverMsg_li_box:hover{
+
+  .receiverMsg_li_box {
+    border: 1px solid #EFEFEF;
+    height: 144px;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  .receiverMsg_li_box:hover {
     border: 2px solid #00a7ea !important;
   }
+
   .receiverMsg_selected, .payment_antIns_selected {
     border: 2px solid #00a7ea !important;
   }
-.receiverMsg_li_bottom{
-  position: absolute;
-  right: 2px;
-  margin-top: 2px;
-  color: #00a7ea;
-}
+
+  .receiverMsg_li_bottom {
+    position: absolute;
+    right: 2px;
+    margin-top: 2px;
+    color: #00a7ea;
+  }
+
   #addMsg {
     text-align: center;
     border: 1px solid #EFEFEF;
     height: 144px;
   }
-  #addMsg:hover{
+
+  #addMsg:hover {
     color: #00a7ea;
     border: 2px solid #00a7ea;
   }
@@ -216,7 +273,8 @@ import bus from '../../common/bus';
     content: "";
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAAJBAMAAAAbVLtZAAAAJFBMVEUAAAD6+fn6+fn6+fn6+fn6+fn6+fn6+fn6+fn6+fn6+fn6+fl911MYAAAAC3RSTlMAcmL5TYuwloNhPwGhwdUAAAA1SURBVAjXYwADZQcwxbRbgIELSGtvZGCQDgBzGZy3grkMLNZBIC5QYPdGsGLO3QUQzW0gAgBJ7gno+zgkXwAAAABJRU5ErkJggg==");
   }
-  .dialog-footer{
+
+  .dialog-footer {
     margin-top: -20px;
   }
 </style>

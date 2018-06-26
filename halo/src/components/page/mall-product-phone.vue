@@ -121,14 +121,47 @@
       vHeader, vPhoto, vSuport, vDetail, vFooter, vHover
     },
     methods: {
+      buyNow(){
+        if(this.form.color!=""){
+          let buyForm = {
+            "proId": this.$route.query.proId,
+            "imgUrl": this.form.imgUrl,
+            "title": this.common.name + " " + this.form.nettype + " " + this.form.color + " " + this.form.rom,
+            "price":this.form.price,
+            "total":this.form.price*this.form.buyCount,
+            "number":this.form.buyCount
+          }
+          var token = sessionStorage.getItem('accessToken');
+          var url = this.$rootUrl + "/api/halo/orders/now";
+          const options = {
+            method: 'POST',
+            headers: {'access_token': token},
+            url: url,
+            data: buyForm
+          };
+          this.$axios(options).then((res) => {
+            if (res.data.data) {
+              if (res.data.errorCode == 0) {
+                sessionStorage.setItem('orderId', res.data.data.orderId);
+                sessionStorage.setItem('address', JSON.stringify(res.data.data.address));
+                sessionStorage.setItem('orderProduct', JSON.stringify(res.data.data.orderProduct));
+                this.$router.push({path: "/mallCheck",query:{type:1}})
+              }
+            }
+          })
+        }
+        else{
+          this.centerDialogVisible=true
+        }
+      },
       addCart() {
         if(this.form.color!=""){
           let buyForm = {
-            "id": this.$route.query.proId,
+            "proId": this.$route.query.proId,
             "imgUrl": this.form.imgUrl,
-            "description": this.common.name + " " + this.form.nettype + " " + this.form.color + " " + this.form.rom,
+            "title": this.common.name + " " + this.form.nettype + " " + this.form.color + " " + this.form.rom,
             "price":this.form.price,
-            "amount":this.form.buyCount
+            "number":this.form.buyCount
           }
           var token = sessionStorage.getItem('accessToken');
           var url = this.$rootUrl + "/api/halo/carts/";
@@ -142,6 +175,7 @@
             if (res.data.data) {
               if (res.data.errorCode == 0) {
                 this.centerDialogVisible=true
+                bus.$emit("cart",1)
               }
             }
           })

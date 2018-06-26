@@ -50,7 +50,7 @@
     },
     methods: {
       next() {
-        if(this.type<2){
+        if (this.type < 2) {
           var url = this.$rootUrl + "/api/halo/registers/verifyCode";
           const options = {
             method: 'POST',
@@ -73,7 +73,7 @@
             }
           })
         }
-        else{
+        else {
           var url = this.$rootUrl + "/api/halo/users/phone";
           const options = {
             method: 'PATCH',
@@ -84,8 +84,8 @@
           this.$axios(options).then((res) => {
             if (res.data.data) {
               if (res.data.errorCode == 0) {
-                  this.$emit("ok", 2)
-                }
+                this.$emit("ok", 2)
+              }
               else {
                 this.$message.error(res.data.msg);
               }
@@ -112,9 +112,9 @@
         }, 1000)
         var phone = this.$route.query.phone
         this.loginForm.phone = this.$route.query.phone
-        if(this.type==0||this.type==2)
-        var url = this.$rootUrl + "/api/halo/registers/requestSmsCode/" + phone;
-        else if(this.type==1)
+        if (this.type == 0 || this.type == 2)
+          var url = this.$rootUrl + "/api/halo/registers/requestSmsCode/" + phone;
+        else if (this.type == 1)
           var url = this.$rootUrl + "/api/halo/auths/requestSmsCode/" + phone;
         const options = {
           method: 'GET',

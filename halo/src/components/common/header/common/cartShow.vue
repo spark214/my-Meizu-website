@@ -5,28 +5,27 @@
         <img src="../../../../../static/img/shoppingCart.png" width="22px">
           </span>
       <el-dropdown-menu slot="dropdown">
-        <div class="shopcartDropdown_none" v-if="!isLogin">
+        <div class="shopcartDropdown_none" v-show="!isLogin">
           <img src="../../../../../static/img/shopcartPanda.png">
           <span>登录后可显示<br>您账号中加入的商品哦</span>
         </div>
-        <div class="shopcartDropdown_none" v-if="isLogin&&!havaCart">
+        <div class="shopcartDropdown_none" v-show="isLogin&&!havaCart">
           <img src="../../../../../static/img/shopcartPanda2.png">
           <span>您的购物车还没有商品,<br>赶紧去选购吧~</span>
         </div>
-        <div class="shopcartDropdown" v-if="isLogin&&havaCart">
+        <div class="shopcartDropdown" v-show="isLogin&&havaCart">
           <p class="cartdown_header">最近加入的商品</p>
           <ul class="clearfix">
             <li>
-              <div class="clearfix">
+              <div class="clearfix" v-for="item in form">
                 <div class="cartdown_left clearfix">
-                  <img :src='form.desc[0].img' width="48px">
+                  <img :src='item.imgUrl' width="48px">
                   <div class="cartdown_left_msg">
-                    <p>{{form.name}}</p>
-                    <p>{{form.desc[0].name}}</p>
+                    <p>{{item.title}}</p>
                   </div>
                 </div>
                 <div class="cartdown_right">
-                  <p>{{form.price}}×{{form.buyCount}}</p>
+                  <p>{{item.price}}×{{item.number}}</p>
                 </div>
               </div>
             </li>
@@ -40,53 +39,74 @@
   </div>
 </template>
 <script>
+  import bus from "../../../common/bus";
+
   export default {
     data() {
       return {
-        form: {},
-        isLogin: true,
+        form: [],
+        isLogin: false,
         havaCart: false,
+        cart: 0
       }
     },
     methods: {
-      data() {
-        var name = "form=";
-        var ca = document.cookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-          var c = ca[i];
-          while (c.charAt(0) == ' ') c = c.substring(1);
+      getData() {
+        var url = this.$rootUrl + "/api/halo/carts/";
+        var token = sessionStorage.getItem('accessToken');
+        const options = {
+          method: 'GET',
+          headers: {'access_token': token},
+          url: url,
+          data: {}
+        };
 
-          if (c.indexOf(name) != -1) {
-            console.log(c)
-            this.form = JSON.parse(c.substring(name.length, c.length));
+        this.$axios(options).then((res) => {
+          if (res.data.errorCode == 0) {
+            this.form = res.data.data.cart.carts
+            this.isLogin = true
+            if (this.form.length > 0) this.havaCart = true
+            else this.haveCart = false
           }
-        }
+        })
       },
       goRouter(that) {
         this.$router.push({path: "/" + that});
       },
     },
-    mounted() {
-      this.data()
+    watch: {
+      cart() {
+        console.log("5")
+        this.getData()
+      }
+    },
+    created() {
+      this.getData()
+      bus.$on("cart", msg => {
+        this.cart = msg
+      })
     }
   }
 </script>
 <style>
-  .cartShow{
+  .cartShow {
     width: 30px;
 
   }
-  .shopcartDropdown_none{
+
+  .shopcartDropdown_none {
     width: 318px;
     height: 120px;
     display: flex;
     justify-content: center;
     align-items: center;
   }
+
   .shopcartDropdown {
     width: 318px;
     height: 120px;
   }
+
   .shopcartDropdown_none span {
     margin-left: 15px;
     font-size: 12px;
@@ -109,7 +129,7 @@
   }
 
   .cartdown_left {
-    width: 50%;
+    width: 250px;
   }
 
   .cartdown_left img {
@@ -122,6 +142,7 @@
   }
 
   .cartdown_left_msg {
+    width: 150px;
     float: left;
   }
 

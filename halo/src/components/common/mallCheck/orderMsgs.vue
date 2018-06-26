@@ -1,6 +1,7 @@
 <template>
   <div class="orderMsg clearfix">
     <h4 style="font-weight: bold">确定订单信息</h4>
+
     <table class="orderMsg_table">
       <tr>
         <td width="500px">商品</td>
@@ -8,30 +9,34 @@
         <td width="200px">数量</td>
         <td width="200px">小计(元)</td>
       </tr>
-      <tr v-for="item in products">
+      <tr>
         <td width="500px">
           <img :src="product.imgUrl" width="100" height="100" class="table_product_img">
           <div class="table_product_msg">
-            <p>{{item.title}}</p>
+            <p>{{product.title}}</p>
           </div>
         </td>
         <td width="200px">
-          <span class="table_price">￥{{item.price.toFixed(2)}}</span>
+          <span class="table_price">￥{{product.price.toFixed(2)}}</span>
         </td>
         <td width="200px">
-          <span>{{item.number}}</span>
+          <span>{{product.number}}</span>
         </td>
         <td width="200px">
-          <span style="color: rgb(224, 43, 65)" class="table_price">￥{{item.total.toFixed(2)}}</span>
+          <span style="color: rgb(224, 43, 65)" class="table_price">￥{{product.total.toFixed(2)}}</span>
         </td>
 
+        <!--<el-table-column width="200" label="配送方式" align="center" >-->
+        <!--<template slot-scope="scope">-->
+        <!--<span>快递:运费0元</span>-->
+        <!--</template>-->
+        <!--</el-table-column>-->
       </tr>
     </table>
-
     <div class="orderMsg_table_footer clearfix">
       <div class="orderMsg_total" style="font-size: 16px">
         合计
-        <span style="font-size: 22px;color:#e02b41;font-weight: bold;" v-text="'￥'+totalPrice+'.00'"></span>
+        <span style="font-size: 22px;color:#e02b41;font-weight: bold;" >{{(product.number*product.price).toFixed(2)}}</span>
       </div>
     </div>
 
@@ -63,7 +68,7 @@
         }
       },
       getData() {
-          this.products = JSON.parse(sessionStorage.getItem('orderProduct'));
+          this.product = JSON.parse(sessionStorage.getItem('orderProduct'));
       }
     },
     created() {
@@ -73,10 +78,17 @@
 </script>
 <style>
   .orderMsg_table {
+    width: 96%;
+    position: relative;
+    left: 50%;
+    margin-left: -48%;
     margin-top: 20px;
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
     border: 0.5px solid #dcdcdc;
+    color: #666666;
   }
 
   .table_product_img {
@@ -131,7 +143,7 @@
     position: relative;
     left: 50%;
     margin-left: -48%;
-    margin-top: -21px;
+    margin-top: 0px;
   }
 
   .orderMsg_total {

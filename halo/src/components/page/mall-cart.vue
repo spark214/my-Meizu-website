@@ -9,28 +9,27 @@
             <el-table-column type="selection" width="80" align="center"></el-table-column>
             <el-table-column width="450" label="商品" class="table_product clearfix" align="center">
               <template scope="scope">
-                <img :src="scope.row.img" width="100" height="100" class="table_product_img">
+                <img :src="scope.row.imgUrl" width="100" height="100" class="table_product_img">
                 <div class="table_product_msg">
-                  <p>{{scope.row.name}}</p>
-                  <p>{{scope.row.version}}</p>
+                  <p>{{scope.row.title}}</p>
                 </div>
 
               </template>
             </el-table-column>
             <el-table-column width="200" label="单价(元)" align="center">
               <template scope="scope">
-                <span class="table_price">￥{{scope.row.price}}.00</span>
+                <span class="table_price">￥{{scope.row.price.toFixed(2)}}</span>
               </template>
             </el-table-column>
             <el-table-column width="200" label="数量" align="center">
               <template scope="scope">
-                <el-input-number v-model="scope.row.num" :min="1" :max="10"
-                                 @change="scope.row.sum=scope.row.num*scope.row.price"></el-input-number>
+                <el-input-number v-model="scope.row.number" :min="1" :max="10"
+                                 @change="scope.row.total=scope.row.number*scope.row.price;changeAmount(scope.$index)"></el-input-number>
               </template>
             </el-table-column>
             <el-table-column width="200" label="小计(元)" prop="sum" align="center">
               <template scope="scope">
-                <span style="color: rgb(224, 43, 65)" class="table_price">￥{{scope.row.sum}}.00</span>
+                <span style="color: rgb(224, 43, 65)" class="table_price">￥{{scope.row.total.toFixed(2)}}</span>
               </template>
             </el-table-column>
             </el-table-column>
@@ -48,7 +47,7 @@
           <a @click="deleteSelected">删除选中的商品</a>
           <div class="footer_right">
             <span> 合计(不含运费)： <span class="table_price" style="color: rgb(224, 43, 65)" v-model="totalPrices">￥{{totalPrice}}.00</span></span>
-            <el-button size="small" type="primary">去结算</el-button>
+            <el-button size="small" type="primary" @click="goBuy">去结算</el-button>
           </div>
         </div>
       </div>
@@ -84,56 +83,12 @@
 <script>
   import vHeader from '../common/header/page/headerLite';
   import vFooter from '../common/footer';
+  import qs from 'qs';
 
   export default {
     data() {
       return {
-        product: [
-          {
-            name: "魅族PRO 6s",
-            version: "全网通公开版 星空黑 64GB",
-            img: "https://openfile.meizu.com/group1/M00/00/C8/Cix_s1hGFveAE3RcAAOqzSlfPuA022.png@240x240.jpg",
-            price: 2299,
-            num: 1,
-            sum: 2299,
-            checked: true
-          },
-          {
-            name: "魅族PRO7",
-            img: "https://openfile.meizu.com/group1/M00/00/C8/Cix_s1hGFveAE3RcAAOqzSlfPuA022.png@240x240.jpg",
-            version: "全网通公开版 提香红4GB+64GB",
-            price: 2499,
-            num: 1,
-            sum: 2499,
-            checked: true
-          },
-          {
-            name: "魅族PRO 6s",
-            version: "全网通公开版 星空黑 64GB",
-            img: "https://openfile.meizu.com/group1/M00/00/C8/Cix_s1hGFveAE3RcAAOqzSlfPuA022.png@240x240.jpg",
-            price: 2299,
-            num: 1,
-            sum: 2299,
-            checked: true
-          }, {
-            name: "魅族PRO 6s",
-            version: "全网通公开版 星空黑 64GB",
-            img: "https://openfile.meizu.com/group1/M00/00/C8/Cix_s1hGFveAE3RcAAOqzSlfPuA022.png@240x240.jpg",
-            price: 2299,
-            num: 1,
-            sum: 2299,
-            checked: true
-          },
-          {
-            name: "魅族PRO 6s",
-            version: "全网通公开版 星空黑 64GB",
-            img: "https://openfile.meizu.com/group1/M00/00/C8/Cix_s1hGFveAE3RcAAOqzSlfPuA022.png@240x240.jpg",
-            price: 2299,
-            num: 1,
-            sum: 2299,
-            checked: true
-          },
-        ],
+        product: [],
         allChecked: true,
         totalPrice: 0,
         productNum: 2,
@@ -149,21 +104,61 @@
       vHeader, vFooter
     },
     methods: {
+      goBuy() {
+        var url = this.$rootUrl + "/api/halo/orders/settlement";
+        var token = sessionStorage.getItem('accessToken');
+        const options = {
+          method: 'POST',
+          headers: {'access_token': token},
+          url: url,
+          data: this.product
+        };
+
+        this.$axios(options).then((res) => {
+          if (res.data.errorCode == 0) {
+            sessionStorage.setItem('orderId', res.data.data.orderId);
+            sessionStorage.setItem('address', JSON.stringify(res.data.data.address));
+            sessionStorage.setItem('orderProduct', JSON.stringify(res.data.data.orderProduct));
+            this.$router.push({path: "/mallCheck",query:{"type":2}})
+          }
+        })
+      },
+      changeAmount(index) {
+        var url = this.$rootUrl + "/api/halo/carts/" + this.product[index].proId;
+        var token = sessionStorage.getItem('accessToken');
+        let quantity = {'quantity': this.product[index].number}
+        console.log(quantity)
+        const options = {
+          method: 'PATCH',
+          headers: {'access_token': token, 'Content-Type': 'application/x-www-form-urlencoded'},
+          url: url,
+          data: qs.stringify(quantity)
+        };
+
+        this.$axios(options).then((res) => {
+          if (res.data.errorCode == 0) {
+
+          }
+        })
+      },
       getData() {
         var url = this.$rootUrl + "/api/halo/carts/";
-
+        var token = sessionStorage.getItem('accessToken');
         const options = {
           method: 'GET',
+          headers: {'access_token': token},
           url: url,
           data: {}
         };
 
         this.$axios(options).then((res) => {
-          if (res.data.errorCode==0) {
-           this.product=res.data.data.cart.carts
-            this.productNum=res.data.data.cart.totalNumber
-            this.totalPrice=res.data.data.cart.totalPrice
-
+          if (res.data.errorCode == 0) {
+            this.product = res.data.data.cart.carts
+            this.productNum = res.data.data.cart.totalNumber
+            this.totalPrice = res.data.data.cart.totalPrice
+            this.product.forEach((val, index) => {
+              val["total"] = val["price"];
+            })
           }
         })
       },
@@ -199,20 +194,32 @@
         this.dialogVisible = true;
       },
       deleteRow() {
-        this.product.splice(this.idx, 1);
-        this.handleScroll();
-        this.$message.success('删除成功');
-        this.dialogVisible = false;
 
+        var url = this.$rootUrl + "/api/halo/carts/" + this.product[this.idx].proId;
+        var token = sessionStorage.getItem('accessToken');
+        const options = {
+          method: 'DELETE',
+          headers: {'access_token': token},
+          url: url,
+          data: {}
+        };
+
+        this.$axios(options).then((res) => {
+          if (res.data.errorCode == 0) {
+            this.$message.success('删除成功');
+            this.handleScroll();
+            this.dialogVisible = false;
+            this.getData()
+          }
+        })
       },
 
     },
     computed: {
       totalPrices: function () {
         this.totalPrice = 0;
-        for (var i = 0; i < this.product.length; i++) {
-          if (this.product[i].checked != false)
-            this.totalPrice += this.product[i].sum;
+        for (let i = 0; i < this.product.length; i++) {
+          this.totalPrice += (this.product[i].price * this.product[i].number);
         }
         return this.totalPrice;
       }

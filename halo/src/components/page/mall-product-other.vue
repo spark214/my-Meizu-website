@@ -35,10 +35,10 @@
             </dl>
 
             <div class="right_button">
-              <el-button type="danger" size="medium" class="right_buynow" @click="goRouter('mallCart')">
+              <el-button type="danger" size="medium" class="right_buynow" @click="buyNow">
                 立即购买
               </el-button>
-              <el-button type="primary" size="medium" class="right_buynow" @click="addCart;centerDialogVisible=true">
+              <el-button type="primary" size="medium" class="right_buynow" @click="addCart">
                 加入购物车
               </el-button>
             </div>
@@ -51,9 +51,9 @@
       <v-footer></v-footer>
 
     </div>
-    <!--<v-hover :brand="ll" :name="common.name" :buyCount="form.buyCount"-->
-    <!--:price="common.price"-->
-    <!--:colorName="form.color"></v-hover>-->
+    <v-hover :name="common.name"  :buyCount="form.buyCount"
+             :price="form.price"
+             :colorName="form.color"></v-hover>
     <el-dialog
       :visible.sync="centerDialogVisible"
       width="30%"
@@ -99,6 +99,70 @@
       vHeader, vPhoto, vSuport, vDetail, vFooter, vHover
     },
     methods: {
+      buyNow(){
+        if(this.form.color!=""){
+          let buyForm = {
+            "proId": this.$route.query.proId,
+            "imgUrl": this.form.imgUrl,
+            "title": this.common.name + " " + this.form.color ,
+            "price":this.form.price,
+            "total":this.form.price*this.form.buyCount,
+            "number":this.form.buyCount
+          }
+          var token = sessionStorage.getItem('accessToken');
+          var url = this.$rootUrl + "/api/halo/orders/now";
+          const options = {
+            method: 'POST',
+            headers: {'access_token': token},
+            url: url,
+            data: buyForm
+          };
+          this.$axios(options).then((res) => {
+            if (res.data.data) {
+              if (res.data.errorCode == 0) {
+                sessionStorage.setItem('orderId', res.data.data.orderId);
+                sessionStorage.setItem('address', JSON.stringify(res.data.data.address));
+                sessionStorage.setItem('orderProduct', JSON.stringify(res.data.data.orderProduct));
+                this.$router.push({path: "/mallCheck",query:{type:1}})
+              }
+            }
+          })
+        }
+        else{
+          this.centerDialogVisible=true
+        }
+      },
+      addCart() {
+        if(this.form.color!=""){
+          let buyForm = {
+            "proId": this.$route.query.proId,
+            "imgUrl": this.form.imgUrl,
+            "title": this.common.name + " " + this.form.color,
+            "price":this.form.price,
+            "number":this.form.buyCount
+          }
+          var token = sessionStorage.getItem('accessToken');
+          var url = this.$rootUrl + "/api/halo/carts/";
+          const options = {
+            method: 'POST',
+            headers: {'access_token': token},
+            url: url,
+            data: buyForm
+          };
+          this.$axios(options).then((res) => {
+            if (res.data.data) {
+              if (res.data.errorCode == 0) {
+                this.centerDialogVisible=true
+                bus.$emit("cart",1)
+              }
+            }
+          })
+        }
+        else{
+          this.centerDialogVisible=true
+        }
+
+      },
       changeColor(name,index) {
         this.form.color=name
         this.selectColor = index;

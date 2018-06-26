@@ -6,28 +6,30 @@
       <li><a href="./index.html">首页</a></li>
       <li class="nav-product" id="nav-phone"><a>手机</a>
         <dl>
-          <dd v-for="(item,index) in mobPhone" @click="goRouter('mallProductPhone')">
+          <dd v-for="(item,index) in mobPhone" @click="goProduct(item.id)">
             <img :src="item.url" class="nav-img">
             <p class="nav-dd">{{item.name}}</p></dd>
         </dl>
       </li>
       <li class="nav-product"><a>声学</a>
         <dl>
-          <dd v-for="(item,index) in earPhone" @click="goRouter('mallProductOther')">
+          <dd v-for="(item,index) in earPhone" @click="goProduct(item.id)">
             <img :src="item.url" class="nav-img">
             <p class="nav-dd">{{item.name}}</p></dd>
         </dl>
       </li>
       <li class="nav-product"><a>配件</a>
         <dl>
-          <dd v-for="(item,index) in fitting" @click="goRouter('mallProductOther')">
+          <dd v-for="(item,index) in fitting" @click="goProduct(item.id)">
             <img :src="item.url" class="nav-img">
             <p class="nav-dd">{{item.name}}</p></dd>
         </dl>
       </li>
       <li><a @click="goRouter('mallIndex')">商城</a></li>
       <li><a target="_blank" href="">Flow.</a></li>
-      <li class="nav-search"><input type="text" placeholder="魅族15" value="" id="searchInput"><i class="el-icon-search" @click="goSearch"></i></li>
+      <li class="nav-search"><input type="text" placeholder="魅族15" value="" id="searchInput"><i class="el-icon-search"
+                                                                                                @click="goSearch"></i>
+      </li>
     </ul>
     <div class="login clearfix">
       <ul>
@@ -35,13 +37,13 @@
           <el-dropdown trigger="hover" @command=" handleCommand" placement="bottom">
           <span class="el-dropdown-link" @click="goRouter('member')">
            <img src="../../../../../static/img/user.png" v-show="!isLogin" width="24px">
-          <img :src="userIcon" v-show="isLogin" width="24" class="userIcon" >
+          <img :src="userIcon" v-show="isLogin" width="24" class="userIcon">
           </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="login" v-if="!isLogin">立即登录</el-dropdown-item>
               <el-dropdown-item command="register" divided v-if="!isLogin">立即注册</el-dropdown-item>
 
-              <el-dropdown-item command="loginout" v-if="isLogin">我的订单</el-dropdown-item>
+              <el-dropdown-item command="myorder" v-if="isLogin">我的订单</el-dropdown-item>
               <el-dropdown-item command="loginout" divided v-if="isLogin">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -64,22 +66,22 @@
     data() {
       return {
         mobPhone: [
-          {name: '魅族15', url: 'https://openfile.meizu.com/group1/M00/04/57/Cgbj0VrxPbKAPw-1AAJWqasMn_A309.png'},
-          {name: '魅族PRO 7', url: 'https://openfile.meizu.com/group1/M00/01/C7/Cgbj0Vl4OYOAGRToAAJwA8hDe5Y164.png'},
-          {name: '魅蓝E3', url: 'https://openfile.meizu.com/group1/M00/04/57/Cgbj0VrxPw-AagPuAAI1cwVNeY8122.png'},
-          {name: '魅蓝S6', url: 'https://openfile.meizu.com/group1/M00/04/49/Cgbj0FrxPy6Ae3lKAAHGS6FCfDA943.png'},
+          {name: '魅族15', url: 'https://openfile.meizu.com/group1/M00/04/57/Cgbj0VrxPbKAPw-1AAJWqasMn_A309.png',id:1},
+          {name: '魅族PRO 7', url: 'https://openfile.meizu.com/group1/M00/01/C7/Cgbj0Vl4OYOAGRToAAJwA8hDe5Y164.png',id:6},
+          {name: '魅蓝E3', url: 'https://openfile.meizu.com/group1/M00/04/57/Cgbj0VrxPw-AagPuAAI1cwVNeY8122.png',id:10},
+          {name: '魅蓝S6', url: 'https://openfile.meizu.com/group1/M00/04/49/Cgbj0FrxPy6Ae3lKAAHGS6FCfDA943.png',id:9},
         ],
         earPhone: [
-          {name: '魅族Halo', url: 'https://openfile.meizu.com/group1/M00/04/49/Cgbj0FrxQ9OASHrkAAHd8RyFtJk439.png'},
-          {name: '魅蓝EP52', url: 'https://openfile.meizu.com/group1/M00/04/49/Cgbj0FrxQ9OATl4OAAFfnIyp_wU418.png'},
-          {name: '魅蓝Flow', url: 'https://openfile.meizu.com/group1/M00/04/49/Cgbj0FrxQ9OANS4SAAESYJ5J8G4662.png'},
-          {name: '魅族Live', url: 'https://openfile.meizu.com/group1/M00/04/57/Cgbj0VrxQ9OAPp2AAAHX9602H_I285.png'},
+          {name: '魅族Halo', url: 'https://openfile.meizu.com/group1/M00/04/49/Cgbj0FrxQ9OASHrkAAHd8RyFtJk439.png',id:38},
+          {name: '魅蓝EP52', url: 'https://openfile.meizu.com/group1/M00/04/49/Cgbj0FrxQ9OATl4OAAFfnIyp_wU418.png',id:31},
+          {name: '魅蓝Flow', url: 'https://openfile.meizu.com/group1/M00/04/49/Cgbj0FrxQ9OANS4SAAESYJ5J8G4662.png',id:27},
+          {name: '魅族Live', url: 'https://openfile.meizu.com/group1/M00/04/57/Cgbj0VrxQ9OAPp2AAAHX9602H_I285.png',id:68},
         ],
         fitting: [
-          {name: '魅蓝双向快充移动电源', url: 'https://openfile.meizu.com/group1/M00/04/49/Cgbj0FrxRYSAa6YQAABMFFMVjEk568.png'},
-          {name: '魅族无线充电器', url: 'https://openfile.meizu.com/group1/M00/04/15/Cgbj0VrcXw2AL0tBAApTh_xwKKk709.png'},
-          {name: '魅族手环', url: 'https://openfile.meizu.com/group1/M00/04/57/Cgbj0VrxRYSAAVeoAAGI27DZUHE458.png'},
-          {name: '魅蓝酷MA萌旅行套装', url: 'https://openfile.meizu.com/group1/M00/04/58/Cgbj0VrxTr2AR8UeAALz4Fjd8wQ600.png'},
+          {name: '魅蓝双向快充移动电源', url: 'https://openfile.meizu.com/group1/M00/04/49/Cgbj0FrxRYSAa6YQAABMFFMVjEk568.png',id:42},
+          {name: '魅族无线充电器', url: 'https://openfile.meizu.com/group1/M00/04/15/Cgbj0VrcXw2AL0tBAApTh_xwKKk709.png',id:52},
+          {name: '魅族手环', url: 'https://openfile.meizu.com/group1/M00/04/57/Cgbj0VrxRYSAAVeoAAGI27DZUHE458.png',id:11},
+          {name: '魅蓝酷MA萌旅行套装', url: 'https://openfile.meizu.com/group1/M00/04/58/Cgbj0VrxTr2AR8UeAALz4Fjd8wQ600.png',id:59},
         ],
         isLogin: false,
         userIcon: "../../../static/img/21.jpg",
@@ -94,13 +96,19 @@
       goRouter(that) {
         this.$router.push({path: "/" + that});
       },
-      goSearch(){
-        var name=document.getElementById("searchInput").value
-        this.$router.push({path: "/mallList", query: {name: name,cateId:-1}})
+      goProduct(){
+        if (id <= 10)
+          this.$router.push({path: "/mallProductPhone", query: {proId: id}})
+        else
+          this.$router.push({path: "/mallProductOther", query: {proId: id}})
+      },
+      goSearch() {
+        var name = document.getElementById("searchInput").value
+        this.$router.push({path: "/mallList", query: {name: name, cateId: -1}})
       },
       handleCommand(command) {
         if (command == 'loginout') {
-          localStorage.removeItem('ms_userId');
+          sessionStorage.removeItem('accessToken');
           this.$router.push('/login');
         }
         else if (command == 'login') {
@@ -109,8 +117,20 @@
         else if (command == 'register') {
           this.$router.push('/register');
         }
+        else if (command == 'myorder') {
+          this.$router.push('/myOrder');
+        }
       },
+      getData() {
+        var token = sessionStorage.getItem('accessToken');
+        if(token!==""){
+          this.isLogin=true
+        }
+      }
 
+    },
+    created() {
+      this.getData()
     }
   }
 </script>

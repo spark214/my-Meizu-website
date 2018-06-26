@@ -25,15 +25,11 @@
       price: {
         type: [Number]
       },
-      nettype:{
-        type:[String]
-      },
+      nettype:"",
       colorName:{
         type:[String]
       },
-      rom:{
-        type:[String]
-      },
+      rom:"",
 
 
 

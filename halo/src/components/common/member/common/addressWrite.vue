@@ -48,18 +48,16 @@
     },
     methods: {
       ok() {
-        if (this.type == 0) {
-          bus.$emit('dialogVisible', false);
-        }
+
         if (this.type != 0) {
           if (this.length <= 10) {
-            if(this.type==1){
+            if(this.type==1||this.type==3){
               this.form.id = this.length+1
             }
             var url = this.$rootUrl + "/api/halo/addresses/";
             var token = sessionStorage.getItem('accessToken');
             var options;
-            if(this.type==2){
+            if(this.type==2||this.type==4){
               options = {
                 method: 'PUT',
                 headers: {'access_token': token},
@@ -77,7 +75,10 @@
             }
             this.$axios(options).then((res) => {
               if (res.data.id||res.data.errorCode==0) {
+                if(this.type<=2)
                     this.$emit("ok",1)
+                else
+                  bus.$emit('dialogVisible', false);
                 }
 
             })

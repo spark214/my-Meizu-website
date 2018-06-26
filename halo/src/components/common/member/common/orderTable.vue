@@ -9,20 +9,20 @@
       <table class="order_table" id="cart_table">
         <tr class="table_product clearfix" align="center">
           <td width="498px">
-            <div v-for="its in item.msg" class="table_product_detail clearfix table_product_border">
-              <img :src="its.img" width="100" height="100" class="table_product_img">
+            <div v-for="its in item.products" class="table_product_detail clearfix table_product_border">
+              <img :src="its.imgUrl" width="100" height="100" class="table_product_img">
               <div class="table_product_msg">
                 <p>{{its.title}}</p> ×<span>{{its.number}}</span>
               </div>
             </div>
           </td>
           <td width="200px" class="table_product_border">
-            <span style="color: rgb(224, 43, 65)" class="table_price ">￥{{item.total.toFixed(2)}}</span>
+            <span style="color: rgb(224, 43, 65)" class="table_price ">￥{{item.price.toFixed(2)}}</span>
           </td>
-          <td width="140px" :rowspan="item.msg.length" class="table_product_border">
+          <td width="140px" :rowspan="item.products.length" class="table_product_border">
             <span>{{orderStatus}}</span>
           </td>
-          <td width="140px" :rowspan="item.msg.length">
+          <td width="140px" :rowspan="item.products.length">
             <el-button v-if="item.status==0" type="danger">立即付款</el-button>
             <p v-if="item.status!=3" style="cursor:pointer;">取消订单</p>
             <p style="cursor: pointer" @click="goRouter('orderDetail')">查看详情</p>
@@ -35,7 +35,7 @@
 <script>
   export default {
     props: {
-      datas: {}
+      datas: []
     },
     data() {
       return {}
@@ -47,13 +47,27 @@
     },
     computed: {
       orderStatus(){
-        switch (this.datas.status){
-          case 0:return "未付款";break;
-          case 1:return "已付款";break;
-          case 2:return "未发货";break;
-          case 3:return "已发货";break;
-          case 4:return "交易成功";break;
-          case 5:return "交易关闭";break;
+        for(let i=0;i<this.datas.length;i++) {
+          switch (this.datas.status) {
+            case 0:
+              return "未付款";
+              break;
+            case 1:
+              return "已付款";
+              break;
+            case 2:
+              return "未发货";
+              break;
+            case 3:
+              return "已发货";
+              break;
+            case 4:
+              return "交易成功";
+              break;
+            case 5:
+              return "交易关闭";
+              break;
+          }
         }
       }
     }

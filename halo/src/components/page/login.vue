@@ -11,7 +11,7 @@
           </el-header>
           <el-container id="login_container_main">
             <el-form :model="loginForm" :rules="rules" ref="loginForm" class="form_main">
-              <el-form-item prop="userId">
+              <el-form-item prop="phone">
                 <el-input v-model="loginForm.phone" placeholder="手机号" @change="vp()"></el-input>
                 <p style="color:#e22841;font-size: 12px">{{errormsg}}</p>
               </el-form-item>
@@ -20,7 +20,14 @@
                           @keyup.enter.native=""></el-input>
               </el-form-item>
 
-              <v-sms v-show="!accLogin"></v-sms>
+              <el-container id="login_container_mains" v-show="!accLogin">
+                <el-form :model="loginFormMsg" :rules="rules" ref="loginFormMsg">
+                  <el-form-item prop="code">
+                    <el-input v-model="loginFormMsg.code" placeholder="短信验证码" @change="send"></el-input>
+                    <el-button @click="countDown" :class="{disabled:!canClick}" class="button_sms">{{content}}</el-button>
+                  </el-form-item>
+                </el-form>
+              </el-container>
 
               <v-code @codeAva="getAva" v-show="accLogin"></v-code>
               <el-checkbox v-show="accLogin">记住密码</el-checkbox>
@@ -38,6 +45,15 @@
       </el-main>
       <el-footer style=" height: 40px;">&copy;2018 Halo Telecom Equipment Co., Ltd. All rights reserved.</el-footer>
     </el-container>
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible">
+      <p>{{errormsg}}</p>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -51,18 +67,31 @@
           phone: "",
           pwd: "",
         },
+        loginFormMsg: {
+          phone: "",
+          code: ''
+        },
         rules: {
-          userId: [
+          phone: [
             {required: true, message: "请输入手机号码", trigger: "blur"}
           ],
-          password: [
+          pwd: [
             {required: true, message: "请输入密码", trigger: "blur"}
+          ],
+          sms: [
+            {required: true, message: '请输入短信验证码', trigger: "blur"}
+
           ],
 
         },
         codeAva: false,
         accLogin: true,
-        errormsg:""
+        errormsg:"",
+        content: '点击发送验证码',
+        totalTime: 60,
+        canClick: true,
+        count: 0,
+        dialogVisible: false,
       };
     },
     methods: {
@@ -84,30 +113,87 @@
             })
       },
       check(){
-        var url = this.$rootUrl + "/api/halo/auths/loginByPwd";
-        const options = {
-          method: 'POST',
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          url: url,
-          data: qs.stringify(this.loginForm)
-        };
-        this.$axios(options).then((res) => {
-          if (res.data.data) {
-            if (res.data.errorCode == 0) {
-              sessionStorage.setItem('accessToken',res.data.data.access_token)
-              this.$router.push({path: "/"});
+        if(this.accLogin){
+          var url = this.$rootUrl + "/api/halo/auths/loginByPwd";
+          const options = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            url: url,
+            data: qs.stringify(this.loginForm)
+          };
+          this.$axios(options).then((res) => {
+            if (res.data.data) {
+              if (res.data.errorCode == 0) {
+                sessionStorage.setItem('accessToken',res.data.data.access_token)
+                this.$router.push({path: "/"});
+              }
+              else {
+                this.errormsg=res.data.msg;
+              }
             }
-            else {
-             this.errormsg=res.data.msg;
+          })
+        }
+        else{
+          var url = this.$rootUrl + "/api/halo/auths/loginByCode ";
+          this.loginFormMsg.phone=this.loginForm.phone
+          const options = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            url: url,
+            data: qs.stringify(this.loginFormMsg)
+          };
+          this.$axios(options).then((res) => {
+            if (res.data.data) {
+              if (res.data.errorCode == 0) {
+                sessionStorage.setItem('accessToken',res.data.data.access_token)
+                this.$router.push({path: "/"})
+              }
+              else {
+                this.errormsg=res.data.msg;
+              }
             }
-          }
-        })
+          })
+
+        }
       },
       getAva(msg) {
         this.codeAva = msg
       },
       goRouter(that) {
         this.$router.push({path: "/" + that});
+      },
+      countDown() {
+        if (!this.canClick) return
+        this.canClick = false
+        this.content = this.totalTime + "s后重新发送"
+        this.count = 1
+        let clock = window.setInterval(() => {
+          this.totalTime--
+          this.content = this.totalTime + "s后重新发送"
+          console.log(this.totalTime)
+          if (this.totalTime <= 0) {
+            window.clearInterval(clock)
+            this.content = '重新发送验证码'
+            this.totalTime = 60
+            this.canClick = true
+          }
+        }, 1000)
+        var phone = this.loginForm.phone
+          var url = this.$rootUrl + "/api/halo/auths/requestSmsCode/" + phone;
+        const options = {
+          method: 'GET',
+          headers: {'content-type': 'application/x-www-form-urlencoded'},
+          url: url,
+          data: {}
+        };
+        this.$axios(options).then((res) => {
+          if (res.data.data) {
+            if (res.data.errorCode != 0) {
+              this.errormsg = res.data.msg;
+              this.dialogVisible = true
+            }
+          }
+        })
       },
 
     },
@@ -209,5 +295,14 @@
     font-size: 14px;
     color: #409EFF;
     cursor: pointer;
+  }
+  .button_sms {
+    margin-top: 20px;
+  }
+  .disabled {
+    background-color: #ddd;
+    border-color: #ddd;
+    color: #57a3f3;
+    cursor: not-allowed;
   }
 </style>
