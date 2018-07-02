@@ -52,7 +52,7 @@
 
     </div>
     <v-hover :name="common.name"  :buyCount="form.buyCount"
-             :price="form.price"
+             :price="common.price"
              :colorName="form.color"></v-hover>
     <el-dialog
       :visible.sync="centerDialogVisible"
@@ -105,8 +105,8 @@
             "proId": this.$route.query.proId,
             "imgUrl": this.form.imgUrl,
             "title": this.common.name + " " + this.form.color ,
-            "price":this.form.price,
-            "total":this.form.price*this.form.buyCount,
+            "price":this.common.price,
+            "total":this.common.price*this.form.buyCount,
             "number":this.form.buyCount
           }
           var token = sessionStorage.getItem('accessToken');
@@ -138,7 +138,7 @@
             "proId": this.$route.query.proId,
             "imgUrl": this.form.imgUrl,
             "title": this.common.name + " " + this.form.color,
-            "price":this.form.price,
+            "price":this.common.price,
             "number":this.form.buyCount
           }
           var token = sessionStorage.getItem('accessToken');
@@ -210,6 +210,11 @@
     },
     created() {
       this.getData()
+    },
+    watch: {
+      '$route'(to, from) {
+        this.getData()
+      }
     }
 
   }

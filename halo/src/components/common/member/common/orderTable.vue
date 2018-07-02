@@ -2,7 +2,7 @@
   <div class="orderTable_conatiner">
     <div v-for="(item,index) in datas" class="orderTable">
       <div class="table_header">
-        <span class="table_header_title">下单时间:</span> <span class="table_header_num">{{item.gmtUpdated}}</span>
+        <span class="table_header_title">下单时间:</span> <span class="table_header_num">{{GMTToStrCreate}}</span>
         <span class="table_header_title">订单号:</span> <span class="table_header_num">{{item.id}}</span>
       </div>
 
@@ -25,7 +25,7 @@
           <td width="140px" :rowspan="item.products.length">
             <el-button v-if="item.status==0" type="danger">立即付款</el-button>
             <p v-if="item.status!=3" style="cursor:pointer;">取消订单</p>
-            <p style="cursor: pointer" @click="goRouter('orderDetail')">查看详情</p>
+            <p style="cursor: pointer" @click="goDetail(index)">查看详情</p>
           </td>
         </tr>
       </table>
@@ -41,6 +41,9 @@
       return {}
     },
     methods: {
+      goDetail(index){
+        this.$router.push({path: "/orderDetail",query:{id:this.datas[index].id}});
+      },
       goRouter(that) {
         this.$router.push({path: "/" + that});
       },
@@ -48,7 +51,7 @@
     computed: {
       orderStatus(){
         for(let i=0;i<this.datas.length;i++) {
-          switch (this.datas.status) {
+          switch (this.datas[i].status) {
             case 0:
               return "未付款";
               break;
@@ -69,7 +72,19 @@
               break;
           }
         }
-      }
+      },
+      GMTToStrCreate() {
+        for (let i = 0; i < this.datas.length; i++) {
+          let date = new Date(this.datas[i].gmtUpdated)
+          let Str = date.getFullYear() + '-' +
+            (date.getMonth() + 1) + '-' +
+            date.getDate() + ' ' +
+            date.getHours() + ':' +
+            date.getMinutes() + ':' +
+            date.getSeconds()
+          return Str
+        }
+      },
     }
   }
 </script>

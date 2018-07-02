@@ -37,49 +37,57 @@
             name: "魅族15",
             title: "2000万暗光双摄 智能美颜",
             price: "2499",
-            img: "https://openfile.meizu.com/group1/M00/04/0B/Cgbj0FrcblSAGHrPAAvT_qZZSA0427.png@480x480.png"
+            img: "https://openfile.meizu.com/group1/M00/04/0B/Cgbj0FrcblSAGHrPAAvT_qZZSA0427.png@480x480.png",
+            id:1
           },
           {
             name: "魅族15 Plus",
             title: "定制全面屏 人机交互新体验",
             price: "2999",
-            img: "https://openfile.meizu.com/group1/M00/04/1C/Cgbj0VrcbrCANJBMAAxI8Fi80MA520.png@480x480.png"
+            img: "https://openfile.meizu.com/group1/M00/04/1C/Cgbj0VrcbrCANJBMAAxI8Fi80MA520.png@480x480.png",
+            id:2
           },
           {
             name: "魅族 M15",
             title: "支持人脸识别 抬腕即解锁",
             price: "1699",
-            img: "https://openfile.meizu.com/group1/M00/04/19/Cgbj0VrcbhmAHzm7AAMI5v4clPg365.png@480x480.png"
+            img: "https://openfile.meizu.com/group1/M00/04/19/Cgbj0VrcbhmAHzm7AAMI5v4clPg365.png@480x480.png",
+            id:3
           },
           {
             name: "魅族PRO 7",
             title: "2000万暗光双摄 智能美颜",
             price: "2499",
-            img: "https://openfile.meizu.com/group1/M00/01/C7/Cgbj0Vl4OYOAGRToAAJwA8hDe5Y164.png@480x480.png"
+            img: "https://openfile.meizu.com/group1/M00/01/C7/Cgbj0Vl4OYOAGRToAAJwA8hDe5Y164.png@480x480.png",
+            id:6
           },
           {
             name: "魅族15",
             title: "2000万暗光双摄 智能美颜",
             price: "2499",
-            img: "https://openfile.meizu.com/group1/M00/01/DC/Cgbj0FmdIJmAeVGmAAxAuuJkLGk921.png@480x480.jpg"
+            img: "https://openfile.meizu.com/group1/M00/01/DC/Cgbj0FmdIJmAeVGmAAxAuuJkLGk921.png@480x480.jpg",
+            id:1
           },
           {
             name: "魅族15",
             title: "2000万暗光双摄 智能美颜",
             price: "2499",
-            img: "https://openfile.meizu.com/group1/M00/02/30/Cgbj0VnCGzuARl88AAnFI7AK-Xs392.png@480x480.png"
+            img: "https://openfile.meizu.com/group1/M00/02/30/Cgbj0VnCGzuARl88AAnFI7AK-Xs392.png@480x480.png",
+            id:1
           },
           {
             name: "魅族15",
             title: "2000万暗光双摄 智能美颜",
             price: "2499",
-            img: "https://openfile.meizu.com/group1/M00/03/BB/Cgbj0Vq9-m2AJr_PAAp1B7CA5GY057.png@480x480.png"
+            img: "https://openfile.meizu.com/group1/M00/03/BB/Cgbj0Vq9-m2AJr_PAAp1B7CA5GY057.png@480x480.png",
+            id:1
           },
           {
             name: "魅族15",
             title: "2000万暗光双摄 智能美颜",
             price: "2499",
-            img: "https://openfile.meizu.com/group1/M00/01/59/Cgbj0FkAUNWADAgGAAZo5v0_vu8708.png@680x680.png"
+            img: "https://openfile.meizu.com/group1/M00/01/59/Cgbj0FkAUNWADAgGAAZo5v0_vu8708.png@680x680.png",
+            id:1
           },
 
         ]

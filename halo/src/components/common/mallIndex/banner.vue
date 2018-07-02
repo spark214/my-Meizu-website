@@ -2,8 +2,8 @@
   <div class="banner">
     <div class="carousel clearfix">
       <el-carousel height="560px" trigger="click" arrow="never">
-        <el-carousel-item v-for="item in banner" :key="item">
-          <div class="banner-content" :style="item"></div>
+        <el-carousel-item v-for="(item,index) in banner" :key="item">
+          <div class="banner-content" :style="item" @click="banner(index)"></div>
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -20,7 +20,7 @@
       <div class="side-detail" v-show="goodsStatus" @mouseenter="evtSideEnter(item.type)">
         <ul class="detail-item" v-for="goods in filterCurrGoods">
           <li class="datail-goods" v-for="item in goods">
-            <a class="goods-link">
+            <a class="goods-link" @click="goProduct(item.proId)">
               <img :src="item.imgUrl" width="40px">
               <div class="goods-link-name">
                 {{item.name}}
@@ -54,6 +54,7 @@
             backgroundPosition: "center",
           },
         ],
+        ids:[38,1,69],
         currGoods: [],
         goodsStatus: false,
         sideItems: [
@@ -103,14 +104,14 @@
             name: '魅蓝6',
           },
           {
-            proId: 1,
+            proId: 8,
             imgUrl: '//openfile.meizu.com/group1/M00/00/2C/Cgbj0VkAUNmAeTU2AAklK6hJr4k492.png',
-            name: '魅蓝Note6',
+            name: '魅蓝E2',
           },
           {
-            proId: 1,
+            proId: 9,
             imgUrl: '//openfile.meizu.com/group1/M00/03/03/Cgbj0VpfCpuAF571AAwckbZIp2U479_180x180.png',
-            name: '魅蓝Note6',
+            name: '魅蓝S6',
           },
           {
             proId: 10,
@@ -129,6 +130,20 @@
       }
     },
     methods: {
+      banner(index){
+        var id=ids[index]
+        if (id <= 10)
+          this.$router.push({path: "/mallProductPhone", query: {proId: id}})
+        else
+          this.$router.push({path: "/mallProductOther", query: {proId: id}})
+
+      },
+      goProduct(id){
+        if (id <= 10)
+          this.$router.push({path: "/mallProductPhone", query: {proId: id}})
+        else
+          this.$router.push({path: "/mallProductOther", query: {proId: id}})
+      },
       evtSideEnter(currType) {
         this.currGoods = this[currType]
         this.goodsStatus = true

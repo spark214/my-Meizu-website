@@ -30,7 +30,6 @@
               </el-container>
 
               <v-code @codeAva="getAva" v-show="accLogin"></v-code>
-              <el-checkbox v-show="accLogin">记住密码</el-checkbox>
               <el-form-item>
                 <el-button type="primary" @click="check()">登录</el-button>
               </el-form-item>
@@ -125,6 +124,7 @@
             if (res.data.data) {
               if (res.data.errorCode == 0) {
                 sessionStorage.setItem('accessToken',res.data.data.access_token)
+                document.cookie="token="+res.data.data.access_token+"; mag-age=3600;"
                 this.$router.push({path: "/"});
               }
               else {

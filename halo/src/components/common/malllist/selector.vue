@@ -22,16 +22,16 @@
         </ul>
       </div>
     </div>
-    <div class="filterOrder clearfix">
-      <ul class="clearfix">
-        <li @click="filter=0"><span :class="{on:filter==0}">推荐</span></li>
-        <li @click="filter=1"><span :class="{on:filter==1}">新品</span></li>
-        <li @click="filterprice"><span :class="{on:filter==2}">价格</span>
-          <i class="el-icon-caret-bottom"
-             v-show="filterPrice==1&&filter==2"></i><i
-            class="el-icon-caret-top" v-show="filterPrice==2&&filter==2"></i></li>
-      </ul>
-    </div>
+    <!--<div class="filterOrder clearfix">-->
+      <!--<ul class="clearfix">-->
+        <!--<li @click="filter=0"><span :class="{on:filter==0}">推荐</span></li>-->
+        <!--<li @click="filter=1"><span :class="{on:filter==1}">新品</span></li>-->
+        <!--<li @click="filterprice"><span :class="{on:filter==2}">价格</span>-->
+          <!--<i class="el-icon-caret-bottom"-->
+             <!--v-show="filterPrice==1&&filter==2"></i><i-->
+            <!--class="el-icon-caret-top" v-show="filterPrice==2&&filter==2"></i></li>-->
+      <!--</ul>-->
+    <!--</div>-->
   </div>
 
 </template>

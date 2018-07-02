@@ -1,13 +1,13 @@
 <template>
   <div class="sectionBox clearfix">
-    <h1 class="sectionBox_title" @click="goRouter('')">{{title}}</h1>
-    <div class="sectionBox_left clearfix" @click="goRouter('mallProductPhone')">
-      <img :src="img[0]" width="615px" @click="goRouter('mallProductPhone')">
+    <h1 class="sectionBox_title" @click="goCate(1)">{{title}}</h1>
+    <div class="sectionBox_left clearfix" @click="goProduct(38)">
+      <img :src="img[0]" width="615px" @click="goProduct(38)">
     </div>
     <div class="sectionBox_right">
-      <img :src="img[1]" width="615px" @click="goRouter('mallProductPhone')">
-      <img :src="img[2]" width="303px" @click="goRouter('mallProductPhone')">
-      <img :src="img[3]" width="303px" @click="goRouter('mallProductPhone')">
+      <img :src="img[1]" width="615px" @click="goProduct(1)">
+      <img :src="img[2]" width="303px" @click="goProduct(2)">
+      <img :src="img[3]" width="303px" @click="goProduct(3)">
     </div>
 
 
@@ -23,8 +23,17 @@
       return {}
     },
     methods: {
+      goCate(id) {
+        this.$router.push({path: "/mallList", query: {cateId: id}})
+      },
       goRouter(that) {
         this.$router.push({path: "/" + that});
+      },
+      goProduct(id){
+        if (id <= 10)
+          this.$router.push({path: "/mallProductPhone", query: {proId: id}})
+        else
+          this.$router.push({path: "/mallProductOther", query: {proId: id}})
       },
     }
   }

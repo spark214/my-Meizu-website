@@ -3,7 +3,7 @@
     <el-row :gutter="7">
       <el-col :span="6" v-for="item in item">
         <el-card shadow="hover" class="list_card" >
-          <a @click="goRouter('mallProductPhone')">
+          <a @click="goProduct(item.id)">
             <img width="230px" class="list_img" v-lazy="item.img">
             <div class="list_desc">
               <p class="list_name">{{item.name}}</p>
@@ -24,6 +24,12 @@ export default {
   methods:{
     goRouter(that) {
       this.$router.push({path: "/" + that});
+    },
+    goProduct(id){
+      if (id <= 10)
+        this.$router.push({path: "/mallProductPhone", query: {proId: id}})
+      else
+        this.$router.push({path: "/mallProductOther", query: {proId: id}})
     },
   }
 }

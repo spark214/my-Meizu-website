@@ -121,7 +121,7 @@
           "id": sessionStorage.getItem('orderId'),
           "products": reform,
           "receiver": JSON.parse(sessionStorage.getItem('receiver')),
-          "payType":this.radio+1
+          "payType":this.radio*1+1
         }
         var token = sessionStorage.getItem('accessToken');
         var url = this.$rootUrl + "/api/halo/orders/";

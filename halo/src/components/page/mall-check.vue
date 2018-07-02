@@ -3,8 +3,8 @@
     <v-header></v-header>
     <div class="pageContain">
       <v-address></v-address>
-      <v-ordermsgs v-if="type=1"></v-ordermsgs>
-      <v-ordermsgs v-else></v-ordermsgs>
+      <v-ordermsgs v-if="type==1"></v-ordermsgs>
+      <v-ordermsg v-else></v-ordermsg>
       <v-payment></v-payment>
     </div>
     <v-footer></v-footer>

@@ -14,7 +14,8 @@
     </div>
     <div class="orderDetail_table">
       <span class="orderDetail_table_title ">订单号：{{orderDetail.id}}</span>
-      <span class="orderDetail_table_title " style="margin-left: 15px" v-if="status!=5&&status!=0">支付方式：{{payType}}</span>
+      <span class="orderDetail_table_title " style="margin-left: 15px"
+            v-if="status!=5&&status!=0">支付方式：{{payType}}</span>
       <el-table :data="orderDetail.products" clss="cart_table" id="cart_table" ref="multipleTable" border>
 
         <el-table-column width="510" label="商品" class="table_product clearfix" align="center">
@@ -48,7 +49,7 @@
     </div>
     <div class="payment_computed clearfix">
       <div class="clearfix"><p>总金额</p>
-        <p >￥{{totalPrices}}</p></div>
+        <p>￥{{totalPrices}}</p></div>
       <div class="clearfix"><p>运费</p>
         <p v-text="'￥0.00'"></p></div>
       <div style="height: 1px;border-top: 0.5px solid #ccc"></div>
@@ -69,80 +70,82 @@
       return {
         "status": 1,
         "orderDetail": {
-          "id": "538103ad3cd346a187aa256b37882ed7",
-          "receiver": {
-            "name": "mello",
-            "phone": "13192265851",
-            "address": "广东省珠海市香洲区唐家湾金凤路六号"
-          },
-          "products": [
-            {
-              "proId": 6,
-              "imgUrl": "https://openfile.meizu.com/group1/M00/01/B9/Cgbj0Fl4OYOAbICrAA2zSL7wnnM117.png@120x120.png",
-              "title": "魅族 PRO 7 全网通公开版 静谧黑 4GB+64GB ",
-              "price": 1299,
-              "number": 2,
-              "total": 1299
-            },
-            {
-              "proId": 37,
-              "imgUrl": "https://openfile.meizu.com/group1/M00/00/A2/Cix_s1gcVpeAOmoaAAGh-ubroNg891.png@120x120.png",
-              "title": "魅族 EP2X耳机 皓月白 ",
-              "price": 89,
-              "number": 1,
-              "total": 89
-            }
-          ],
-          "payType": 1
+          "id": "",
+          "receiver": {},
+          "products": [],
+          "payType": 0,
         },
-        alltotal:0
+
+        alltotal: 0
       }
     },
-    methods:{
-      getData(){
-        // var url = this.$rootUrl + "/api/halo/orders/"+this.id+"/products";
-        // var token = sessionStorage.getItem('accessToken');
-        // const options = {
-        //   method: 'GET',
-        //   headers: {'access_token': token},
-        //   url: url,
-        //   data: {}
-        // };
-        //
-        // this.$axios(options).then((res) => {
-        //   if (res.data.errorCode==0) {
-        //
-        //   }
-        // })
+    methods: {
+      getData() {
+        var id = this.$route.query.id
+        var url = this.$rootUrl + "/api/halo/orders/" + id + "/products";
+        var token = sessionStorage.getItem('accessToken');
+        const options = {
+          method: 'GET',
+          headers: {'access_token': token},
+          url: url,
+          data: {}
+        };
+
+        this.$axios(options).then((res) => {
+          if (res.data.errorCode == 0) {
+            this.orderDetail = res.data.data.orderDetail
+            this.status=res.data.data.status
+          }
+        })
       }
     },
-    computed:{
-      totalPrices(){
-        for(let i=0;i<this.orderDetail.products.length;i++){
-          this.alltotal+=this.orderDetail.products[i].total
+    computed: {
+      totalPrices() {
+        for (let i = 0; i < this.orderDetail.products.length; i++) {
+          this.alltotal += this.orderDetail.products[i].total
         }
         return this.alltotal.toFixed(2)
       },
-      payType(){
-        switch (this.orderDetail.payType){
-          case 0:return "花呗分期";break;
-          case 1:return "支付宝";break;
-          case 2:return "微信";break;
-          case 3:return "银行卡";break;
+      payType() {
+        switch (this.orderDetail.payType) {
+          case 0:
+            return "花呗分期";
+            break;
+          case 1:
+            return "支付宝";
+            break;
+          case 2:
+            return "微信";
+            break;
+          case 3:
+            return "银行卡";
+            break;
         }
       },
-      orderStatus(){
-        switch (this.status){
-          case 0:return "未付款";break;
-          case 1:return "已付款";break;
-          case 2:return "未发货";break;
-          case 3:return "已发货";break;
-          case 4:return "交易成功";break;
-          case 5:return "交易关闭";break;
+      orderStatus() {
+        switch (this.status) {
+          case 0:
+            return "未付款";
+            break;
+          case 1:
+            return "已付款";
+            break;
+          case 2:
+            return "未发货";
+            break;
+          case 3:
+            return "已发货";
+            break;
+          case 4:
+            return "交易成功";
+            break;
+          case 5:
+            return "交易关闭";
+            break;
         }
       }
     },
-    created(){
+    created() {
       this.getData()
     }
   }
@@ -225,7 +228,8 @@
     color: #666666;
     font-size: 14px;
   }
-  .orderDetail_receiver{
+
+  .orderDetail_receiver {
     border-top: 0.5px solid #ccc;
     padding-top: 10px;
     color: #666666;
@@ -233,20 +237,23 @@
     position: relative;
     top: 200px;
   }
-  .payment_computed{
+
+  .payment_computed {
     width: 254px;
     height: 318px;
     float: right;
     position: relative;
-    right:50px;
-    top:50px;
+    right: 50px;
+    top: 50px;
     line-height: 40px;
     color: #666;
   }
-  .payment_computed>div p:first-child{
+
+  .payment_computed > div p:first-child {
     float: left;
   }
-  .payment_computed>div p:last-child{
+
+  .payment_computed > div p:last-child {
     float: right;
   }
 </style>

@@ -26,7 +26,7 @@
         <p>订单状态</p>
       </div>
       <div class="user_order_content clearfix">
-        <div class="order_pay clearfix  order_box">
+        <div class="order_pay clearfix  order_box"  @click="goRouter('unpayOrder')">
           <div class="order_pay_icon order_icon">
             <img src="../../../../../static/img/wallet.png">
           </div>
@@ -36,7 +36,7 @@
           </div>
 
         </div>
-        <div class="order_send clearfix order_box">
+        <div class="order_send clearfix order_box" @click="goRouter('unsentOrder')">
           <div class="order_send_icon order_icon">
             <img src="../../../../../static/img/send.png">
           </div>
@@ -80,7 +80,7 @@
             if (res.data.data) {
               if (res.data.errorCode == 0) {
                 this.msg = res.data.data.userinfo
-                if(this.msg.avatar==""){
+                if(this.msg.avatar=="//"){
                   this.avatar= "//image-res.mzres.com/image/uc/80f8d55d49464e3e90d72f6679cbf970z?t=946656000000"
                 }
                 else{

@@ -118,7 +118,7 @@
           if (res.data.errorCode == 0) {
             sessionStorage.setItem('orderId', res.data.data.orderId);
             sessionStorage.setItem('address', JSON.stringify(res.data.data.address));
-            sessionStorage.setItem('orderProduct', JSON.stringify(res.data.data.orderProduct));
+            sessionStorage.setItem('orderProduct', JSON.stringify(res.data.data.orderProducts));
             this.$router.push({path: "/mallCheck",query:{"type":2}})
           }
         })

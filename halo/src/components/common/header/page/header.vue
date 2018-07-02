@@ -4,21 +4,21 @@
                                              height="24px"></a>
     <ul class="navs" id="navul">
       <li><a href="./index.html">首页</a></li>
-      <li class="nav-product" id="nav-phone"><a>手机</a>
+      <li class="nav-product" id="nav-phone"><a  @click="goList(0)">手机</a>
         <dl>
           <dd v-for="(item,index) in mobPhone" @click="goProduct(item.id)">
             <img :src="item.url" class="nav-img">
             <p class="nav-dd">{{item.name}}</p></dd>
         </dl>
       </li>
-      <li class="nav-product"><a>声学</a>
+      <li class="nav-product"><a  @click="goList(5)">声学</a>
         <dl>
           <dd v-for="(item,index) in earPhone" @click="goProduct(item.id)">
             <img :src="item.url" class="nav-img">
             <p class="nav-dd">{{item.name}}</p></dd>
         </dl>
       </li>
-      <li class="nav-product"><a>配件</a>
+      <li class="nav-product"  ><a @click="goList(6)">配件</a>
         <dl>
           <dd v-for="(item,index) in fitting" @click="goProduct(item.id)">
             <img :src="item.url" class="nav-img">
@@ -26,7 +26,7 @@
         </dl>
       </li>
       <li><a @click="goRouter('mallIndex')">商城</a></li>
-      <li><a target="_blank" href="">Flow.</a></li>
+      <li><a target="_blank" href="https://tozlam.cn/mz/flyme_index.html">Flow.</a></li>
       <li class="nav-search"><input type="text" placeholder="魅族15" value="" id="searchInput"><i class="el-icon-search"
                                                                                                 @click="goSearch"></i>
       </li>
@@ -36,8 +36,7 @@
         <li>
           <el-dropdown trigger="hover" @command=" handleCommand" placement="bottom">
           <span class="el-dropdown-link" @click="goRouter('member')">
-           <img src="../../../../../static/img/user.png" v-show="!isLogin" width="24px">
-          <img :src="userIcon" v-show="isLogin" width="24" class="userIcon">
+           <img src="../../../../../static/img/user.png" width="24px">
           </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="login" v-if="!isLogin">立即登录</el-dropdown-item>
@@ -93,10 +92,13 @@
       vCart
     },
     methods: {
+      goList(id) {
+        this.$router.push({path: "/mallList", query: {cateId: id}})
+      },
       goRouter(that) {
         this.$router.push({path: "/" + that});
       },
-      goProduct(){
+      goProduct(id){
         if (id <= 10)
           this.$router.push({path: "/mallProductPhone", query: {proId: id}})
         else
@@ -123,7 +125,7 @@
       },
       getData() {
         var token = sessionStorage.getItem('accessToken');
-        if(token!==""){
+        if(token!=undefined){
           this.isLogin=true
         }
       }

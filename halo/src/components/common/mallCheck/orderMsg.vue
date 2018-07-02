@@ -10,7 +10,7 @@
       </tr>
       <tr v-for="item in products">
         <td width="500px">
-          <img :src="product.imgUrl" width="100" height="100" class="table_product_img">
+          <img :src="item.imgUrl" width="100" height="100" class="table_product_img">
           <div class="table_product_msg">
             <p>{{item.title}}</p>
           </div>
@@ -31,7 +31,7 @@
     <div class="orderMsg_table_footer clearfix">
       <div class="orderMsg_total" style="font-size: 16px">
         合计
-        <span style="font-size: 22px;color:#e02b41;font-weight: bold;" v-text="'￥'+totalPrice+'.00'"></span>
+        <span style="font-size: 22px;color:#e02b41;font-weight: bold;" >{{totalPrices.toFixed(2)}}</span>
       </div>
     </div>
 
@@ -66,6 +66,15 @@
           this.products = JSON.parse(sessionStorage.getItem('orderProduct'));
       }
     },
+    computed: {
+      totalPrices: function () {
+        this.totalPrice = 0;
+        for (let i = 0; i < this.products.length; i++) {
+          this.totalPrice += (this.products[i].price * this.products[i].number);
+        }
+        return this.totalPrice;
+      }
+    },
     created() {
       this.getData()
     }
@@ -73,10 +82,17 @@
 </script>
 <style>
   .orderMsg_table {
+    width: 96%;
+    position: relative;
+    left: 50%;
+    margin-left: -48%;
     margin-top: 20px;
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
     border: 0.5px solid #dcdcdc;
+    color: #666666;
   }
 
   .table_product_img {
@@ -131,7 +147,6 @@
     position: relative;
     left: 50%;
     margin-left: -48%;
-    margin-top: -21px;
   }
 
   .orderMsg_total {

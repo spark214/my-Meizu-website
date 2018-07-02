@@ -74,7 +74,7 @@
                   <el-form-item prop="sms1">
                     <span class="label">邮件验证码</span>
                     <el-input v-model="mailForm.sms1" style="width: 15%"></el-input>
-                    <el-button @click="countDown(1)" :class="{disabled:!canClick}" class="button_sms">{{content}}
+                    <el-button @click="countDown(0)" :class="{disabled:!canClick}" class="button_sms">{{content}}
                     </el-button>
                   </el-form-item>
                   <el-button type="primary" @click="mailStep=2" style="width: 15%">下一步</el-button>
@@ -91,7 +91,7 @@
                   <el-form-item prop="sms2">
                     <span class="label">邮件验证码</span>
                     <el-input v-model="mailForm.sms2" style="width: 13.2%"></el-input>
-                    <el-button @click="countDown(0)" :class="{disabled:!canClick}" class="button_sms" class="AMbutton">
+                    <el-button @click="countDown(1)" :class="{disabled:!canClick}" class="button_sms" class="AMbutton">
                       {{content}}
                     </el-button>
                   </el-form-item>
@@ -357,7 +357,7 @@
               this.mailForm.old = res.data.data.userinfo.email
               this.phoneForm.old = res.data.data.userinfo.phone
               this.$router.push({path: '/user', query: {phone: this.phoneForm.old}});
-              if (this.userinfo.avatar == "") {
+              if (this.userinfo.avatar == "//") {
                 this.avatar = "//image-res.mzres.com/image/uc/80f8d55d49464e3e90d72f6679cbf970z?t=946656000000"
               }
               else {

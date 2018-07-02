@@ -3,8 +3,8 @@
     <v-header></v-header>
     <div class="carousel">
       <el-carousel height="680px"  trigger="click">
-        <el-carousel-item v-for="item in banner" :key="item">
-         <div class="banner-content" :style="item"></div>
+        <el-carousel-item v-for="(item,index) in banner" :key="item" @click="banner(index)">
+         <div class="banner-content" :style="item" ></div>
         </el-carousel-item>
       </el-carousel>
     </div>
@@ -34,14 +34,20 @@
             backgroundPosition:"center",
             backgroundSize:"cover",
       },
-        ]
+        ],
+        ids:[1,31,69]
       }
     },
     components:{
       vHeader,vFooter
     },
     methods:{
-      banner(){
+      banner(index){
+       var id=ids[index]
+          if (id <= 10)
+            this.$router.push({path: "/mallProductPhone", query: {proId: id}})
+          else
+            this.$router.push({path: "/mallProductOther", query: {proId: id}})
 
       }
     }

@@ -95,7 +95,7 @@
           if (res.data.data) {
             if (res.data.errorCode == 0) {
               var avatar = res.data.data.userinfo.avatar
-              if (avatar == "") {
+              if (avatar == "//") {
                 this.avatar = "//image-res.mzres.com/image/uc/80f8d55d49464e3e90d72f6679cbf970z?t=946656000000"
               }
               else {
