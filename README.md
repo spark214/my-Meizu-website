@@ -23,3 +23,12 @@ npm run dev
 npm run build
 ````
 
+## 模块
+- [x] [HOME PAGE](#Home-page)
+
+
+## 展示
+
+### Home-page
+![home01](http://tozlam.cn/Home.png)
+![home02](http://tozlam.cn/home2.png)
