@@ -24,11 +24,50 @@ npm run build
 ````
 
 ## 模块
-- [x] [HOME PAGE](#Home-page)
-
+- [x] [HOME](#home)
+- [x] [PRODUCT LIST](#product-list)
+- [x] [MALL INDEX](#mall-index)
+- [x] [PRODUCT DETAIL](#product-detail)
+- [x] [MALL CART](#mall-cart)
+- [x] [MALL CHECK](#mall-check)
+- [x] [USER MANAGE](#user-manage)
+- [x] [ORDER LIST](#order-list)
 
 ## 展示
 
-### Home-page
+### Home 
 ![home01](http://tozlam.cn/Home.png)
 ![home02](http://tozlam.cn/home2.png)
+
+### Mall Index
+![mallIndex](http://tozlam.cn/mallindex01.png)
+![mallIndex](http://tozlam.cn/mallindex02.png)
+
+### Product List
+![list](http://tozlam.cn/list.png)
+
+### Product Detail
+![detail](http://tozlam.cn/phoneDetail01.png)
+![detail](http://tozlam.cn/phoneDetail02.png)
+![detail](http://tozlam.cn/phoneDetail03.png)
+
+### Mall Cart
+![cart](http://tozlam.cn/mallCart.png)
+
+### Mall Check
+![check](http://tozlam.cn/check01.png)
+
+### LOGIN
+![login](http://tozlam.cn/login.png)
+![login](http://tozlam.cn/login2.png)
+
+
+### USER MANAGE
+![user](http://tozlam.cn/user01.png)
+![user](http://tozlam.cn/user02.png)
+![user](http://tozlam.cn/user03.png)
+
+### ORDER LIST
+![order](http://tozlam.cn/order01.png)
+
+
