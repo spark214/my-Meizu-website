@@ -4,8 +4,8 @@
 [![VueJS Version](https://img.shields.io/badge/VueJS-v2.5-brightgreen.svg?style=flat-square)](https://vuejs.org/)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 ![Read the Docs (version)](https://img.shields.io/readthedocs/pip/stable.svg)
-[![npm version](https://img.shields.io/badge/npm-v7.8.0-brightgreen.svg)](https://standardjs.com)
-[![Element](https://img.shields.io/badge/Element-v2.4.1-brightgreen.svg)](http://element-cn.eleme.io/#/zh-CN)
+[![npm version](https://img.shields.io/badge/npm-v5.0.3-brightgreen.svg)](https://standardjs.com)
+[![Element](https://img.shields.io/badge/Element-v2.3.8-brightgreen.svg)](http://element-cn.eleme.io/#/zh-CN)
 
 >基于Vue+Element实现的Halo.手机购物网站。本仓库为用户端网站仓库，管理端仓库：[Halo-MS](https://github.com/tozlam/Halo-MS)。后台仓库：[Halo手机商城服务端](https://github.com/MelloChan/halo-server)。
 
@@ -32,6 +32,8 @@ npm run build
 - HTTP连接工具：axios
 - 脚手架工具 vue-cli
 - 模块打包器：Webpack 3.6.0
+- Node版本：v8.1.2
+- npm版本：v5.0.3
 - 图片懒加载工具：vue-lazyload
 - 路由管理器：Vue Router
 - 部署环境：CentOS 7.2 64位
