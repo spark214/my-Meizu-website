@@ -25,6 +25,21 @@ npm run dev
 npm run build
 ````
 
+## 技术选型
+
+- 框架：Vue 2.5.11
+- UI库：Element 2.3.8
+- HTTP连接工具：axios
+- 脚手架工具 vue-cli
+- 模块打包器：Webpack 3.6.0
+- 图片懒加载工具：vue-lazyload
+- 路由管理器：Vue Router
+- 部署环境：CentOS 7.2 64位
+- Web服务器: Nginx 1.14.0
+- 版本控制: Git
+- 开发工具: IDEA 2018
+- 开发环境: Windows 10
+
 ## 模块
 - [x] [HOME](#home)
 - [x] [PRODUCT LIST](#product-list)
