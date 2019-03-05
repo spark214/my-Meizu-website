@@ -25,20 +25,20 @@
     methods: {
       next() {
         if (this.route == 'go'){
-          var url = this.$rootUrl + "/api/halo/registers/registerByPhone";
+          var url = this.$rootUrl + "/api/user/registerByPhone";
           const option = {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
             url: url,
-            data: qs.stringify(this.loginForm)
+            data: this.loginForm
           };
           this.$axios(option).then((res) => {
-            if (res.data.data) {
-              if (res.data.errorCode == 0) {
-                sessionStorage.setItem('accessToken',res.data.data.access_token)
+            let item = res.data.data;
+            if (item.data) {
+              if (item.errorCode == 0) {
+                sessionStorage.setItem('accessToken',item.data.access_token)
               }
               else {
-                this.$message.error(res.data.msg);
+                this.$message.error(item.msg);
               }
             }
           })

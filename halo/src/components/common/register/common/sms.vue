@@ -51,16 +51,16 @@
     methods: {
       next() {
         if (this.type < 2) {
-          var url = this.$rootUrl + "/api/halo/registers/verifyCode";
+          var url = this.$rootUrl + "/api/user/regVerifyCode";
           const options = {
             method: 'POST',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             url: url,
-            data: qs.stringify(this.loginForm)
+            data: this.loginForm
           };
           this.$axios(options).then((res) => {
-            if (res.data.data) {
-              if (res.data.errorCode == 0) {
+            let item = res.data.data;
+            if (item.data) {
+              if (item.errorCode == 0) {
                 if (this.type == 0)
                   this.$router.push({path: '/userinfo', query: {phone: this.loginForm.phone}});
                 else if (this.type == 1) {
@@ -68,26 +68,30 @@
                 }
               }
               else {
-                this.$message.error(res.data.msg);
+                this.$message.error(item.msg);
               }
             }
           })
         }
         else {
-          var url = this.$rootUrl + "/api/halo/users/phone";
+          var token = sessionStorage.getItem('accessToken');
+          var url = this.$rootUrl + "/api/user/updatePhone";
           const options = {
-            method: 'PATCH',
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            method: 'POST',
             url: url,
-            data: qs.stringify(this.loginForm)
+            data: {
+              data:this.loginForm,
+              token:token
+            }
           };
           this.$axios(options).then((res) => {
-            if (res.data.data) {
-              if (res.data.errorCode == 0) {
+            let item = res.data.data;
+            if (item.data) {
+              if (item.errorCode == 0) {
                 this.$emit("ok", 2)
               }
               else {
-                this.$message.error(res.data.msg);
+                this.$message.error(item.msg);
               }
             }
           })
@@ -113,19 +117,21 @@
         var phone = this.$route.query.phone
         this.loginForm.phone = this.$route.query.phone
         if (this.type == 0 || this.type == 2)
-          var url = this.$rootUrl + "/api/halo/registers/requestSmsCode/" + phone;
+          var url = this.$rootUrl + "/api/user/regRequestSmsCode" ;
         else if (this.type == 1)
-          var url = this.$rootUrl + "/api/halo/auths/requestSmsCode/" + phone;
+          var url = this.$rootUrl + "/api/user/loginRequestSmsCode";
         const options = {
-          method: 'GET',
-          headers: {'content-type': 'application/x-www-form-urlencoded'},
+          method: 'POST',
           url: url,
-          data: {}
+          data: {
+            phone: phone
+          }
         };
         this.$axios(options).then((res) => {
-          if (res.data.data) {
-            if (res.data.errorCode != 0) {
-              this.errormsg = res.data.msg;
+          let item = res.data.data;
+          if (item.data) {
+            if (item.errorCode != 0) {
+              this.errormsg = item.msg;
               this.dialogVisible = true
             }
           }

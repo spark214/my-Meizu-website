@@ -55,13 +55,15 @@
     methods: {
       charge() {
         this.filterNum()
-        var url = this.$rootUrl + "/api/halo/users/coin";
+        var url = this.$rootUrl + "/api/user/chargeCoin";
         var token = sessionStorage.getItem('accessToken');
         const options = {
-          method: 'PATCH',
-          headers: {'access_token': token,'Content-Type':'application/x-www-form-urlencoded'},
+          method: 'POST',
           url: url,
-          data:qs.stringify(this.hcoin)
+          data:{
+            data:this.hcoin,
+            token:token
+          }
         };
         this.$axios(options).then((res) => {
           if (res.data.data) {
@@ -101,18 +103,20 @@
         else this.content = ""
       },
       getData() {
-        var url = this.$rootUrl + "/api/halo/users/coin";
+        var url = this.$rootUrl + "/api/user/coinData";
         var token = sessionStorage.getItem('accessToken');
         const options = {
-          method: 'GET',
-          headers: {'access_token': token},
+          method: 'POST',
           url: url,
-          data: {}
+          data: {
+            token:token
+          }
         };
         this.$axios(options).then((res) => {
-          if (res.data.data) {
-            if (res.data.errorCode == 0) {
-              this.coin = res.data.data.coin
+          let item = res.data.data;
+          if (item.data) {
+            if (item.errorCode == 0) {
+              this.coin = item.data.coin;
             }
           }
         })

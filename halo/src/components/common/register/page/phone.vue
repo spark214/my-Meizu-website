@@ -68,20 +68,22 @@
     methods: {
       submitForm(form) {
         var data = this.loginForm.phone;
-        var url = this.$rootUrl + "/api/halo/registers/verifyPhone/" + data;
+        var url = this.$rootUrl + "/api/user/regVerifyPhone";
         const options = {
-          method: 'GET',
-          headers: {'content-type': 'application/x-www-form-urlencoded'},
+          method: 'POST',
           url: url,
-          data: {}
+          data: {
+            phone:data
+          }
         };
         this.$refs[form].validate((valid) => {
           if (valid) {
             this.$axios(options).then((res) => {
-              if (res.data.errorCode == 0) {
+              let item = res.data.data;
+              if (item.errorCode == 0) {
                 this.$router.push({path: '/sms', query: {phone: data}});
               } else {
-                this.errormsg = res.data.msg;
+                this.errormsg = item.msg;
                 this.dialogVisible = true
               }
 

@@ -68,18 +68,20 @@
         this.$router.push({path: "/" + that});
       },
       getData(){
-          var url = this.$rootUrl + "/api/halo/users/";
+          var url = this.$rootUrl + "/api/user/userData";
           var token = sessionStorage.getItem('accessToken');
           const options = {
-            method: 'GET',
-            headers: {'access_token': token},
+            method: 'POST',
             url: url,
-            data: {}
+            data: {
+              token:token
+            }
           };
           this.$axios(options).then((res) => {
-            if (res.data.data) {
-              if (res.data.errorCode == 0) {
-                this.msg = res.data.data.userinfo
+            let item = res.data.data;
+            if (item.data) {
+              if (item.errorCode == 0) {
+                this.msg = item.data.userinfo
                 if(this.msg.avatar=="//"){
                   this.avatar= "//image-res.mzres.com/image/uc/80f8d55d49464e3e90d72f6679cbf970z?t=946656000000"
                 }
