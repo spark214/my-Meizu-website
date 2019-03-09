@@ -53,7 +53,7 @@
   </div>
 </template>
 <script>
-  import vWrite from '../../common/member/common/addressWrite';
+  import vWrite from '../../page/member/common/addressWrite';
   import bus from '../../common/bus';
 
   export default {
@@ -73,17 +73,20 @@
     methods: {
       delAddr(index){
         var id=this.receiver[index].id
-        var url = this.$rootUrl + "/api/halo/addresses/"+id;
+        var url = this.$rootUrl + "/api/user/delAddress";
         var token = sessionStorage.getItem('accessToken');
         const options = {
-          method: 'DELETE',
+          method: 'POST',
           headers: {'access_token': token},
           url: url,
-          data: {}
+          data: {
+            id:id
+          }
         };
         this.$axios(options).then((res) => {
-          if (res.data.data) {
-            if (res.data.errorCode == 0) {
+          let item = res.data.data;
+          if (item.data) {
+            if (item.errorCode == 0) {
               this.getData()
             }
           }
@@ -115,7 +118,7 @@
           });
       },
       getData() {
-        var url = this.$rootUrl + "/api/halo/addresses/";
+        var url = this.$rootUrl + "/api/user/getAddress";
         var token = sessionStorage.getItem('accessToken');
         const options = {
           method: 'GET',
@@ -124,9 +127,10 @@
           data: {}
         };
         this.$axios(options).then((res) => {
-          if (res.data.data) {
-            if (res.data.errorCode == 0) {
-              this.receiver = res.data.data.address
+          let item = res.data.data;
+          if (item.data) {
+            if (item.errorCode == 0) {
+              this.receiver = item.data.address
             }
           }
         })

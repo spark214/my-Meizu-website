@@ -27,8 +27,8 @@
       </li>
       <li><a @click="goRouter('mallIndex')">商城</a></li>
       <li><a target="_blank" href="https://tozlam.cn/mz/flyme_index.html">Flow.</a></li>
-      <li class="nav-search"><input type="text" placeholder="魅族15" value="" id="searchInput"><i class="el-icon-search"
-                                                                                                @click="goSearch"></i>
+      <li class="nav-search"><input type="text" placeholder="魅族15" value="" id="searchInput">
+        <i class="el-icon-search" @click="goSearch"></i>
       </li>
     </ul>
     <div class="login clearfix">

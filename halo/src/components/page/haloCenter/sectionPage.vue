@@ -1,0 +1,207 @@
+<template>
+    <div class="sectionPage">
+        <center-header></center-header>
+        <div class="sectionPage-container clearfix">
+            <div class="section-container">
+                <div class="section-header">
+                    <h3>{{sectionName}}</h3>
+                    <el-dropdown>
+                        <span class="el-dropdown-link">
+                            排序方式<i class="el-icon-arrow-down el-icon--right"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item>默认排序</el-dropdown-item>
+                            <el-dropdown-item>发帖时间</el-dropdown-item>
+                            <el-dropdown-item>最新回复</el-dropdown-item>
+                            <el-dropdown-item>阅读数</el-dropdown-item>
+                            <el-dropdown-item>热度</el-dropdown-item>
+                        </el-dropdown-menu>
+
+                    </el-dropdown>
+                </div>
+                <div class="section-list">
+                    <div class="section-item" v-for="item in sectionList">
+                        <p class="section-item-title">{{item.title}}</p>
+                        <div class="section-item-data">
+                            <span>{{item.author}}</span>
+                            <span>浏览：{{item.view}}</span>
+                            <span>回复：{{item.reply}}</span>
+                            <span>{{item.replyUser}} &nbsp;&nbsp;{{item.replyTime}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right">
+                <section-board></section-board>
+            </div>
+        </div>
+        <editor></editor>
+        <v-footer></v-footer>
+    </div>
+</template>
+<script>
+    import _ from 'lodash';
+    import CenterHeader from './common/header.vue';
+    import SectionBoard from './common/sectionBoard.vue';
+    import VFooter from './common/footer.vue';
+    import Editor from './common/editor.vue';
+    export default{
+        components: {
+            CenterHeader, VFooter, SectionBoard,Editor
+        },
+        data(){
+            return {
+                sectionName: '闲置交易',
+                sectionList: [
+                    {
+                        author: "halo user",
+                        title: "欢迎来到Halo社区闲置交易版块",
+                        view: 1100,
+                        reply: 320,
+                        replyUser: "halo",
+                        replyTime: "16分钟前"
+                    },
+                    {
+                        author: "halo user",
+                        title: "欢迎来到Halo社区闲置交易版块",
+                        view: 1100,
+                        reply: 320,
+                        replyUser: "halo",
+                        replyTime: "16分钟前"
+                    },
+                    {
+                        author: "halo user",
+                        title: "欢迎来到Halo社区闲置交易版块",
+                        view: 1100,
+                        reply: 320,
+                        replyUser: "halo",
+                        replyTime: "16分钟前"
+                    },
+                    {
+                        author: "halo user",
+                        title: "欢迎来到Halo社区闲置交易版块",
+                        view: 1100,
+                        reply: 320,
+                        replyUser: "halo",
+                        replyTime: "16分钟前"
+                    },
+                    {
+                        author: "halo user",
+                        title: "欢迎来到Halo社区闲置交易版块",
+                        view: 1100,
+                        reply: 320,
+                        replyUser: "halo",
+                        replyTime: "16分钟前"
+                    },
+                    {
+                        author: "halo user",
+                        title: "欢迎来到Halo社区闲置交易版块",
+                        view: 1100,
+                        reply: 320,
+                        replyUser: "halo",
+                        replyTime: "16分钟前"
+                    },
+                    {
+                        author: "halo user",
+                        title: "欢迎来到Halo社区闲置交易版块",
+                        view: 1100,
+                        reply: 320,
+                        replyUser: "halo",
+                        replyTime: "16分钟前"
+                    },
+                ]
+            }
+        },
+        methods: {},
+        created: {
+
+        }
+    }
+</script>
+<style lang="less">
+    @import "../../common.less";
+
+    .sectionPage {
+        background-color: #f2f2f2 !important;
+
+    .sectionPage-container {
+        margin: auto;
+        width: 1100px;
+
+    .section-container {
+        float: left;
+        position: relative;
+        margin: 10px auto;
+        width: 716px;
+        border: 1px solid #e6e6e6;
+        background-color: #fff;
+        padding: 0 15px 10px;
+        box-shadow: 1px 1px 10px #e2e2e2;
+        font-family: "微软雅黑", Arial, Helvetica, sans-serif;
+
+    .section-header {
+        height: 50px;
+        display: flex;
+        align-items: center;
+        font-size: 18px;
+        color: #333;
+
+    h3 {
+        font-weight: 400;
+    }
+
+    .el-dropdown {
+        margin-left: 80px;
+        cursor: pointer;
+
+    &:hover {
+        color: #00a7ea;
+    }
+
+    }
+    }
+    .section-list {
+        border-top: 1px solid #e6e6e6;
+
+    .section-item {
+        padding: 15px;
+        border-bottom: 1px solid #e6e6e6;
+
+    .section-item-title {
+        cursor: pointer;
+        font-weight: 500;
+        color: #333;
+    &:hover {
+         color: #00a7ea;
+     }
+    }
+
+    .section-item-data {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #666;
+
+    span {
+        padding: 0 15px;
+        border-right: 1px solid #666;
+
+    &:first-child {
+        padding-left: 0;
+    }
+
+    &:last-child {
+        border-right: 0;
+    }
+
+    }
+    }
+    }
+    }
+    }
+    }
+    .right {
+        float: left;
+    }
+
+    }
+</style>

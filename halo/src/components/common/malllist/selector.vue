@@ -63,15 +63,16 @@
           this.filterPrice++;
       },
       getData(cateId) {
+        let method = 'GET';
         if (cateId == 0) {
-          var url = this.$rootUrl + "/api/halo/categorys/";
+          var url = this.$rootUrl + "/api/product/getCategorys";
         }
         else {
-          var url = this.$rootUrl + "/api/halo/categorys/" + cateId;
+          var url = this.$rootUrl + "api/product/categorysDetail";
+          method = 'POST';
         }
         const options = {
-          method: 'GET',
-          headers: {'content-type': 'application/x-www-form-urlencoded'},
+          method: method,
           url: url,
           data: {}
         };
