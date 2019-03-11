@@ -15,7 +15,7 @@
         </ul>
       </div>
       <div class="sider_ser sider_item">
-        <div class="sider_title"><i class="el-icon-service" style="font-size: 18px"></i> <span>服务中心</span></div>
+        <div class="sider_title"><i class="el-icon-news" style="font-size: 18px"></i> <span>Halo社区</span></div>
         <ul class="sider_list">
           <li  @click="selectItem(3)"><router-link :to="item[3].route" >{{item[3].name}}</router-link></li>
           <li @click="selectItem(4)"><router-link :to="item[4].route" >{{item[4].name}}</router-link></li>
@@ -35,7 +35,7 @@
           {name:'我的订单',route:'myOrder'},
           {name:'地址管理',route:'mAddress'},
           {name:'建议反馈',route:'advice'},
-          {name:'退款/退换货跟踪',route:'mIndex'},
+          {name:'我的帖子',route:'myPost'},
           {name:'意外保',route:'insurance'},
           {name:'我的消息',route:'myMessage'},
         ]

@@ -105,60 +105,66 @@
     },
     methods: {
       goBuy() {
-        var url = this.$rootUrl + "/api/halo/orders/settlement";
+        var url = this.$rootUrl + "/api/order/settlement";
         var token = sessionStorage.getItem('accessToken');
         const options = {
           method: 'POST',
-          headers: {'access_token': token},
+          headers: {'token': token},
           url: url,
           data: this.product
         };
 
         this.$axios(options).then((res) => {
-          if (res.data.errorCode == 0) {
-            sessionStorage.setItem('orderId', res.data.data.orderId);
-            sessionStorage.setItem('address', JSON.stringify(res.data.data.address));
-            sessionStorage.setItem('orderProduct', JSON.stringify(res.data.data.orderProducts));
+          let item = res.data.data;
+          if (item.errorCode == 0) {
+            sessionStorage.setItem('orderId', item.data.orderId);
+            sessionStorage.setItem('address', JSON.stringify(item.data.address));
+            sessionStorage.setItem('orderProduct', JSON.stringify(item.data.orderProducts));
             this.$router.push({path: "/mallCheck",query:{"type":2}})
           }
         })
       },
       changeAmount(index) {
-        var url = this.$rootUrl + "/api/halo/carts/" + this.product[index].proId;
+        var url = this.$rootUrl + "/api/carts/updateCart" ;
         var token = sessionStorage.getItem('accessToken');
         let quantity = {'quantity': this.product[index].number}
         console.log(quantity)
         const options = {
-          method: 'PATCH',
-          headers: {'access_token': token, 'Content-Type': 'application/x-www-form-urlencoded'},
+          method: 'POST',
+          headers: {'token': token},
           url: url,
-          data: qs.stringify(quantity)
+          data: {
+            params: quantity,
+            proId: this.product[index].proId
+          }
         };
 
         this.$axios(options).then((res) => {
-          if (res.data.errorCode == 0) {
+          let item = res.data.data;
+          if (item.errorCode == 0) {
 
           }
         })
       },
       getData() {
-        var url = this.$rootUrl + "/api/halo/carts/";
+        var url = this.$rootUrl + "/api/carts/getCart";
         var token = sessionStorage.getItem('accessToken');
         const options = {
           method: 'GET',
-          headers: {'access_token': token},
+          headers: {'token': token},
           url: url,
           data: {}
         };
 
         this.$axios(options).then((res) => {
-          if (res.data.errorCode == 0) {
-            this.product = res.data.data.cart.carts
-            this.productNum = res.data.data.cart.totalNumber
-            this.totalPrice = res.data.data.cart.totalPrice
+          let item = res.data.data;
+          if (item.errorCode == 0) {
+            this.product = item.data.cart.carts;
+            this.productNum = item.data.cart.totalNumber;
+            this.totalPrice = item.data.cart.totalPrice;
             this.product.forEach((val, index) => {
               val["total"] = val["price"];
-            })
+            });
           }
         })
       },
@@ -195,21 +201,24 @@
       },
       deleteRow() {
 
-        var url = this.$rootUrl + "/api/halo/carts/" + this.product[this.idx].proId;
+        var url = this.$rootUrl + "/api/carts/delCart" ;
         var token = sessionStorage.getItem('accessToken');
         const options = {
-          method: 'DELETE',
-          headers: {'access_token': token},
+          method: 'POST',
+          headers: {'token': token},
           url: url,
-          data: {}
+          data: {
+            proId:this.product[this.idx].proId
+          }
         };
 
         this.$axios(options).then((res) => {
-          if (res.data.errorCode == 0) {
+          let item = res.data.data;
+          if (item.errorCode == 0) {
             this.$message.success('删除成功');
             this.handleScroll();
             this.dialogVisible = false;
-            this.getData()
+            this.getData();
           }
         })
       },

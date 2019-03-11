@@ -43,19 +43,21 @@
     methods: {
       getData() {
         var proId = this.$route.query.proId
-        var url = this.$rootUrl + "/api/halo/items/" + proId;
+        var url = this.$rootUrl + "/api/product/productDetail";
 
         const options = {
-          method: 'GET',
-          headers: {'content-type': 'application/x-www-form-urlencoded'},
+          method: 'POST',
           url: url,
-          data: {}
+          data: {
+            proId:proId
+          }
         };
 
         this.$axios(options).then((res) => {
-          if (res.data.data) {
-            var src = res.data.data.itemDetail.detailImg
-            this.common=src.replace(/data-original/g,"src")
+          let item = res.data.data;
+          if (item.data) {
+            var src = item.data.itemDetail.detailImg;
+            this.common=src.replace(/data-original/g,"src");
           }
         })
       }

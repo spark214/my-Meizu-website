@@ -1,7 +1,7 @@
 <template>
     <div class="haloCenterHeader">
-        <div class="header">
-            <div class="header-left">
+        <div class="center-header">
+            <div class="header-left" @click="goRouter('/haloCenter')">
                 <img src="../../../../../static/img/halo-230-40-blue.png" width="180px" height="35px">
                 <div class="header-left-name">
                     <p>社区</p>
@@ -60,6 +60,9 @@
                     this.$router.push('/myOrder');
                 }
             },
+            goRouter(item){
+                this.$router.push({path: item, query: {}});
+            }
         },
         created(){
 
@@ -68,18 +71,22 @@
 </script>
 <style lang="less">
     .haloCenterHeader {
+        position: relative;
         background-color: #fff;
+        display: flex;
+        justify-content: center;
+        border-bottom: 0.5px solid #f3f3f3;
 
-    .header {
-        margin: auto;
+    .center-header {
         background-color: #fff;
         padding: 20px 0;
         width: 1100px;
         display: flex;
         justify-content: space-between;
-        border-bottom: 0.5px solid #f3f3f3;
+
 
     .header-left {
+        cursor: pointer;
         display: flex;
 
     .header-left-name {

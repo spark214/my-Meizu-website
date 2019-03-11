@@ -20,7 +20,7 @@
                     </el-dropdown>
                 </div>
                 <div class="section-list">
-                    <div class="section-item" v-for="item in sectionList">
+                    <div class="section-item" v-for="item in sectionList" @click="goRouter('/postDetail')">
                         <p class="section-item-title">{{item.title}}</p>
                         <div class="section-item-data">
                             <span>{{item.author}}</span>
@@ -112,7 +112,11 @@
                 ]
             }
         },
-        methods: {},
+        methods: {
+            goRouter(item){
+                this.$router.push({path: item, query: {}});
+            }
+        },
         created: {
 
         }

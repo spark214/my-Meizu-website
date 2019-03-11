@@ -130,7 +130,7 @@ export default new Router({
         },
         {
             path: '/member',
-            component: resolve => require(['../components/page/member/index.vue'], resolve),
+            component: resolve => require(['../components/page/member/member.vue'], resolve),
             meta: {
                 title: 'Halo 会员管理'
             },
@@ -161,8 +161,8 @@ export default new Router({
                     },
                 },
                 {
-                    path: '/insurance',
-                    component: resolve => require(['../components/page/member/insurance.vue'], resolve),
+                    path: '/myPost',
+                    component: resolve => require(['../components/page/member/myPost.vue'], resolve),
                     meta: {
                         title: 'Halo.商城'
                     },

@@ -82,19 +82,22 @@
     methods: {
       getData() {
         var id = this.$route.query.id
-        var url = this.$rootUrl + "/api/halo/orders/" + id + "/products";
+        var url = this.$rootUrl + "/api/order/orderDetail";
         var token = sessionStorage.getItem('accessToken');
         const options = {
-          method: 'GET',
-          headers: {'access_token': token},
+          method: 'POST',
+          headers: {'token': token},
           url: url,
-          data: {}
+          data: {
+            id:id
+          }
         };
 
         this.$axios(options).then((res) => {
-          if (res.data.errorCode == 0) {
-            this.orderDetail = res.data.data.orderDetail
-            this.status=res.data.data.status
+          let item = res.data.data;
+          if (item.errorCode == 0) {
+            this.orderDetail = item.data.orderDetail;
+            this.status = item.data.status;
           }
         })
       }

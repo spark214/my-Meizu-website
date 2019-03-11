@@ -61,7 +61,7 @@
                             var url = this.$rootUrl + "/api/user/updateAddress";
                             options = {
                                 method: 'POST',
-                                headers: {'access_token': token},
+                                headers: {'token': token},
                                 url: url,
                                 data: this.form
                             };
@@ -70,7 +70,7 @@
                             var url = this.$rootUrl + "/api/user/addAddress";
                             options = {
                                 method: 'POST',
-                                headers: {'access_token': token},
+                                headers: {'token': token},
                                 url: url,
                                 data: this.form
                             };

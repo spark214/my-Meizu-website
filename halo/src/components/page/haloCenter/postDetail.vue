@@ -106,9 +106,14 @@
     @import "../../common.less";
 
     .postDetail {
+        position: relative;
         background-color: #f2f2f2 !important;
 
     .postDetail-coontainer {
+        position: absolute;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
         margin: 20px auto;
         width: 1100px;
 

@@ -124,7 +124,7 @@
           "payType":this.radio*1+1
         }
         var token = sessionStorage.getItem('accessToken');
-        var url = this.$rootUrl + "/api/halo/orders/";
+        var url = this.$rootUrl + "/api/order/newOrder";
         const options = {
           method: 'POST',
           headers: {'access_token': token},
@@ -132,8 +132,9 @@
           data: form
         };
         this.$axios(options).then((res) => {
-          if (res.data.data) {
-            if (res.data.errorCode == 0) {
+          let item = res.data.data;
+          if (item.data) {
+            if (item.errorCode == 0) {
               this.$router.push({path: "/myOrder"});
             }
           }

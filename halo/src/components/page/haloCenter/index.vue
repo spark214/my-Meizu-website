@@ -8,7 +8,7 @@
                 </div>
                 <div class="hot-body clearfix">
                     <div class="hot-item clearfix" v-for="item in postList">
-                        <div class="hot-item-title">{{item.title}}</div>
+                        <div class="hot-item-title" @click="goRouter('/postDetail')">{{item.title}}</div>
                         <span class="hot-item-user">{{item.user}}</span>
                         <span class="hot-item-dataNum">
                             <span>{{item.view}}<i class="el-icon-view"></i></span>
@@ -54,7 +54,11 @@
 
             }
         },
-        methods: {},
+        methods: {
+            goRouter(item){
+                this.$router.push({path: item, query: {}});
+            }
+        },
         created(){
 
         }

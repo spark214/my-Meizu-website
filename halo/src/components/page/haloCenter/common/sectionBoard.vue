@@ -1,12 +1,12 @@
 <template>
     <div class="sectionBoard">
-        <div class="addSection">
+        <div class="addSection" @click="goRouter('/newPost')">
             <i class="el-icon-edit"></i><span>发布帖子</span>
         </div>
         <div class="sectionBoard-container">
             <div class="sectionBoard-header">热门版块</div>
             <div class="sectionBoard-body">
-                <div class="sectionBoard-item" v-for="item in sectionList">
+                <div class="sectionBoard-item" v-for="item in sectionList" @click="goRouter('/centerSection')">
                     {{item.name}}
                 </div>
             </div>
@@ -26,6 +26,11 @@ export default{
                 {name: '综合讨论', url: ''},
                 {name: '综合讨论', url: ''},
             ]
+        }
+    },
+    methods:{
+        goRouter(item){
+            this.$router.push({path: item, query: {}});
         }
     }
 }

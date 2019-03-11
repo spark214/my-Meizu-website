@@ -64,24 +64,29 @@
       },
       getData(cateId) {
         let method = 'GET';
+        let data = {};
         if (cateId == 0) {
           var url = this.$rootUrl + "/api/product/getCategorys";
         }
         else {
-          var url = this.$rootUrl + "api/product/categorysDetail";
+          var url = this.$rootUrl + "/api/product/categorysDetail";
           method = 'POST';
+          data = {
+            cate:cateId
+          }
         }
         const options = {
           method: method,
           url: url,
-          data: {}
+          data: data
         };
 
         this.$axios(options).then((res) => {
-          if (res.data.data[0]) {
-            if (cateId == 0) this.types = res.data.data[0].categories
+          let item = res.data.data;
+          if (item.data[0]) {
+            if (cateId == 0) this.types = item.data[0].categories;
 
-            this.brands = res.data.data[0].brands
+            this.brands = item.data[0].brands;
           }
         })
       }

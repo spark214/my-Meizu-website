@@ -52,21 +52,22 @@
     },
     methods: {
       getData() {
-        var url = this.$rootUrl + "/api/halo/carts/";
+        var url = this.$rootUrl + "/api/carts/getCart";
         var token = sessionStorage.getItem('accessToken');
         const options = {
           method: 'GET',
-          headers: {'access_token': token},
+          headers: {'token': token},
           url: url,
           data: {}
         };
 
         this.$axios(options).then((res) => {
-          if (res.data.errorCode == 0) {
-            this.form = res.data.data.cart.carts
-            this.isLogin = true
-            if (this.form.length > 0) this.havaCart = true
-            else this.haveCart = false
+          let item = res.data.data;
+          if (item.errorCode == 0) {
+            this.form = item.data.cart.carts;
+            this.isLogin = true;
+            if (this.form.length > 0) this.havaCart = true;
+            else this.haveCart = false;
           }
         })
       },

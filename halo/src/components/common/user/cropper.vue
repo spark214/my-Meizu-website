@@ -114,7 +114,7 @@
         var url = this.$rootUrl + "/api/user/saveAvatar";
         var token = sessionStorage.getItem('accessToken');
         let config = {
-          headers: {'access_token': token, 'Content-Type': 'multipart/form-data'},
+          headers: {'token': token, 'Content-Type': 'multipart/form-data'},
           processData: false,
           contentType: false
         }

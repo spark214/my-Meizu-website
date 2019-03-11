@@ -81,12 +81,12 @@
                     let item = res.data.data;
                     if (item.data) {
                         if (item.errorCode == 0) {
-                            this.msg = item.data.userinfo
+                            this.msg = item.data.userinfo;
                             if (this.msg.avatar == "//") {
-                                this.avatar = "//image-res.mzres.com/image/uc/80f8d55d49464e3e90d72f6679cbf970z?t=946656000000"
+                                this.avatar = "//image-res.mzres.com/image/uc/80f8d55d49464e3e90d72f6679cbf970z?t=946656000000";
                             }
                             else {
-                                this.avatar = this.msg.avatar
+                                this.avatar = this.msg.avatar;
                             }
                         }
 
@@ -100,11 +100,11 @@
                 if (this.msg.email === undefined) {
                     return null;
                 }
-                var mail = this.msg.email.replace(/(.{2}).+(.{2}@.+)/g, '$1****$2')
+                var mail = this.msg.email.replace(/(.{2}).+(.{2}@.+)/g, '$1****$2');
                 return mail;
             },
             filterPhone() {
-                var phone = this.msg.phone.toString().replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+                var phone = this.msg.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
                 return phone;
             }
         },

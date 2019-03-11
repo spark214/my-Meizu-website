@@ -66,7 +66,7 @@
         var token = sessionStorage.getItem('accessToken');
         const options = {
           method: 'POST',
-          headers: {'access_token': token},
+          headers: {'token': token},
           url: url,
           data: {
             id:id
@@ -91,7 +91,7 @@
         var token = sessionStorage.getItem('accessToken');
         const options = {
           method: 'GET',
-          headers: {'access_token': token},
+          headers: {'token': token},
           url: url,
           data: {}
         };
