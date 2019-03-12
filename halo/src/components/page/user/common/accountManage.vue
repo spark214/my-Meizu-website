@@ -168,7 +168,7 @@
 </template>
 <script>
     import qs from 'qs';
-    import vSms from "../../common/register/common/sms";
+    import vSms from "../../register/common/sms";
 
     export default {
         data() {

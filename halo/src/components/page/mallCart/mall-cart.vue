@@ -53,7 +53,7 @@
       </div>
       <div class="nologin_container" v-else>
         <div class="clearfix">
-          <img src="../../../static/img/noLoginPanda.png">
+          <img src="../../../../static/img/noLoginPanda.png">
           <div class="nologin_msg">
             <h3>您还没有登录！</h3>
             <p>登录后可显示您账号中已加入的商品哦~</p>
@@ -81,8 +81,8 @@
 
 </template>
 <script>
-  import vHeader from '../common/header/page/headerLite';
-  import vFooter from '../common/footer';
+  import vHeader from '../../common/header/page/headerLite';
+  import vFooter from '../../common/footer';
   import qs from 'qs';
 
   export default {

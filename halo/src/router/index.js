@@ -40,35 +40,35 @@ export default new Router({
         },
         {
             path: '/mallIndex',
-            component: resolve => require(['../components/page/mall-index.vue'], resolve),
+            component: resolve => require(['../components/page/Index/mall-index.vue'], resolve),
             meta: {
                 title: 'Halo商城'
             }
         },
         {
             path: '/mallProductPhone',
-            component: resolve => require(['../components/page/mall-product-phone.vue'], resolve),
+            component: resolve => require(['../components/page/product/mall-product-phone.vue'], resolve),
             meta: {
                 title: 'Halo.'
             }
         },
         {
             path: '/mallProductOther',
-            component: resolve => require(['../components/page/mall-product-other.vue'], resolve),
+            component: resolve => require(['../components/page/product/mall-product-other.vue'], resolve),
             meta: {
                 title: 'Halo.'
             }
         },
         {
             path: '/mallCart',
-            component: resolve => require(['../components/page/mall-cart.vue'], resolve),
+            component: resolve => require(['../components/page/mallCart/mall-cart.vue'], resolve),
             meta: {
                 title: 'Halo购物车'
             }
         },
         {
             path: '/mallList',
-            component: resolve => require(['../components/page/mall-list.vue'], resolve),
+            component: resolve => require(['../components/page/mallList/mall-list.vue'], resolve),
             meta: {
                 title: 'Halo商城'
             }
@@ -82,21 +82,21 @@ export default new Router({
         },
         {
             path: '/user',
-            component: resolve => require(['../components/page/user.vue'], resolve),
+            component: resolve => require(['../components/page/user/user.vue'], resolve),
             meta: {
                 title: '账号管理'
             }
         },
         {
             path: '/mallCheck',
-            component: resolve => require(['../components/page/mall-check.vue'], resolve),
+            component: resolve => require(['../components/page/mallCheck/mall-check.vue'], resolve),
             meta: {
                 title: '确认订单-Halo.商城'
             }
         },
         {
             path: '/register',
-            component: resolve => require(['../components/page/register.vue'], resolve),
+            component: resolve => require(['../components/page/register/register.vue'], resolve),
             meta: {
                 title: 'Halo 注册'
             },
@@ -107,21 +107,21 @@ export default new Router({
                 },
                 {
                     path: '/phone',
-                    component: resolve => require(['../components/common/register/page/phone.vue'], resolve),
+                    component: resolve => require(['../components/page/register/page/phone.vue'], resolve),
                     meta: {
                         title: 'Halo 注册'
                     },
                 },
                 {
                     path: '/sms',
-                    component: resolve => require(['../components/common/register/page/smsPage.vue'], resolve),
+                    component: resolve => require(['../components/page/register/page/smsPage.vue'], resolve),
                     meta: {
                         title: 'Halo 注册'
                     },
                 },
                 {
                     path: '/userinfo',
-                    component: resolve => require(['../components/common/register/page/userInfo.vue'], resolve),
+                    component: resolve => require(['../components/page/register/page/userInfo.vue'], resolve),
                     meta: {
                         title: 'Halo 注册'
                     },

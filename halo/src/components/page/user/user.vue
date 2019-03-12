@@ -17,11 +17,11 @@
   </div>
 </template>
 <script>
-  import vHeader from '../common/header/page/header';
-  import vFooter from '../common/footer';
-  import vManage from '../common/user/accountManage';
-import vCoin from '../common/user/hCoin';
-import vCrop from '../common/user/cropper';
+  import vHeader from '../../common/header/page/header';
+  import vFooter from '../../common/footer';
+  import vManage from './common/accountManage';
+import vCoin from './common/hCoin';
+import vCrop from './common/cropper';
   export default {
     data() {
       return {

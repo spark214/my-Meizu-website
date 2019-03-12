@@ -38,18 +38,18 @@
       return {
         banner: [
           {
-            backgroundImage: "url(//p9f6ljki4.bkt.clouddn.com/mallIndex-halo-1240x500.jpg)",
+            backgroundImage: "url(//img.tozlam.cn/mallIndex-halo-1240x500.jpg)",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
 
           },
           {
-            backgroundImage: "url(//p9f6ljki4.bkt.clouddn.com/mallIndex-mz15-1240x500.jpg)",
+            backgroundImage: "url(//img.tozlam.cn/mallIndex-mz15-1240x500.jpg)",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
           },
           {
-            backgroundImage: "url(//p9f6ljki4.bkt.clouddn.com/mallIndex-pop-1240x500.jpg)",
+            backgroundImage: "url(//img.tozlam.cn/mallIndex-pop-1240x500.jpg)",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
           },

@@ -1,10 +1,10 @@
 <template>
     <div class="contain_head_img">
-        <img v-lazy="imgurl[picS][selectPic]" width="395px"
+        <img v-lazy="imgurl[picS][selectPic]" :key="imgurl[picS][selectPic]" width="395px"
              class="img_preview">
         <ul>
             <li v-for="(pic,picIndex) in imgurl[picS]">
-                <img v-lazy="pic"
+                <img v-lazy="pic" :key="pic"
                      width="75px" @click="changePic(picIndex)" :class="{selectPic:selectPic==(picIndex)}">
             </li>
         </ul>
@@ -39,7 +39,7 @@
     }
 </style>
 <script>
-    import bus from './bus.js';
+    import bus from '../../../common/bus.js';
 
     export default {
 
@@ -48,12 +48,14 @@
                 common: [],
                 selectPic: 0,
                 imgurl: [],
-                picS: 0
+                picS: 0,
+                bigImg: ''
             }
         },
         methods: {
             changePic(index) {
                 this.selectPic = (index);
+                this.bigImg = this.imgurl[this.picS][this.selectPic];
             },
             getData() {
                 var proId = this.$route.query.proId;
@@ -69,25 +71,24 @@
 
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
-                this.imgurl = new Array();
-                var common = JSON.parse(item.data.itemDetail.specificationJson);
-                for (let i = 0; i < common.imgUrl.length; i++) {
-                    this.imgurl[i] = new Array(i);
-                    this.imgurl[i] = common.imgUrl[i].split(',');
+                    this.imgurl = new Array();
+                    var common = JSON.parse(item.data.itemDetail.specificationJson);
+                    for (let i = 0; i < common.imgUrl.length; i++) {
+                        this.imgurl[i] = new Array(i);
+                        this.imgurl[i] = common.imgUrl[i].split(',');
 
-                }
-                console.log(this.imgurl)
+                    }
 
-            })
+                })
             }
 
         },
         computed: {},
         created() {
+            this.getData();
             bus.$on("pic", msg => {
                 this.picS = msg;
-            })
-            this.getData()
+            });
         },
         watch: {
             '$route'(to, from) {

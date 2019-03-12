@@ -1,9 +1,9 @@
 <template>
-    <div class="container ">
+    <div class="mall-product">
 
         <v-header></v-header>
 
-        <div class="clearfix pageContain">
+        <div class="container clearfix pageContain">
             <div class="contain_head clearfix">
                 <v-photo></v-photo>
                 <div class="contain_head_right">
@@ -11,38 +11,16 @@
                     <p class="right_slogan">{{common.title}}</p>
                     <div class="right_price">
                         <a>价&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格：</a>
-                        <span>￥{{form.price.toFixed(2)}}</span>
+                        <span>￥{{common.price}}.00</span>
                     </div>
                     <div class="right_selecct">
-                        <dl v-if="common.version!==undefined">
-                            <dt class="right_selecct_rom_lab">版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：</dt>
-                            <dd v-for="item in common.version" class="right_selecct_rom_lab">
-                                <el-button size="small" @click="goProduct(item.id)"
-                                           :class="{selected:common.name==item.type}">
-                                    {{item.type}}
-                                </el-button>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt class="right_selecct_rom_lab">网络类型：</dt>
-                            <dd v-for="item in common.nettype" class="right_selecct_rom_lab" @click="form.nettype=item">
-                                <el-button :class="{selected:form.nettype==item}">{{item}}</el-button>
-                            </dd>
-                        </dl>
                         <dl>
                             <dt class="right_selecct_item_lab">颜色分类：</dt>
                             <dd v-for="(item,index) in filterColor" class="right_selecct_item right_selecct_item_lab">
-                                <a @click="changeColor(item.name,index);form.imgUrl=item.img"
+                                <a @click="changeColor(item.name,index)"
                                    :class="{selected:form.color==item.name}">
-                                    <img v-lazy="item.img" width="32px"><span>{{item.name}}</span>
+                                    <img v-lazy="item.img" :key="item.img" width="32px"><span>{{item.name}}</span>
                                 </a>
-                            </dd>
-                        </dl>
-                        <dl>
-                            <dt class="right_selecct_rom_lab">内存容量：</dt>
-                            <dd v-for="(item,index) in common.rom" class=" right_selecct_rom_lab"
-                                @click="form.rom=item.size;form.price=item.price">
-                                <el-button :class="{selected:form.rom==item.size}">{{item.size}}</el-button>
                             </dd>
                         </dl>
                     </div>
@@ -73,47 +51,46 @@
             <v-footer></v-footer>
 
         </div>
-        <v-hover :name="common.name" :nettype="form.nettype" :buyCount="form.buyCount"
-                 :price="form.price"
-                 :rom="form.rom" :colorName="form.color"></v-hover>
+        <v-hover :name="common.name" :buyCount="form.buyCount"
+                 :price="common.price"
+                 :colorName="form.color"></v-hover>
         <el-dialog
                 :visible.sync="centerDialogVisible"
                 width="30%"
                 @open="setTimeClose">
-            <div class="cartDialog" v-if="form.color!=''">
+            <div class="cartDialog">
                 <i class="el-icon-circle-check-outline"></i>
                 <span>已成功加入购物车</span>
-                <p @click="goRouter('mallcart')" style="cursor: pointer">去购物车结算 ></p>
-            </div>
-            <div v-else>
-                <p style="color: #cc0000">请选择商品颜色!</p>
+                <p @click="goRouter('mallcart')">去购物车结算 ></p>
             </div>
         </el-dialog>
     </div>
 </template>
 <script>
-    import vHeader from '../common/header/page/header';
-    import vPhoto from '../common/photoShow';
-    import bus from '../common/bus.js';
-    import vSuport from '../common/suport';
-    import vDetail from '../common/detail';
-    import vFooter from '../common/footer';
-    import vHover from '../common/hoverBar';
-    import qs from 'qs';
+    import vHeader from '../../common/header/page/header';
+    import vPhoto from './common/photoShow';
+    import bus from '../../common/bus.js';
+    import vSuport from './common/suport';
+    import vDetail from './common/detail';
+    import vFooter from '../../common/footer';
+    import vHover from './common/hoverBar';
+
     export default {
         data() {
             return {
-                common: [],
+                "common": {
+                    imgurl: []
+                },
                 form: {
                     color: '',
-                    price: 0,
                     buyCount: 1,
-                    nettype: '',
-                    rom: '',
-                    imgUrl: ""
+                    price: "",
+                    desc: "",
+                    img: ""
                 },
                 sumPrice: 0,
                 selectColor: 0,
+                formcount: 0,
                 centerDialogVisible: false
 
             }
@@ -127,9 +104,9 @@
                     let buyForm = {
                         "proId": this.$route.query.proId,
                         "imgUrl": this.form.imgUrl,
-                        "title": this.common.name + " " + this.form.nettype + " " + this.form.color + " " + this.form.rom,
-                        "price": this.form.price,
-                        "total": this.form.price * this.form.buyCount,
+                        "title": this.common.name + " " + this.form.color,
+                        "price": this.common.price,
+                        "total": this.common.price * this.form.buyCount,
                         "number": this.form.buyCount
                     }
                     var token = sessionStorage.getItem('accessToken');
@@ -161,8 +138,8 @@
                     let buyForm = {
                         "proId": this.$route.query.proId,
                         "imgUrl": this.form.imgUrl,
-                        "title": this.common.name + " " + this.form.nettype + " " + this.form.color + " " + this.form.rom,
-                        "price": this.form.price,
+                        "title": this.common.name + " " + this.form.color,
+                        "price": this.common.price,
                         "number": this.form.buyCount
                     }
                     var token = sessionStorage.getItem('accessToken');
@@ -181,7 +158,7 @@
                                 bus.$emit("cart", 1);
                             }
                         }
-                    });
+                    })
                 }
                 else {
                     this.centerDialogVisible = true
@@ -196,14 +173,13 @@
             goRouter(that) {
                 this.$router.push({path: "/" + that});
             },
-            goProduct(id) {
-                if (id <= 10)
-                    this.$router.push({path: "/mallProductPhone", query: {proId: id}})
-                else
-                    this.$router.push({path: "/mallProductOther", query: {proId: id}})
+            setTimeClose() {
+                setTimeout(() => {
+                    this.centerDialogVisible = false
+                }, 3000)
             },
             getData() {
-                var proId = this.$route.query.proId
+                var proId = this.$route.query.proId;
                 var url = this.$rootUrl + "/api/product/productDetail";
 
                 const options = {
@@ -218,14 +194,9 @@
                     let item = res.data.data;
                     if (item.data) {
                         this.common = JSON.parse(item.data.itemDetail.specificationJson);
-                        this.form.rom = this.common.rom[0].size;
-                        this.form.price = this.common.rom[0].price;
-                        this.form.nettype = this.common.nettype[0];
-
                     }
                 })
             }
-
 
         },
 
@@ -253,12 +224,6 @@
     }
 </script>
 <style>
-    .mall-product {
-        /*position: absolute;*/
-        /*top: 0px;*/
-        /*left: 0px;*/
-    }
-
     .contain_head {
         width: 100%;
     }
@@ -437,7 +402,26 @@
         color: #31a5e7;
     }
 
-    .cartDialog {
-        color: #00a7ea;
+    .cartDialog i {
+        font-size: 25px;
+        color: #31a5e7;
+        position: relative;
+        top: 3px;
     }
+
+    .cartDialog {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 14px;
+    }
+
+    .cartDialog p {
+        margin-top: 10px;
+        margin-left: 18px;
+        color: #31a5e7;
+        cursor: pointer;
+    }
+
 </style>

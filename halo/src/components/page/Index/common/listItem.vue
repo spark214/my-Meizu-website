@@ -4,7 +4,7 @@
       <el-col :span="6" v-for="item in item">
         <el-card shadow="hover" class="list_card" >
           <a @click="goProduct(item.id)">
-            <img width="230px" class="list_img" v-lazy="item.img">
+            <img width="230px" class="list_img" v-lazy="item.img" :key="item.img">
             <div class="list_desc">
               <p class="list_name">{{item.name}}</p>
               <p class="list_title">{{item.title}}</p>

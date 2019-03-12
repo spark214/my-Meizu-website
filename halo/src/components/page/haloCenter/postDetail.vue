@@ -25,9 +25,10 @@
                     </div>
                     <div class="postDetail-body-context-footer">
                         <el-button type="primary">回复</el-button>
+                        <el-button class="body-reply-backBtn" @click="goRouter('/centerSection')" v-if="post.reply.length === 0">返回列表</el-button>
                     </div>
                 </div>
-                <div class="postDetail-body-reply clearfix">
+                <div class="postDetail-body-reply clearfix" v-if="post.reply.length > 0">
                     <div class="postDetail-body-reply-header">
                         <span style="font-size: 24px">{{post.reply.length}} </span>条回复
                     </div>
@@ -45,7 +46,7 @@
                             </p>
                         </div>
                     </div>
-                    <el-button class="body-reply-backBtn">返回列表</el-button>
+                    <el-button class="body-reply-backBtn" @click="goRouter('/centerSection')">返回列表</el-button>
                 </div>
                 <div class="postDetail-body-editor clearfix">
                     <editor></editor>
@@ -57,6 +58,7 @@
                 <section-board></section-board>
             </div>
         </div>
+        <v-footer></v-footer>
     </div>
 </template>
 <script>
@@ -80,23 +82,27 @@
                     replyNum: "200",
                     context: "<p>halo</p><p>center</p>",
                     reply: [
-                        {
-                            user: "zijian",
-                            avatar: '//cdn.v2ex.com/gravatar/7c3d2db8337080adfccf106782b5b866?s=48&d=retro',
-                            replyTime: "10分钟前",
-                            context: "欢迎"
-                        },
-                        {
-                            user: "mello",
-                            avatar: '//cdn.v2ex.com/gravatar/7c3d2db8337080adfccf106782b5b866?s=48&d=retro',
-                            replyTime: "9分钟前",
-                            context: "欢迎+1"
-                        },
+//                        {
+//                            user: "zijian",
+//                            avatar: '//cdn.v2ex.com/gravatar/7c3d2db8337080adfccf106782b5b866?s=48&d=retro',
+//                            replyTime: "10分钟前",
+//                            context: "欢迎"
+//                        },
+//                        {
+//                            user: "mello",
+//                            avatar: '//cdn.v2ex.com/gravatar/7c3d2db8337080adfccf106782b5b866?s=48&d=retro',
+//                            replyTime: "9分钟前",
+//                            context: "欢迎+1"
+//                        },
                     ]
                 }
             }
         },
-        methods: {},
+        methods: {
+            goRouter(item){
+                this.$router.push({path: item, query: {}});
+            }
+        },
         created(){
 
         }
@@ -110,10 +116,11 @@
         background-color: #f2f2f2 !important;
 
     .postDetail-coontainer {
-        position: absolute;
-        top: 80px;
-        left: 50%;
-        transform: translateX(-50%);
+        /*position: absolute;*/
+        /*top: 80px;*/
+        /*left: 50%;*/
+        /*transform: translateX(-50%);*/
+        min-height: 700px;
         margin: 20px auto;
         width: 1100px;
 

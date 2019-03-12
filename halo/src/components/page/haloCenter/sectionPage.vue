@@ -35,7 +35,6 @@
                 <section-board></section-board>
             </div>
         </div>
-        <editor></editor>
         <v-footer></v-footer>
     </div>
 </template>
@@ -129,6 +128,7 @@
         background-color: #f2f2f2 !important;
 
     .sectionPage-container {
+        min-height: 730px;
         margin: auto;
         width: 1100px;
 

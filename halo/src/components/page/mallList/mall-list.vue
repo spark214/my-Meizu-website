@@ -9,10 +9,10 @@
   </div>
 </template>
 <script>
-  import vHeader from '../common/header/page/header';
-  import vGrid from '../common/malllist/grid';
-  import vFooter from '../common/footer';
-  import vSelector from '../common/malllist/selector';
+  import vHeader from '../../common/header/page/header';
+  import vGrid from './common/grid';
+  import vFooter from '../../common/footer';
+  import vSelector from './common/selector';
 
   export default {
     data() {

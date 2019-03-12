@@ -53,8 +53,8 @@
   </div>
 </template>
 <script>
-  import vWrite from '../../page/member/common/addressWrite';
-  import bus from '../../common/bus';
+  import vWrite from '../../member/common/addressWrite';
+  import bus from '../../../common/bus';
 
   export default {
     data() {

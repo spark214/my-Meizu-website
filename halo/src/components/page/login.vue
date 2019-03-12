@@ -61,8 +61,8 @@
     </div>
 </template>
 <script>
-    import vCode from "../common/register/common/vCode";
-    import vSms from "../common/register/common/sms";
+    import vCode from "./register/common/vCode";
+    import vSms from "./register/common/sms";
     import qs from 'qs';
     export default {
         data: function () {

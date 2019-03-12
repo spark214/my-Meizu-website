@@ -1,26 +1,26 @@
 <template>
-    <div class="haloCenter ">
-        <center-header userName="halo user"></center-header>
-        <div class="index-container clearfix">
-            <div class="hot-container">
-                <div class="hot-header ">
-                    社区热帖
+    <div class="sectionPage">
+        <center-header></center-header>
+        <div class="sectionPage-container clearfix">
+            <div class="section-container">
+                <div class="section-header">
+                    <h3>社区热帖</h3>
                 </div>
-                <div class="hot-body clearfix">
-                    <div class="hot-item clearfix" v-for="item in postList">
-                        <div class="hot-item-title" @click="goRouter('/postDetail')">{{item.title}}</div>
-                        <span class="hot-item-user">{{item.user}}</span>
-                        <span class="hot-item-dataNum">
-                            <span>{{item.view}}<i class="el-icon-view"></i></span>
-                            <span>{{item.reply}}<i class="el-icon-message"></i></span>
-                        </span>
+                <div class="section-list">
+                    <div class="section-item" v-for="item in sectionList" @click="goRouter('/postDetail')">
+                        <p class="section-item-title">{{item.title}}</p>
+                        <div class="section-item-data">
+                            <span>{{item.author}}</span>
+                            <span>浏览：{{item.view}}</span>
+                            <span>回复：{{item.reply}}</span>
+                            <span>{{item.replyUser}} &nbsp;&nbsp;{{item.replyTime}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="right">
                 <section-board></section-board>
             </div>
-
         </div>
         <v-footer></v-footer>
     </div>
@@ -30,28 +30,88 @@
     import CenterHeader from './common/header.vue';
     import SectionBoard from './common/sectionBoard.vue';
     import VFooter from './common/footer.vue';
+    import Editor from './common/editor.vue';
     export default{
-        name: "haloCenter",
         components: {
-            CenterHeader, VFooter,SectionBoard
+            CenterHeader, VFooter, SectionBoard,Editor
         },
         data(){
             return {
-                searchKey: '',
-                postList: [
-                    {title: 'Halo社区欢迎您', user: "halo user", view: 10086, reply: 310},
-                    {title: 'Halo社区欢迎您', user: "halo user", view: 10086, reply: 310},
-                    {title: 'Halo社区欢迎您', user: "halo user", view: 10086, reply: 310},
-                    {title: 'Halo社区欢迎您', user: "halo user", view: 10086, reply: 310},
-                    {title: 'Halo社区欢迎您', user: "halo user", view: 10086, reply: 310},
-                    {title: 'Halo社区欢迎您', user: "halo user", view: 10086, reply: 310},
-                    {title: 'Halo社区欢迎您', user: "halo user", view: 10086, reply: 310},
-                    {title: 'Halo社区欢迎您', user: "halo user", view: 10086, reply: 310},
-                    {title: 'Halo社区欢迎您', user: "halo user", view: 10086, reply: 310},
-                    {title: 'Halo社区欢迎您', user: "halo user", view: 10086, reply: 310},
-                ],
-
-
+                sectionName: '闲置交易',
+                sectionList: [
+                    {
+                        author: "halo user",
+                        title: "欢迎来到Halo社区闲置交易版块",
+                        view: 1100,
+                        reply: 320,
+                        replyUser: "halo",
+                        replyTime: "16分钟前"
+                    },
+                    {
+                        author: "halo user",
+                        title: "欢迎来到Halo社区闲置交易版块",
+                        view: 1100,
+                        reply: 320,
+                        replyUser: "halo",
+                        replyTime: "16分钟前"
+                    },
+                    {
+                        author: "halo user",
+                        title: "欢迎来到Halo社区闲置交易版块",
+                        view: 1100,
+                        reply: 320,
+                        replyUser: "halo",
+                        replyTime: "16分钟前"
+                    },
+                    {
+                        author: "halo user",
+                        title: "欢迎来到Halo社区闲置交易版块",
+                        view: 1100,
+                        reply: 320,
+                        replyUser: "halo",
+                        replyTime: "16分钟前"
+                    },
+                    {
+                        author: "halo user",
+                        title: "欢迎来到Halo社区闲置交易版块",
+                        view: 1100,
+                        reply: 320,
+                        replyUser: "halo",
+                        replyTime: "16分钟前"
+                    },
+                    {
+                        author: "halo user",
+                        title: "欢迎来到Halo社区闲置交易版块",
+                        view: 1100,
+                        reply: 320,
+                        replyUser: "halo",
+                        replyTime: "16分钟前"
+                    },
+                    {
+                        author: "halo user",
+                        title: "欢迎来到Halo社区闲置交易版块",
+                        view: 1100,
+                        reply: 320,
+                        replyUser: "halo",
+                        replyTime: "16分钟前"
+                    },
+                    {
+                        author: "halo user",
+                        title: "欢迎来到Halo社区闲置交易版块",
+                        view: 1100,
+                        reply: 320,
+                        replyUser: "halo",
+                        replyTime: "16分钟前"
+                    },
+                    {
+                        author: "halo user",
+                        title: "欢迎来到Halo社区闲置交易版块",
+                        view: 1100,
+                        reply: 320,
+                        replyUser: "halo",
+                        replyTime: "16分钟前"
+                    },
+                ]
             }
         },
         methods: {
@@ -59,7 +119,7 @@
                 this.$router.push({path: item, query: {}});
             }
         },
-        created(){
+        created: {
 
         }
     }
@@ -67,14 +127,18 @@
 <style lang="less">
     @import "../../common.less";
 
-    .haloCenter {
+    .sectionPage {
         background-color: #f2f2f2 !important;
 
-    .hot-container {
+    .sectionPage-container {
+        min-height: 730px;
+        margin: auto;
+        width: 1100px;
+
+    .section-container {
         float: left;
         position: relative;
         margin: 10px auto;
-        /*margin-left: 300px;*/
         width: 716px;
         border: 1px solid #e6e6e6;
         background-color: #fff;
@@ -82,81 +146,69 @@
         box-shadow: 1px 1px 10px #e2e2e2;
         font-family: "微软雅黑", Arial, Helvetica, sans-serif;
 
-    .hot-header {
+    .section-header {
         height: 50px;
         display: flex;
         align-items: center;
         font-size: 18px;
         color: #333;
+
+    h3 {
+        font-weight: 400;
     }
 
-    .hot-body {
-        border-top: 1px solid #e6e6e6;
-        padding-top: 15px;
-        width: 700px;
-        margin: auto;
-
-    .hot-item {
-        float: left;
-        margin-bottom: 15px;
-        width: 340px;
-        height: 50px;
-
-    .hot-item-user {
-        margin-right: 20px;
-        font-size: 13px;
-        color: #999;
-        width: 75px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-    }
-
-    .hot-item-title {
+    .el-dropdown {
+        margin-left: 80px;
         cursor: pointer;
-        font-size: 15px;
-        color: #333;
-        overflow: hidden;
-        width: 310px;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        margin-bottom: 5px;
 
     &:hover {
-        color: #00a7ea;
-    }
-
-    }
-    .hot-item-dataNum {
-        float: right;
-        margin-right: 30px;
-        font-size: 13px;
-        color: #999;
-
-    i {
-        margin-left: 2px;
-    }
-
-    span:first-child {
-        margin-right: 10px;
-    }
-
-    }
-    &:nth-child(even) {
-        margin-left: 15px;
-    }
+         color: #00a7ea;
+     }
 
     }
     }
+    .section-list {
+        border-top: 1px solid #e6e6e6;
 
+    .section-item {
+        padding: 15px;
+        border-bottom: 1px solid #e6e6e6;
+
+    .section-item-title {
+        cursor: pointer;
+        font-weight: 500;
+        color: #333;
+    &:hover {
+         color: #00a7ea;
+     }
+    }
+
+    .section-item-data {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #666;
+
+    span {
+        padding: 0 15px;
+        border-right: 1px solid #666;
+
+    &:first-child {
+         padding-left: 0;
+     }
+
+    &:last-child {
+         border-right: 0;
+     }
+
+    }
+    }
+    }
+    }
+    }
     }
     .right {
         float: left;
     }
 
-    .index-container{
-        margin: auto;
-        width: 1100px;
-    }
     }
 </style>

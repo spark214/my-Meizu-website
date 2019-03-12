@@ -1,6 +1,6 @@
 <template>
   <div class="header clearfix">
-    <a class="logo" href="./index.html"><img src="http://p9f6ljki4.bkt.clouddn.com/halo-230-40-blue.png" width="120px"
+    <a class="logo" href="./index.html"><img src="http://img.tozlam.cn/halo-230-40-blue.png" width="120px"
                                              height="24px"></a>
     <ul class="navs" id="navul">
       <li><a href="./index.html">首页</a></li>

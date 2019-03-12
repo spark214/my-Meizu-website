@@ -18,12 +18,12 @@
   </div>
 </template>
 <script>
-  import vHeader from '../common/header/page/header';
-  import vFooter from '../common/footer';
-  import vBanner from '../common/mallIndex/banner';
-  import vMsc from '../common/mallIndex/msc';
-  import vSection from '../common/mallIndex/sectionBox';
-  import vList from '../common/mallIndex/listItem';
+  import vHeader from '../../common/header/page/header';
+  import vFooter from '../../common/footer';
+  import vBanner from './common/banner';
+  import vMsc from './common/msc';
+  import vSection from './common/sectionBox';
+  import vList from './common/listItem';
 
   export default {
     data() {

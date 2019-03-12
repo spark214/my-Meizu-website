@@ -11,12 +11,12 @@
   </div>
 </template>
 <script>
-  import vHeader from '../common/header/page/header';
-  import vFooter from '../common/footer';
-  import vAddress from '../common/mallCheck/address';
-  import vOrdermsg from '../common/mallCheck/orderMsg';
-  import vOrdermsgs from '../common/mallCheck/orderMsgs';
-  import vPayment from '../common/mallCheck/payment';
+  import vHeader from '../../common/header/page/header';
+  import vFooter from '../../common/footer';
+  import vAddress from './common/address';
+  import vOrdermsg from './common/orderMsg';
+  import vOrdermsgs from './common/orderMsgs';
+  import vPayment from './common/payment';
 
   export default {
     data() {

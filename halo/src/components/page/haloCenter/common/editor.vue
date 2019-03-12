@@ -25,7 +25,7 @@
                     UEDITOR_HOME_URL: '/static/UEditor/',
                     //工具栏
                     toolbars:[
-                            ['selectall', 'cleardoc','emotion','simpleupload','blockquote']
+                            ['bold','fontsize','indent','selectall', 'cleardoc','emotion','simpleupload','blockquote','source']
                     ],
                     //元素路径关闭
                     elementPathEnabled:false

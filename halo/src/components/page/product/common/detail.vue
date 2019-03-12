@@ -3,7 +3,7 @@
     <div class="contain_detail_header">
       <ul>
         <li :class="{selectedSection:sectionIndex==1}" @click="sectionIndex=1"><a>商品详情</a></li>
-        <li :class="{selectedSection:sectionIndex==2}" @click="sectionIndex=2"><a>常见问题</a></li>
+        <!--<li :class="{selectedSection:sectionIndex==2}" @click="sectionIndex=2"><a>常见问题</a></li>-->
       </ul>
     </div>
 
@@ -132,7 +132,7 @@
     position: absolute;
     left: 10px;
     top: 3px;
-    background: url("../../../static/img/icons.png") left top no-repeat;
+    background: url("../../../../../static/img/icons.png") left top no-repeat;
   }
 
   .question-list dd {
@@ -149,7 +149,7 @@
     height: 26px;
     position: absolute;
     left: 10px;
-    background: url("../../../static/img/icons.png") -36px top no-repeat;
+    background: url("../../../../../static/img/icons.png") -36px top no-repeat;
   }
 
   .question-list h4 {

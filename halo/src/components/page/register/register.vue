@@ -23,7 +23,7 @@
   </div>
 </template>
 <script>
-  import rPhone from '../common/register/page/phone';
+  import rPhone from './page/phone';
 
   var code;
   export default {
@@ -106,7 +106,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: url("../../../static/img/login_banner.png");
+    background: url("../../../../static/img/login_banner.png");
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;

@@ -4,12 +4,12 @@
             <el-col :span="6" v-for="(item,index) in item">
                 <el-card shadow="hover" class="list_card">
                     <a>
-                        <img width="220px" class="list_img" v-lazy="filterImg[index][selectPic[index]]"
+                        <img width="220px" class="list_img" v-lazy="filterImg[index][selectPic[index]]" :key="filterImg[index][selectPic[index]]"
                              @click="goProduct(item.proId)">
                         <div class="list_colorchoose">
                             <ul class="clearfix">
                                 <li v-for="(pic,picIndex) in  filterImg[index]" v-if="pic!==undefined">
-                                    <img v-lazy="pic"
+                                    <img v-lazy="pic" :key="pic"
                                          width="39px" @click="selectPic.splice(index,1,picIndex)"
                                          :class="{selectPic:selectPic[index]==(picIndex)}">
                                 </li>
