@@ -58,7 +58,7 @@
             }
         },
         created(){
-            this.websocket();
+//            this.websocket();
         }
     }
 </script>
