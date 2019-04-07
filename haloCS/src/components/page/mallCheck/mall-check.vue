@@ -28,7 +28,8 @@
       vHeader, vFooter, vAddress,vOrdermsg,vPayment,vOrdermsgs
     },
     created(){
-      this.type = this.$route.query.type
+      this.type = this.$route.query.type;
+      window.scroll(0, 0);
     }
 
   }

@@ -1,14 +1,15 @@
 <template>
-  <div>
+  <div class="sms">
     <el-container id="login_container_main">
       <el-form :model="loginForm" :rules="rules" ref="loginForm">
         <el-form-item prop="code">
           <el-input v-model="loginForm.code" placeholder="短信验证码" @change="send"></el-input>
           <el-button @click="countDown" :class="{disabled:!canClick}" class="button_sms">{{content}}</el-button>
         </el-form-item>
-        <el-button type="primary" size="medium" @click="next()">下一步</el-button>
+        <el-button type="primary"  @click="next()" style="height: 36px">下一步</el-button>
       </el-form>
     </el-container>
+
     <el-dialog
       title="提示"
       :visible.sync="dialogVisible">
@@ -144,7 +145,17 @@
     }
   }
 </script>
-<style>
+<style lang="less">
+  .sms {
+
+  .login_container_main{
+
+  }
+
+  .el-form{
+    width: 298px;
+  }
+
   .disabled {
     background-color: #ddd;
     border-color: #ddd;
@@ -157,9 +168,14 @@
     width: 100%;
   }
 
-  .button_sms {
-    margin-top: 20px;
+  .el-button{
+    font-size: 12px;
   }
 
+  .button_sms {
+    margin-top: 20px;
+    height: 36px !important;
+  }
 
+  }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="reg_phone">
     <div class="phoneChecck">
       <el-form :model="loginForm" :rules="rules" ref="loginForm" class="form">
         <el-form-item prop="phone">
@@ -8,7 +8,7 @@
 
         <v-code @codeAva="getAva"></v-code>
         <p class="tips">点击立即注册，即表示您同意并愿意遵守 Halo服务协议 和 法律声明</p>
-        <el-button type="primary" size="medium" @click="next('sms','loginForm')">立即注册</el-button>
+        <el-button type="primary" @click="next('sms','loginForm')" class="regButton">立即注册</el-button>
         <el-form-item>
           <a @click="goRouter('login')" class="login">登录</a>
         </el-form-item>
@@ -117,7 +117,9 @@
 
   }
 </script>
-<style scoped>
+<style lang="less">
+  .reg_phone {
+
   .tips {
     font-size: 12px;
     line-height: 20px;
@@ -130,6 +132,7 @@
     left: 50%;
     top: 0;
     transform: translateX(-50%);
+    font-size: 12px;
   }
 
   .el-button {
@@ -146,8 +149,14 @@
   }
 
   .login {
-    font-size: 14px;
+    font-size: 12px;
     color: #409EFF;
     cursor: pointer;
+  }
+
+  .regButton{
+    height: 36px !important;
+  }
+
   }
 </style>

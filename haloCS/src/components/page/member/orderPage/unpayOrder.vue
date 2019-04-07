@@ -1,24 +1,57 @@
 <template>
-  <div>
-    <v-order v-if="order.length>0"></v-order>
-    <v-unfound v-if="order.length==0"></v-unfound>
+  <div v-loading="orderLoading" class="allOrder">
+    <v-order v-if="order.length > 0" :datas="order" ></v-order>
+    <v-unfound v-if="orderLoading == false && order.length == 0"></v-unfound>
   </div>
 </template>
 <script>
   import vOrder from '../common/orderTable';
-import vUnfound from '../common/unfound';
+  import vUnfound from '../common/unfound';
   export default {
     data() {
       return {
-        order: [
-        ],
+        order: [],
+        orderLoading:false
+      }
+    },
+    methods: {
+      getData(){
+        this.orderLoading = true;
+        var url = this.$rootUrl + "/api/order/myOrder";
+        const options = {
+          method: 'POST',
+          url: url,
+          data: {
+            status:'0'
+          }
+        };
+        this.$axios(options).then((res) => {
+          let item = res.data.data;
+            if (item.errorCode == 0) {
+              this.order = item.data.orderDetailList;
+              this.orderLoading = false;
+            } else if (item.errorCode == 403) {
+              sessionStorage.setItem('pageHistory', this.$route.fullPath);
+              this.$router.push({path: "/login"});
+              throw item.errorMsg;
+            } else {
+              throw item.errorMsg;
+            }
+        }).catch(errorMsg => {
+          this.$message.error(errorMsg);
+        });
       }
     },
     components: {
-      vOrder,vUnfound
+      vOrder, vUnfound
+    },
+    created(){
+      this.getData()
     }
   }
 </script>
-<style>
-
+<style lang="less">
+  .allOrder{
+    min-height: 300px;
+  }
 </style>

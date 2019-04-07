@@ -11,10 +11,14 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "cjs-module": "^1.5.0",
     "element-ui": "^2.3.7",
+    "highcharts": "^7.1.0",
+    "jquery": "^3.3.1",
     "style-loader": "^0.21.0",
     "vue": "^2.5.11",
     "vue-axios": "^2.1.1",
+    "vue-highcharts": "^0.1.0",
     "vue-router": "^3.0.1",
     "vue-schart": "^1.0.0"
   },
@@ -24,15 +28,22 @@
     "not ie <= 8"
   ],
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.0",
+    "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-3": "^6.24.1",
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
+    "egg-ueditor": "git+https://github.com/tozlam/egg-ueditor.git",
     "file-loader": "^1.1.4",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0",
+    "loader-test-zijian": "^1.0.3",
     "vue-loader": "^13.0.5",
     "vue-template-compiler": "^2.4.4",
+    "vue-ueditor-wrap": "^2.4.0",
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.9.1"
   }

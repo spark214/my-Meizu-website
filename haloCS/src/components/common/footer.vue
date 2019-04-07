@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="contain_footer clearfix">
+    <div class="contain_footer clearfix" v-if="type == 1">
       <table class="foottable">
         <tr>
           <td><img src="../../../static/img/sf.png" ><a>顺丰包邮</a></td>
@@ -25,7 +25,12 @@
 </template>
 <script>
   export default {
-
+    props:{
+      type:{
+        type:Number,
+        default:1
+      }
+    }
   }
 </script>
 <style>

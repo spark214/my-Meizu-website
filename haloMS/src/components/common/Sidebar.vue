@@ -58,6 +58,11 @@
             index: 'usermanage',
             title: '用户管理'
           },
+          {
+            icon: 'el-icon-news',
+            index: 'postmanage',
+            title: '社区管理'
+          },
         ]
       }
     },
@@ -83,7 +88,7 @@
     bottom:0;
   }
   .sidebar-menu:not(.el-menu--collapse){
-    width: 250px;
+    width: 200px;
   }
   .sidebar > ul {
     height:100%;

@@ -4,7 +4,8 @@
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item :to="{path: '/mallList', query: {cateId: 0}}">全部商品</el-breadcrumb-item>
-        <el-breadcrumb-item v-show="cateId!=0">{{filterBrands}}</el-breadcrumb-item>
+        <el-breadcrumb-item v-show="cateId != 0">{{filterCates}}</el-breadcrumb-item>
+        <el-breadcrumb-item v-show="brandId != 0">{{filterBrands}}</el-breadcrumb-item>
       </el-breadcrumb>
     </div>
 
@@ -92,7 +93,7 @@
       }
     },
     computed: {
-      filterBrands() {
+      filterCates() {
         switch (this.cateId) {
           case 1:
             return "手机";
@@ -119,19 +120,44 @@
             return "移动存储/办公设备";
             break;
         }
+      },
+      filterBrands() {
+        switch (this.brandId) {
+          case 1:
+            return "魅族";
+            break;
+          case 2:
+            return "魅蓝";
+            break;
+          case 3:
+            return "乐心";
+            break;
+          case 4:
+            return "沁麟";
+            break;
+          case 5:
+            return "准儿";
+            break;
+          case 6:
+            return "Westinghouse西屋";
+            break;
+          case 7:
+            return "纽曼";
+            break;
+        }
       }
     },
     created() {
-      this.cateId = this.$route.query.cateId
-      if (this.$route.query.cateId === undefined) this.cateId = 0
+      this.cateId = this.$route.query.cateId || 0;
+      this.brandId = this.$route.query.brandId || 0;
       if (this.cateId >= 0)
-        this.getData(this.cateId)
+        this.getData(this.cateId);
     },
     watch: {
       '$route'(to, from) {
-        this.cateId = this.$route.query.cateId
-        if (this.$route.query.cateId === undefined) this.cateId = 0
-        this.getData(this.cateId)
+        this.cateId = this.$route.query.cateId || 0;
+        this.brandId = this.$route.query.brandId || 0;
+        this.getData(this.cateId);
       }
     }
 

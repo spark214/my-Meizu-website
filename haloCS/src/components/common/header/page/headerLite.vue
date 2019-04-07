@@ -50,10 +50,8 @@
     },
     data() {
       return {
-        isLogin: true,
-        user: "tozlam",
-
-
+        isLogin: false,
+        user: "",
       }
     },
     methods: {
@@ -66,6 +64,15 @@
           this.$router.push('/login');
         }
       },
+    },
+    created(){
+      const expireTime = sessionStorage.getItem('expireTime');
+      const nowTime = new Date().getTime();
+      if(expireTime && nowTime < expireTime){
+        this.isLogin = true;
+      }
+      this.user = this.$store.state.userInfo.username;
+      console.log(this.$store.state.userInfo);
     }
   }
 </script>

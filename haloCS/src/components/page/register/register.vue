@@ -1,5 +1,5 @@
 <template>
-  <div id="login_wrap">
+  <div id="reg_wrap">
     <el-container>
       <el-main id="login_main">
         <el-container id="login_container">
@@ -80,13 +80,12 @@
     }
   }
 </script>
-<style>
-  * {
+<style lang="less">
+  #reg_wrap{
     padding: 0;
     margin: 0;
     list-style: none;
     font-family: "微软雅黑", Arial, Helvetica, sans-serif;
-  }
 
   .el-container {
     position: relative;
@@ -123,7 +122,7 @@
   }
 
   #login_container_header {
-    height: 120px !important;
+    height: 110px !important;
     color: rgb(12, 187, 239);
     font-size: 20px;
     text-align: center;
@@ -161,6 +160,9 @@
     color: #409EFF;
     cursor: pointer;
     position: absolute;
+
+  }
+
 
   }
 </style>

@@ -5,7 +5,7 @@
             <div class="member_bread">
                 <el-breadcrumb separator-class="el-icon-arrow-right">
                     <el-breadcrumb-item :to="{ path: 'mallIndex' }">首页</el-breadcrumb-item>
-                    <el-breadcrumb-item :to="{path:'member'}" >我的商城</el-breadcrumb-item>
+                    <el-breadcrumb-item :to="{path:'member'}" >我的</el-breadcrumb-item>
                     <el-breadcrumb-item  ></el-breadcrumb-item>
                 </el-breadcrumb>
             </div>

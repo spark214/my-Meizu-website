@@ -5,44 +5,15 @@
         <ul>
             <li v-for="(pic,picIndex) in imgurl[picS]">
                 <img v-lazy="pic" :key="pic"
-                     width="75px" @click="changePic(picIndex)" :class="{selectPic:selectPic==(picIndex)}">
+                     width="75px" @click="changePic(picIndex)" :class="{selectPic:selectPic == (picIndex)}">
             </li>
         </ul>
     </div>
 </template>
-<style>
-    .contain_head_img {
-        position: relative;
-        float: left;
-        width: 40%;
-        margin-left: 30px;
-    }
-
-    .contain_head_img ul {
-        margin-left: 20px;
-        margin-bottom: 20px;
-        margin-top: 20px;
-    }
-
-    .contain_head_img ul li {
-        display: inline;
-        margin-right: 25px;
-        cursor: pointer;
-    }
-
-    .contain_head_img ul li img {
-        box-sizing: border-box;
-    }
-
-    .selectPic {
-        border: 1px solid #dcdcdc;
-    }
-</style>
 <script>
     import bus from '../../../common/bus.js';
 
     export default {
-
         data() {
             return {
                 common: [],
@@ -71,14 +42,15 @@
 
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
-                    this.imgurl = new Array();
-                    var common = JSON.parse(item.data.itemDetail.specificationJson);
-                    for (let i = 0; i < common.imgUrl.length; i++) {
-                        this.imgurl[i] = new Array(i);
-                        this.imgurl[i] = common.imgUrl[i].split(',');
+                    if (item.errorCode == 0) {
+                        this.imgurl = new Array();
+                        var common = JSON.parse(item.data.itemDetail.specificationJson);
+                        for (let i = 0; i < common.imgUrl.length; i++) {
+                            this.imgurl[i] = new Array(i);
+                            this.imgurl[i] = common.imgUrl[i].split(',');
 
+                        }
                     }
-
                 })
             }
 
@@ -97,3 +69,39 @@
         }
     }
 </script>
+<style lang="less">
+    .contain_head_img {
+        position: relative;
+        float: left;
+        width: 40%;
+        margin-left: 30px;
+
+    &
+    >
+    img {
+        width: 395px;
+        height: 395px;
+    }
+
+    }
+
+    .contain_head_img ul {
+        margin-left: 20px;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+
+    .contain_head_img ul li {
+        display: inline;
+        margin-right: 25px;
+        cursor: pointer;
+    }
+
+    .contain_head_img ul li img {
+        box-sizing: border-box;
+    }
+
+    .selectPic {
+        border: 1px solid #dcdcdc;
+    }
+</style>

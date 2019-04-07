@@ -1,9 +1,9 @@
 <template>
-  <div class="header clearfix">
-    <a class="logo" href="./index.html"><img src="http://img.tozlam.cn/halo-230-40-blue.png" width="120px"
-                                             height="24px"></a>
+  <div class="webHeader clearfix">
+    <a class="logo" href="./index.html">
+      <img src="http://img.tozlam.cn/halo-230-40-blue.png" width="120px" height="24px"></a>
     <ul class="navs" id="navul">
-      <li><a href="./index.html">首页</a></li>
+      <li><a @click="goRouter('mallIndex')">首页</a></li>
       <li class="nav-product" id="nav-phone"><a  @click="goList(0)">手机</a>
         <dl>
           <dd v-for="(item,index) in mobPhone" @click="goProduct(item.id)">
@@ -25,9 +25,9 @@
             <p class="nav-dd">{{item.name}}</p></dd>
         </dl>
       </li>
-      <li><a @click="goRouter('mallIndex')">商城</a></li>
-      <li><a target="_blank" href="https://tozlam.cn/mz/flyme_index.html">Flow.</a></li>
-      <li class="nav-search"><input type="text" placeholder="魅族15" value="" id="searchInput">
+      <li><a @click="goRouter('haloCenter')">社区</a></li>
+      <li class="nav-search">
+        <input type="text" placeholder="魅族15" v-model="keyword" id="searchInput">
         <i class="el-icon-search" @click="goSearch"></i>
       </li>
     </ul>
@@ -50,7 +50,6 @@
         </li>
         <li>
           <v-cart></v-cart>
-
         </li>
       </ul>
 
@@ -84,8 +83,7 @@
         ],
         isLogin: false,
         userIcon: "../../../static/img/21.jpg",
-
-
+        keyword:'魅族15'
       }
     },
     components: {
@@ -105,13 +103,29 @@
           this.$router.push({path: "/mallProductOther", query: {proId: id}})
       },
       goSearch() {
-        var name = document.getElementById("searchInput").value
-        this.$router.push({path: "/mallList", query: {name: name, cateId: -1}})
+        var name = this.keyword;
+        this.$router.push({path: "/mallList", query: {name: name, cateId: -1}});
       },
       handleCommand(command) {
         if (command == 'loginout') {
-          sessionStorage.removeItem('accessToken');
-          this.$router.push('/login');
+          var url = this.$rootUrl + "/api/user/logout";
+          const options = {
+            method: 'GET',
+            url: url,
+            data: {}
+          };
+          this.$axios(options).then((res) => {
+            let item = res.data.data;
+            if (item.errorCode == 0) {
+              sessionStorage.setItem('expireTime',0);
+              const path = this.$route.path;
+              if(path == '/newPost' || path == '/user' || path == '/mallCheck' || this.$route.matched[0].path == '/member'){
+                this.$router.push({path:'/'});
+              }else{
+                this.getData();
+              }
+            }
+        });
         }
         else if (command == 'login') {
           this.$router.push('/login');
@@ -124,22 +138,28 @@
         }
       },
       getData() {
-        var token = sessionStorage.getItem('accessToken');
-        if(token!=undefined){
-          this.isLogin=true
+        const expireTime = sessionStorage.getItem('expireTime');
+        const nowTime = new Date().getTime();
+        if(expireTime && nowTime < expireTime){
+          this.isLogin = true;
         }
       }
 
     },
     created() {
-      this.getData()
+      this.getData();
     }
   }
 </script>
-<style>
-  .header {
+<style lang="less">
+  .webHeader {
     z-index: 100;
-  }
+    position: absolute;
+    width: 100%;
+    height: 60px;
+    top: 0;
+    background-color: #ffffff;
+    border-bottom: 0.5px solid #f3f3f3;
 
   .navs {
     float: right;
@@ -147,15 +167,16 @@
     margin-top: 20px;
   }
 
-  .header a {
+  .webHeader a {
     color: #000;
   }
 
-  .header a:hover {
+  .webHeader a:hover {
     color: #31a5e7;
   }
 
   .login {
+    margin-left: 10px;
     position: absolute;
     left: 90%;
     top: 20px;
@@ -181,7 +202,7 @@
 
   .logo {
     position: absolute;
-    margin-left: 25px;
+    margin-left: 55px;
     z-index: 100;
   }
 
@@ -191,16 +212,8 @@
 
   }
 
-  .header {
-    position: relative;
-    width: 100%;
-    height: 60px;
-    top: 0;
-    background-color: transparent;
-    border-bottom: 0.5px solid #f3f3f3;
-  }
 
-  .header:hover {
+  .webHeader:hover {
     background-color: #fff;
   }
 
@@ -213,6 +226,7 @@
     margin-top: 0px;
     background-color: #fff;
     display: none;
+    z-index: 1000;
   }
 
   .nav-product:hover dl {
@@ -239,12 +253,6 @@
 
   .on {
     color: #00a7ea;
-  }
-
-  .header {
-    position: absolute;
-    width: 100%;
-    top: 0;
   }
 
   .nav-search {
@@ -278,4 +286,5 @@
     cursor: pointer;
   }
 
+  }
 </style>

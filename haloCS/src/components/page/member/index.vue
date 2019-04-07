@@ -69,13 +69,10 @@
             },
             getData(){
                 var url = this.$rootUrl + "/api/user/userData";
-                var token = sessionStorage.getItem('accessToken');
                 const options = {
                     method: 'POST',
                     url: url,
-                    data: {
-                        token: token
-                    }
+                    data: {}
                 };
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
@@ -113,7 +110,7 @@
         }
     }
 </script>
-<style>
+<style lang="less">
     .user_info, .user_order {
         width: 100%;
         border: 0.5px solid #f3f3f3;
@@ -133,6 +130,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
+
+        img{
+            width: 135px;
+            height: 135px;
+        }
     }
 
     .info_welcome {

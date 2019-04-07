@@ -5,8 +5,8 @@
                 <el-container id="login_container">
                     <el-header id="login_container_header">
                         <div class="login_box_header">
-                            <a style="margin-right: 20px" @click="accLogin=true" :class="{on:accLogin}">账号登陆</a> |
-                            <a style="margin-left: 20px" @click="accLogin=false" :class="{on:!accLogin}">验证码登陆</a>
+                            <a style="margin-right: 20px" @click="accLogin=true" :class="{on:accLogin}">账号登录</a> |
+                            <a style="margin-left: 20px" @click="accLogin=false" :class="{on:!accLogin}">验证码登录</a>
                         </div>
                     </el-header>
                     <el-container id="login_container_main">
@@ -26,6 +26,7 @@
                                     <el-form-item prop="code">
                                         <el-input v-model="loginFormMsg.code" placeholder="短信验证码"
                                                   @change="send"></el-input>
+                                        <p style="color:#e22841;font-size: 12px">{{errormsg}}</p>
                                         <el-button @click="countDown" :class="{disabled:!canClick}" class="button_sms">
                                             {{content}}
                                         </el-button>
@@ -35,7 +36,7 @@
 
                             <v-code @codeAva="getAva" v-show="accLogin"></v-code>
                             <el-form-item>
-                                <el-button type="primary" @click="check()">登录</el-button>
+                                <el-button type="primary" @click="check()" class="loginBtn">登录</el-button>
                             </el-form-item>
                             <el-form-item>
                                 <a @click="goRouter('register')" class="login">注册</a>
@@ -124,22 +125,32 @@
                     const options = {
                         method: 'POST',
                         url: url,
-                        data:this.loginForm
+                        data: this.loginForm
                     };
                     this.$axios(options).then((res) => {
                         let item = res.data.data;
                         if (item.data) {
                             if (item.errorCode == 0) {
-                                sessionStorage.setItem('accessToken', item.data.access_token);
-                                document.cookie = "token=" + item.data.access_token + "; mag-age=3600;";
-                                this.$router.push({path: "/"});
+                                let userInfo = item.data.userinfo;
+                                this.$store.commit('LOGIN', {
+                                    username: userInfo.username,
+                                    avatar: userInfo.avatar,
+                                    phone:userInfo.phone
+                                });
+                                sessionStorage.setItem('expireTime', (new Date().getTime() + 58 * 60 * 1000));
+                                let pageHistory = sessionStorage.getItem('pageHistory');
+                                if (pageHistory) {
+                                    this.$router.push({path: pageHistory});
+                                } else {
+                                    this.$router.push({path: "/"});
+                                }
                             }
                             else {
                                 this.errormsg = item.msg;
                             }
                         }
                     })
-                }else {
+                } else {
                     var url = this.$rootUrl + "/api/user/loginByCode";
                     this.loginFormMsg.phone = this.loginForm.phone
                     const options = {
@@ -151,8 +162,19 @@
                         let item = res.data.data;
                         if (item.data) {
                             if (item.errorCode == 0) {
-                                sessionStorage.setItem('accessToken', item.data.access_token)
-                                this.$router.push({path: "/"})
+                                let userInfo = item.data.userinfo;
+                                this.$store.commit('LOGIN',{
+                                    username:userInfo.username,
+                                    avatar:userInfo.avatar,
+                                    phone:userInfo.phone
+                                });
+                                sessionStorage.setItem('expireTime', (new Date().getTime() + 60 * 60 * 1000));
+                                let pageHistory = sessionStorage.getItem('pageHistory');
+                                if (pageHistory) {
+                                    this.$router.push({path: pageHistory});
+                                } else {
+                                    this.$router.push({path: "/"});
+                                }
                             }
                             else {
                                 this.errormsg = item.msg;
@@ -184,12 +206,12 @@
                     }
                 }, 1000)
                 var phone = this.loginForm.phone;
-                var url = this.$rootUrl + "/api/user/loginRequestSmsCode" ;
+                var url = this.$rootUrl + "/api/user/loginRequestSmsCode";
                 const options = {
                     method: 'POST',
                     url: url,
                     data: {
-                        phone:phone
+                        phone: phone
                     }
                 };
                 this.$axios(options).then((res) => {
@@ -209,13 +231,13 @@
         }
     }
 </script>
-<style scoped>
-    * {
+<style lang="less">
+    #login_wrap {
         padding: 0;
         margin: 0;
         list-style: none;
         font-family: "微软雅黑", Arial, Helvetica, sans-serif;
-    }
+
 
     .el-container {
         position: relative;
@@ -269,9 +291,13 @@
         color: #32A5E7 !important;
     }
 
+    .el-form-item{
+        margin-bottom: 25px;
+    }
+
     .el-input, .el-button {
         width: 300px;
-        height: 46px;
+        height: 36px;
     }
 
     #login_container_main {
@@ -314,5 +340,9 @@
         border-color: #ddd;
         color: #57a3f3;
         cursor: not-allowed;
+    }
+    .loginBtn{
+        height: 36px;
+    }
     }
 </style>

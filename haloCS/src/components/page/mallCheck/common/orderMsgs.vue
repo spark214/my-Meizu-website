@@ -11,7 +11,7 @@
       </tr>
       <tr>
         <td width="500px">
-          <img :src="product.imgUrl" width="100" height="100" class="table_product_img">
+          <img :src="product.imgUrl" width="50" height="50" class="table_product_img">
           <div class="table_product_msg">
             <p>{{product.title}}</p>
           </div>
@@ -25,12 +25,6 @@
         <td width="200px">
           <span style="color: rgb(224, 43, 65)" class="table_price">￥{{product.total.toFixed(2)}}</span>
         </td>
-
-        <!--<el-table-column width="200" label="配送方式" align="center" >-->
-        <!--<template slot-scope="scope">-->
-        <!--<span>快递:运费0元</span>-->
-        <!--</template>-->
-        <!--</el-table-column>-->
       </tr>
     </table>
     <div class="orderMsg_table_footer clearfix">
@@ -68,7 +62,7 @@
         }
       },
       getData() {
-          this.product = JSON.parse(sessionStorage.getItem('orderProduct'));
+          this.product = this.$store.state.order.product;
       }
     },
     created() {
@@ -76,7 +70,7 @@
     }
   }
 </script>
-<style>
+<style lang="less">
   .orderMsg_table {
     width: 96%;
     position: relative;
@@ -89,11 +83,21 @@
     justify-content: center;
     border: 0.5px solid #dcdcdc;
     color: #666666;
+
+  tr:first-child td{
+    padding-top: 15px;
+  }
+
+  td{
+    text-align: center;
+    position: relative;
+  }
   }
 
   .table_product_img {
     float: left;
     margin-left: 20px;
+    margin-top: 25px;
   }
 
   .table_product_msg {
@@ -103,7 +107,7 @@
     justify-content: center;
     align-items: self-start;
     flex-direction: column;
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .table_product_msg p {
@@ -137,6 +141,7 @@
 
   .orderMsg_table_footer {
     background: #f5f5f5;
+    border: 1px solid #f5f5f5;
     width: 96%;
     height: 50px;
     line-height: 50px;

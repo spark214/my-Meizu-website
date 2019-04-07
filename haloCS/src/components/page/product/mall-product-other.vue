@@ -17,7 +17,7 @@
                         <dl>
                             <dt class="right_selecct_item_lab">颜色分类：</dt>
                             <dd v-for="(item,index) in filterColor" class="right_selecct_item right_selecct_item_lab">
-                                <a @click="changeColor(item.name,index)"
+                                <a @click="changeColor(item.name,index);form.imgUrl=item.img"
                                    :class="{selected:form.color==item.name}">
                                     <img v-lazy="item.img" :key="item.img" width="32px"><span>{{item.name}}</span>
                                 </a>
@@ -29,8 +29,8 @@
                         <dl>
                             <dt class="right_selecct_item_lab">数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：</dt>
                             <dd class="right_selecct_item_lab">
-                                <el-input-number v-model="form.buyCount" :min="1" :max="10" size="mini"
-                                                 controls-position="right"></el-input-number>
+                                <el-input-number v-model="form.buyCount" :min="1" :max="10"
+                                                 size="mini"></el-input-number>
                             </dd>
                         </dl>
 
@@ -46,14 +46,14 @@
                 </div>
             </div>
 
-            <v-detail></v-detail>
+            <v-detail :detailData="detailData"></v-detail>
 
             <v-footer></v-footer>
 
         </div>
         <v-hover :name="common.name" :buyCount="form.buyCount"
                  :price="common.price"
-                 :colorName="form.color"></v-hover>
+                 :colorName="form.color" @buyNow="buyNow"></v-hover>
         <el-dialog
                 :visible.sync="centerDialogVisible"
                 width="30%"
@@ -78,7 +78,7 @@
     export default {
         data() {
             return {
-                "common": {
+                common: {
                     imgurl: []
                 },
                 form: {
@@ -91,8 +91,8 @@
                 sumPrice: 0,
                 selectColor: 0,
                 formcount: 0,
-                centerDialogVisible: false
-
+                centerDialogVisible: false,
+                detailData: []
             }
         },
         components: {
@@ -100,7 +100,10 @@
         },
         methods: {
             buyNow(){
-                if (this.form.color != "") {
+                const expireTime = sessionStorage.getItem('expireTime');
+                const nowTime = new Date().getTime();
+                console.log(expireTime);
+                if(expireTime && nowTime < expireTime){
                     let buyForm = {
                         "proId": this.$route.query.proId,
                         "imgUrl": this.form.imgUrl,
@@ -109,32 +112,36 @@
                         "total": this.common.price * this.form.buyCount,
                         "number": this.form.buyCount
                     }
-                    var token = sessionStorage.getItem('accessToken');
                     var url = this.$rootUrl + "/api/order/buyNow";
                     const options = {
                         method: 'POST',
-                        headers: {'token': token},
                         url: url,
                         data: buyForm
                     };
                     this.$axios(options).then((res) => {
                         let item = res.data.data;
-                    if (item.data) {
-                        if (item.errorCode == 0) {
-                            sessionStorage.setItem('orderId', item.data.orderId);
-                            sessionStorage.setItem('address', JSON.stringify(item.data.address));
-                            sessionStorage.setItem('orderProduct', JSON.stringify(item.data.orderProduct));
-                            this.$router.push({path: "/mallCheck", query: {type: 1}})
+                        if (item.data) {
+                            if (item.errorCode == 0) {
+                                this.$store.commit("ORDER",{
+                                    id:item.data.orderId,
+                                    address:item.data.address,
+                                    product:item.data.orderProduct
+                                });
+                                this.$router.push({path: "/mallCheck", query: {type: 1}})
+                            }else{
+                                throw item.errorMsg;
+                            }
                         }
-                    }
-                })
+                    }).catch(errorMsg => {
+                        this.$message.error(errorMsg);
+                    });
                 }
                 else {
-                    this.centerDialogVisible = true
+                    sessionStorage.setItem('pageHistory',this.$route.fullPath);
+                    this.$router.push({path: "/login"});
                 }
             },
             addCart() {
-                if (this.form.color != "") {
                     let buyForm = {
                         "proId": this.$route.query.proId,
                         "imgUrl": this.form.imgUrl,
@@ -155,15 +162,17 @@
                         if (item.data) {
                             if (item.errorCode == 0) {
                                 this.centerDialogVisible = true;
+                                if (item.cookie) {
+                                    document.cookie = 'cart=' + item.cookie;
+                                }
                                 bus.$emit("cart", 1);
+                            }else{
+                                throw item.errorMsg;
                             }
                         }
-                    })
-                }
-                else {
-                    this.centerDialogVisible = true
-                }
-
+                    }).catch(errorMsg => {
+                        this.$message.error(errorMsg);
+                    });
             },
             changeColor(name, index) {
                 this.form.color = name
@@ -186,34 +195,44 @@
                     method: 'POST',
                     url: url,
                     data: {
-                        proId:proId
+                        proId: proId
                     }
                 };
 
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
-                    if (item.data) {
+                    if (item.errorCode == 0 && item.data.itemDetail.specificationJson) {
                         this.common = JSON.parse(item.data.itemDetail.specificationJson);
+                        this.detailData = item.data.itemDetail.detailImg.replace(/data-original/g, "src");
+                    } else if (item.errorCode != 0) {
+                        throw item.errorMsg;
+                    } else if (!item.data.itemDetail.specificationJson) {
+                        throw '产品信息加载错误';
+                        this.$router.go(-1);
                     }
-                })
+                }).catch(errorMsg => {
+                    this.$message.error(errorMsg);
+                });
             }
-
         },
-
         computed: {
             filterColor() {
                 let color = []
                 const item = this.common.color
-                for (let i = 0; i < item.length; i++) {
-                    let index = item[i].lastIndexOf(":")
-                    color.push({name: item[i].substr(index + 1), img: item[i].slice(0, index)})
+                if (item) {
+                    for (let i = 0; i < item.length; i++) {
+                        let index = item[i].lastIndexOf(":")
+                        color.push({name: item[i].substr(index + 1), img: item[i].slice(0, index)})
+                    }
+                    this.form.color = color[0].name;
+                    this.form.imgUrl = color[0].img;
                 }
-                return color
-            }
-            ,
+                return color;
+            },
         },
         created() {
-            this.getData()
+            this.getData();
+            window.scroll(0, 0);
         },
         watch: {
             '$route'(to, from) {
@@ -223,7 +242,9 @@
 
     }
 </script>
-<style>
+<style lang="less">
+    .mall-product {
+
     .contain_head {
         width: 100%;
     }
@@ -329,7 +350,6 @@
 
     .right_selecct_item_lab, .right_selecct_rom_lab {
         display: inline-block;
-        margin-bottom: 15px;
     }
 
     .right_selecct_rom {
@@ -389,6 +409,9 @@
     .right_buynow {
         width: 120px;
         margin-left: 50px;
+        &:last-child{
+         margin-left: 10px;
+         }
     }
 
     .right_button {
@@ -424,4 +447,5 @@
         cursor: pointer;
     }
 
+    }
 </style>

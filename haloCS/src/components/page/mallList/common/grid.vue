@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="product-grid">
         <el-row :gutter="7">
             <el-col :span="6" v-for="(item,index) in item">
                 <el-card shadow="hover" class="list_card">
@@ -24,9 +24,14 @@
                 </el-card>
             </el-col>
         </el-row>
+        <div class="unfound" v-if="item.length == 0">
+            <h3>暂无商品</h3>
+            <img src="http://store.res.meizu.com/member/img/noData-31ec95ea89.png">
+        </div>
         <el-pagination
+                v-if="cateId == 0 && brandId == 0"
                 layout="prev, pager, next"
-                :total="100"
+                :page-count="6"
                 @current-change="handleCurrentChange"
                 class="grid_pagination"
                 pager-count="4">
@@ -40,13 +45,14 @@
                 item: [],
                 pageIndex: 1,
                 selectPic: [],
-                cateId: 0
+                cateId: 0,
+                brandId:0
             }
         },
         methods: {
             handleCurrentChange(val) {
-                this.pageIndex = val
-                this.getData(this.cateId)
+                this.pageIndex = val;
+                this.getData(this.cateId);
 
             },
             goRouter(that) {
@@ -99,14 +105,20 @@
 
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
-                    if (item.data) {
-                        this.item = item.data.items;
-                        for (let i = 0; i < this.item.length; i++) {
-                            this.selectPic[i] = 0
+                    if(item.errorCode == 0){
+                        if (item.data) {
+                            this.item = item.data.items;
+                            for (let i = 0; i < this.item.length; i++) {
+                                this.selectPic[i] = 0
+                            }
+                            window.scroll(0, 0);
                         }
-                        window.scroll(0, 0);
+                    }else{
+                        throw item.errorMsg;
                     }
-                })
+                }).catch(errorMsg => {
+                    this.$message.error(errorMsg);
+                });
             }
         },
         computed: {
@@ -125,26 +137,27 @@
                     }
                     imgurl[i][j] = this.item[i].imgUrl.slice(currindex)
                 }
-                console.log(imgurl)
                 return imgurl
             }
             ,
         },
         created() {
-            this.cateId = this.$route.query.cateId
-            if (this.$route.query.cateId === undefined) this.cateId = 0
-            this.getData(this.cateId)
+            this.cateId = this.$route.query.cateId || 0;
+            this.brandId = this.$route.query.brandId || 0;
+            this.getData(this.cateId);
         },
         watch: {
             '$route'(to, from) {
-                this.cateId = this.$route.query.cateId
-                if (this.$route.query.cateId === undefined) this.cateId = 0
-                this.getData(this.cateId)
+                this.cateId = this.$route.query.cateId || 0;
+                this.brandId = this.$route.query.brandId || 0;
+                this.getData(this.cateId);
             }
         }
     }
 </script>
-<style scoped>
+<style lang="less">
+    .product-grid {
+
     .list_colorchoose ul {
         display: flex;
         justify-content: center;
@@ -208,5 +221,24 @@
         justify-content: center;
         background-color: transparent;
         margin-top: 20px;
+    }
+
+    .unfound {
+        margin-top: 20px;
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 400px;
+    }
+
+    .unfound h3 {
+        color: #666666;
+        font-size: 24px;
+        margin-bottom: 20px;
+
+    }
+
     }
 </style>

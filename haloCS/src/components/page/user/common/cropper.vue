@@ -3,7 +3,7 @@
 
     <div class="now_pro">
       <h3 class="title">当前头像</h3>
-      <img :src="avatar" width="100px" style="margin-left: 10px">
+      <img :src="avatar" width="100px" style="width:100px;height: 100px;margin-left: 10px">
     </div>
     <div id="demo">
       <h3 class="title">设置新头像</h3>
@@ -109,14 +109,15 @@
         })
       },
       save() {
-        let param = new FormData()
-        param.append("imgFile", this.file);
+//        let param = new FormData();
+//        param.append("imgFile", this.headerImage);
+        let param = {
+          img:this.headerImage
+        };
         var url = this.$rootUrl + "/api/user/saveAvatar";
         var token = sessionStorage.getItem('accessToken');
         let config = {
-          headers: {'token': token, 'Content-Type': 'multipart/form-data'},
-          processData: false,
-          contentType: false
+          headers: {'token': token}
         }
         this.$axios.post(url, param, config).then((res) => {
           if (res.data.data) {
@@ -169,6 +170,7 @@
         roundedCanvas = this.getRoundedCanvas(croppedCanvas);
 
         this.headerImage = roundedCanvas.toDataURL();
+        console.log(this.headerImage);
         this.postImg()
 
       },

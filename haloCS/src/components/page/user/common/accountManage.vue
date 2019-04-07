@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="accountManage">
         <div class="pageContain_section">
             <div class="section_main clearfix">
                 <img :src="avatar" width="100px" @mouseenter="showEdit=true" @mouseout="showEdit=false">
@@ -14,9 +14,8 @@
             <div class="section_safety clearfix">
                 <div class="safety_header clearfix">
                     <h3 class="safety_title">账号安全</h3>
-                    <h3 class="safety_level">安全等级 <span> {{userinfo.securityLevel}}</span> <i class="el-icon-question"
-                                                                                              style="cursor: pointer"
-                                                                                              @click="dialogVisible = true"></i>
+                    <h3 class="safety_level">安全等级 <span> {{userinfo.securityLevel}}</span>
+                        <i class="el-icon-question" style="cursor: pointer" @click="dialogVisible = true"></i>
                     </h3>
                 </div>
                 <div class="safety_box">
@@ -27,29 +26,29 @@
                         </div>
 
 
-                        <div class="mail_update" v-show="pwdStep!=0" style="background-color: white">
+                        <div class="mail_update" v-show="pwdStep!=0" style="background-color: white;border-top: none">
                             <div class="mail_first" v-show="pwdStep==1">
                                 <h4 class="mail_title">验证手机</h4>
                                 <v-sms :type="1" @ok="checkPhonePwd"></v-sms>
 
-                                <el-button @click="pwdStep=0" style="width: 15%">取消</el-button>
+                                <el-button @click="pwdStep=0" style="width: 298px;margin-top: 10px;margin-bottom: 30px">
+                                    取消
+                                </el-button>
                                 </el-form>
                             </div>
 
                             <div v-show="pwdStep==2">
                                 <el-form :model="pwdForm" :rules="rules" ref="pwdForm" class="mailForm">
                                     <el-form-item prop="old">
-                                        <span class="label">当前密码</span>
-                                        <el-input v-model="pwdForm.oldPwd" style="width: 15%"
+                                        <el-input v-model="pwdForm.oldPwd" style="width: 298px" placeholder="当前密码"
                                                   type="password"></el-input>
                                     </el-form-item>
                                     <el-form-item prop="new">
-                                        <span class="label">新密码</span>
-                                        <el-input v-model="pwdForm.newPwd" style="width: 15%"
+                                        <el-input v-model="pwdForm.newPwd" style="width: 298px" placeholder="新密码"
                                                   type="password"></el-input>
                                     </el-form-item>
-                                    <el-button type="primary" @click="updatePwd" style="width: 15%">提交</el-button>
-                                    <el-button @click="pwdStep=0" style="width: 15%">取消</el-button>
+                                    <p><el-button type="primary" @click="updatePwd" style="width: 298px">提交</el-button></p>
+                                    <p><el-button @click="pwdStep=0" style="width: 298px">取消</el-button></p>
                                 </el-form>
                             </div>
                         </div>
@@ -59,9 +58,9 @@
                         <div class=" safety_div" v-show="mailStep==0">
                             <p class="safety_left">邮箱</p>
                             <span class="have" v-if="mailForm.old!=''">
-                <p>{{filterMail}}</p>
-                <p>已验证，可通过邮箱找回密码</p>
-              </span>
+                                <p>{{filterMail}}</p>
+                                <p>已验证，可通过邮箱找回密码</p>
+                            </span>
                             <p class="safety_right" @click="mailStep=2" v-if="mailForm.old!=''">修改</p>
                             <p class="safety_right" @click="mailStep=2" v-if="mailForm.old==''">添加</p>
                         </div>
@@ -74,13 +73,12 @@
                                         <span class="label">当前邮箱</span> <span>{{filterMail}}</span>
                                     </el-form-item>
                                     <el-form-item prop="sms1">
-                                        <span class="label">邮件验证码</span>
-                                        <el-input v-model="mailForm.sms1" style="width: 15%"></el-input>
+                                        <el-input v-model="mailForm.sms1" placeholder="邮件验证码" style="width: 15%"></el-input>
                                         <el-button @click="countDown(0)"
                                                    :class="[{disabled:!canClick},{button_sms:canClick}]">{{content}}
                                         </el-button>
                                     </el-form-item>
-                                    <el-button type="primary" @click="mailStep=2" style="width: 15%">下一步</el-button>
+                                    <el-button type="primary" @click="mailStep=2" style="width: 298px">下一步</el-button>
                                     <el-button @click="mailStep=0" style="width: 15%">取消</el-button>
                                 </el-form>
                             </div>
@@ -88,20 +86,21 @@
                                 <h4 class="mail_title">修改邮箱</h4>
                                 <el-form :model="mailForm" :rules="rules" ref="mailForm" class="mailForm">
                                     <el-form-item prop="new">
-                                        <span class="label">新邮箱</span><span><el-input type="text" v-model="mailForm.new"
-                                                                                      style="width: 25%"></el-input></span>
+                                        <span>
+                                            <el-input type="text" v-model="mailForm.new" placeholder="新邮箱" style="width: 298px">
+                                            </el-input>
+                                        </span>
                                     </el-form-item>
                                     <el-form-item prop="sms2">
-                                        <span class="label">邮件验证码</span>
-                                        <el-input v-model="mailForm.sms2" style="width: 13.2%"></el-input>
+                                        <el-input v-model="mailForm.sms2" placeholder="邮件验证码" style="width:180px"></el-input>
                                         <el-button @click="countDown(1)"
                                                    :class="[{disabled:!canClick},{button_sms:canClick}]"
                                                    class="AMbutton">
                                             {{content}}
                                         </el-button>
                                     </el-form-item>
-                                    <el-button type="primary" @click="updateEmail()" class="AMbutton">保存</el-button>
-                                    <el-button @click="mailStep=0" class="AMbutton">取消</el-button>
+                                    <p><el-button type="primary" @click="updateEmail()" style="width: 298px">保存</el-button></p>
+                                    <p><el-button @click="mailStep=0" style="width: 298px">取消</el-button></p>
                                 </el-form>
                             </div>
                         </div>
@@ -111,41 +110,42 @@
                         <div class="safety_div" v-show="phoneStep==0">
                             <p class="safety_left">手机号码</p>
                             <span class="have">
-                <p>{{filterPhone}}</p>
-                <p>已验证，可通过手机找回密码</p>
-              </span>
+                                <p>{{filterPhone}}</p>
+                                <p>已验证，可通过手机找回密码</p>
+                            </span>
                             <p class="safety_right" @click="phoneStep=1">修改</p>
                         </div>
 
-                        <div class="mail_update" v-show="phoneStep!=0">
-
+                        <div class="mail_update" v-show="phoneStep!=0" style="border-bottom: none">
                             <div class="mail_first" v-show="phoneStep==1">
                                 <h4 class="mail_title">验证密码</h4>
                                 <el-form :model="phoneForm" :rules="rules" ref="phoneForm" class="mailForm">
                                     <el-form-item prop="sms1">
-                                        <span class="label">验证密码</span>
-                                        <el-input type="password" v-model="pwd" style="width: 15%"></el-input>
+                                        <el-input type="password" v-model="pwd" placeholder="验证密码" style="width: 298px"></el-input>
                                     </el-form-item>
-                                    <el-button type="primary" @click="checkPwd" class="AMbutton">下一步</el-button>
-                                    <el-button @click="phoneStep=0" class="AMbutton">取消</el-button>
+                                    <p><el-button type="primary" @click="checkPwd"  style="width: 298px">下一步</el-button></p>
+                                    <p><el-button @click="phoneStep=0"  style="width: 298px">取消</el-button></p>
                                 </el-form>
                             </div>
 
                             <div class="mail_second" v-show="phoneStep==2">
                                 <h4 class="mail_title">验证手机</h4>
                                 <v-sms :type="1" @ok="checkPhone"></v-sms>
+                                <el-button @click="phoneStep==0" style="width: 298px;margin-top: 10px;margin-bottom: 30px">
+                                    取消
+                                </el-button>
                             </div>
 
                             <div class="mail_second" v-show="phoneStep==3">
                                 <h4 class="mail_title">修改手机</h4>
                                 <el-form :model="mailForm" :rules="rules" ref="mailForm" class="mailForm">
                                     <el-form-item prop="new">
-                                        <span class="label">新手机号码</span><span>
-                    <el-input type="text" v-model="phoneForm.new"
-                              @change="phoneChange" style="width: 25%"></el-input></span>
+                                        <span class="label">新手机号码</span>
+                                        <span>
+                                            <el-input type="text" v-model="phoneForm.new" @change="phoneChange" style="width: 298px"></el-input>
+                                        </span>
                                     </el-form-item>
                                     <v-sms :type="2" @ok="checkPhone"></v-sms>
-
                                 </el-form>
                             </div>
                         </div>
@@ -233,8 +233,16 @@
                     if (item.data) {
                         if (item.errorCode == 0) {
                             this.pwdStep = 0
+                        } else if (item.errorCode == 403) {
+                            sessionStorage.setItem('pageHistory', this.$route.fullPath);
+                            this.$router.push({path: "/login"});
+                            throw item.errorMsg;
+                        } else {
+                            throw item.errorMsg;
                         }
                     }
+                }).catch(errorMsg => {
+                    this.$message.error(errorMsg);
                 })
             },
             phoneChange() {
@@ -270,10 +278,17 @@
                         if (item.errorCode == 0) {
                             this.phoneStep = 2
                             this.$router.push({path: '/user', query: {phone: this.phoneForm.old}});
+                        } else if (item.errorCode == 403) {
+                            sessionStorage.setItem('pageHistory', this.$route.fullPath);
+                            this.$router.push({path: "/login"});
+                            throw item.errorMsg;
+                        } else {
+                            throw item.errorMsg;
                         }
                     }
-                })
-
+                }).catch(errorMsg => {
+                    this.$message.error(errorMsg);
+                });
             },
             updateEmail() {
                 var token = sessionStorage.getItem('accessToken');
@@ -293,9 +308,17 @@
                         if (item.errorCode == 0) {
                             this.getData()
                             this.mailStep = 0
+                        } else if (item.errorCode == 403) {
+                            sessionStorage.setItem('pageHistory', this.$route.fullPath);
+                            this.$router.push({path: "/login"});
+                            throw item.errorMsg;
+                        } else {
+                            throw item.errorMsg;
                         }
                     }
-                })
+                }).catch(errorMsg => {
+                    this.$message.error(errorMsg);
+                });
 
             },
             updatePhone() {
@@ -316,9 +339,17 @@
                         if (item.errorCode == 0) {
                             this.getData()
                             this.mailStep = 0
+                        } else if (item.errorCode == 403) {
+                            sessionStorage.setItem('pageHistory', this.$route.fullPath);
+                            this.$router.push({path: "/login"});
+                            throw item.errorMsg;
+                        } else {
+                            throw item.errorMsg;
                         }
                     }
-                })
+                }).catch(errorMsg => {
+                    this.$message.error(errorMsg);
+                });
 
             },
             countDown(item) {
@@ -364,36 +395,38 @@
             },
             getData() {
                 var url = this.$rootUrl + "/api/user/userData";
-                var token = sessionStorage.getItem('accessToken');
                 const options = {
                     method: 'POST',
                     url: url,
-                    data: {
-                        token: token
-                    }
+                    data: {}
                 };
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
-                    if (item.data) {
-                        if (item.errorCode == 0) {
-                            this.userinfo = item.data.userinfo
-                            this.mailForm.old = item.data.userinfo.email
-                            this.phoneForm.old = item.data.userinfo.phone
-                            this.$router.push({path: '/user', query: {phone: this.phoneForm.old}});
-                            if (this.userinfo.avatar == "//") {
-                                this.avatar = "//image-res.mzres.com/image/uc/80f8d55d49464e3e90d72f6679cbf970z?t=946656000000"
-                            }
-                            else {
-                                this.avatar = this.userinfo.avatar
-                            }
+                if (item.data) {
+                    if (item.errorCode == 0) {
+                        this.userinfo = item.data.userinfo
+                        this.mailForm.old = item.data.userinfo.email
+                        this.phoneForm.old = item.data.userinfo.phone
+                        this.$router.push({path: '/user', query: {phone: this.phoneForm.old}});
+                        if (this.userinfo.avatar == "//") {
+                            this.avatar = "//image-res.mzres.com/image/uc/80f8d55d49464e3e90d72f6679cbf970z?t=946656000000"
                         }
-
+                        else {
+                            this.avatar = this.userinfo.avatar
+                        }
+                    } else if (item.errorCode == 403) {
+                        sessionStorage.setItem('pageHistory', this.$route.fullPath);
+                        this.$router.push({path: "/login"});
+                        throw item.errorMsg;
+                    } else {
+                        throw item.errorMsg;
                     }
-                })
+                }
+            }).catch(errorMsg => {
+                    this.$message.error(errorMsg);
+            });
             }
-
         },
-
         computed: {
             filterMail() {
                 if (this.mailForm.old === undefined) {
@@ -412,7 +445,8 @@
         }
     }
 </script>
-<style>
+<style lang="less">
+    .accountManage {
 
     .pageContain_section {
         margin-top: 20px;
@@ -427,6 +461,8 @@
     .section_main img {
         float: left;
         margin-left: 10px;
+        width: 100px;
+        height: 100px;
     }
 
     .editPortrait {
@@ -503,7 +539,7 @@
     }
 
     .safety_right:not(:nth-child(2)) {
-        top: -60px;
+        top: -50px;
     }
 
     .safety_div {
@@ -550,6 +586,8 @@
     }
 
     .AMbutton {
-        width: 20% !important;
+        /*width: 50px !important;*/
+    }
+
     }
 </style>

@@ -19,7 +19,9 @@
 <script>
 export default {
   props:{
-    item:[]
+    item:{
+      type:Array
+    }
   },
   methods:{
     goRouter(that) {

@@ -35,6 +35,11 @@ export default new Router({
           component: resolve => require(['../components/page/UserManage.vue'], resolve),
           meta: { title: '用户管理' }
         },
+        {
+          path: '/postmanage',
+          component: resolve => require(['../components/page/PostManage.vue'], resolve),
+          meta: { title: '社区管理' }
+        },
       ]
     },
     {

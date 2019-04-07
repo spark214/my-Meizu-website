@@ -1,6 +1,5 @@
 <template>
     <div class="container ">
-
         <v-header></v-header>
 
         <div class="clearfix pageContain">
@@ -14,26 +13,31 @@
                         <span>￥{{form.price.toFixed(2)}}</span>
                     </div>
                     <div class="right_selecct">
-                        <dl v-if="common.version!==undefined">
+                        <dl v-if="common.version !== undefined">
                             <dt class="right_selecct_rom_lab">版&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;本：</dt>
                             <dd v-for="item in common.version" class="right_selecct_rom_lab">
-                                <el-button size="small" @click="goProduct(item.id)"
-                                           :class="{selected:common.name==item.type}">
+                                <el-button size="small" @click="goProduct(item.id)" v-if="item.type"
+                                           :class="{selected:common.name == item.type}">
                                     {{item.type}}
+                                </el-button>
+                                <el-button size="small" @click="goProduct(item.id)" v-else
+                                           :class="{selected:common.name == item.type}">
+                                    {{item}}
                                 </el-button>
                             </dd>
                         </dl>
                         <dl>
                             <dt class="right_selecct_rom_lab">网络类型：</dt>
-                            <dd v-for="item in common.nettype" class="right_selecct_rom_lab" @click="form.nettype=item">
-                                <el-button :class="{selected:form.nettype==item}">{{item}}</el-button>
+                            <dd v-for="item in common.nettype" class="right_selecct_rom_lab"
+                                @click="form.nettype = item">
+                                <el-button :class="{selected:form.nettype == item}">{{item}}</el-button>
                             </dd>
                         </dl>
                         <dl>
                             <dt class="right_selecct_item_lab">颜色分类：</dt>
                             <dd v-for="(item,index) in filterColor" class="right_selecct_item right_selecct_item_lab">
-                                <a @click="changeColor(item.name,index);form.imgUrl=item.img"
-                                   :class="{selected:form.color==item.name}">
+                                <a @click="changeColor(item.name,index);form.imgUrl = item.img"
+                                   :class="{selected:form.color == item.name}">
                                     <img v-lazy="item.img" width="32px" :key="item.img"><span>{{item.name}}</span>
                                 </a>
                             </dd>
@@ -41,8 +45,8 @@
                         <dl>
                             <dt class="right_selecct_rom_lab">内存容量：</dt>
                             <dd v-for="(item,index) in common.rom" class=" right_selecct_rom_lab"
-                                @click="form.rom=item.size;form.price=item.price">
-                                <el-button :class="{selected:form.rom==item.size}">{{item.size}}</el-button>
+                                @click="form.rom = item.size;form.price = item.price">
+                                <el-button :class="{selected:form.rom == item.size}">{{item.size}}</el-button>
                             </dd>
                         </dl>
                     </div>
@@ -51,8 +55,7 @@
                         <dl>
                             <dt class="right_selecct_item_lab">数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：</dt>
                             <dd class="right_selecct_item_lab">
-                                <el-input-number v-model="form.buyCount" :min="1" :max="10" size="mini"
-                                                 controls-position="right"></el-input-number>
+                                <el-input-number v-model="form.buyCount" :min="1" :max="10" size="mini"></el-input-number>
                             </dd>
                         </dl>
 
@@ -68,19 +71,19 @@
                 </div>
             </div>
 
-            <v-detail></v-detail>
+            <v-detail :detailData="detailData"></v-detail>
 
             <v-footer></v-footer>
 
         </div>
         <v-hover :name="common.name" :nettype="form.nettype" :buyCount="form.buyCount"
                  :price="form.price"
-                 :rom="form.rom" :colorName="form.color"></v-hover>
+                 :rom="form.rom" :colorName="form.color" @buyNow="buyNow"></v-hover>
         <el-dialog
                 :visible.sync="centerDialogVisible"
                 width="30%"
                 @open="setTimeClose">
-            <div class="cartDialog" v-if="form.color!=''">
+            <div class="cartDialog" v-if="form.color != ''">
                 <i class="el-icon-circle-check-outline"></i>
                 <span>已成功加入购物车</span>
                 <p @click="goRouter('mallcart')" style="cursor: pointer">去购物车结算 ></p>
@@ -114,7 +117,8 @@
                 },
                 sumPrice: 0,
                 selectColor: 0,
-                centerDialogVisible: false
+                centerDialogVisible: false,
+                detailData:[]
 
             }
         },
@@ -123,7 +127,9 @@
         },
         methods: {
             buyNow(){
-                if (this.form.color != "") {
+                const expireTime = sessionStorage.getItem('expireTime');
+                const nowTime = new Date().getTime();
+                if(expireTime && nowTime < expireTime){
                     let buyForm = {
                         "proId": this.$route.query.proId,
                         "imgUrl": this.form.imgUrl,
@@ -132,44 +138,9 @@
                         "total": this.form.price * this.form.buyCount,
                         "number": this.form.buyCount
                     }
-                    var token = sessionStorage.getItem('accessToken');
                     var url = this.$rootUrl + "/api/order/buyNow";
                     const options = {
                         method: 'POST',
-                        headers: {'token': token},
-                        url: url,
-                        data: buyForm
-                    };
-                    this.$axios(options).then((res) => {
-                        let item = res.data.data;
-                    if (item.data) {
-                        if (item.errorCode == 0) {
-                            sessionStorage.setItem('orderId', item.data.orderId);
-                            sessionStorage.setItem('address', JSON.stringify(item.data.address));
-                            sessionStorage.setItem('orderProduct', JSON.stringify(item.data.orderProduct));
-                            this.$router.push({path: "/mallCheck", query: {type: 1}})
-                        }
-                    }
-                })
-                }
-                else {
-                    this.centerDialogVisible = true
-                }
-            },
-            addCart() {
-                if (this.form.color != "") {
-                    let buyForm = {
-                        "proId": this.$route.query.proId,
-                        "imgUrl": this.form.imgUrl,
-                        "title": this.common.name + " " + this.form.nettype + " " + this.form.color + " " + this.form.rom,
-                        "price": this.form.price,
-                        "number": this.form.buyCount
-                    }
-                    var token = sessionStorage.getItem('accessToken');
-                    var url = this.$rootUrl + "/api/carts/addCart";
-                    const options = {
-                        method: 'POST',
-                        headers: {'token': token},
                         url: url,
                         data: buyForm
                     };
@@ -177,15 +148,55 @@
                         let item = res.data.data;
                         if (item.data) {
                             if (item.errorCode == 0) {
-                                this.centerDialogVisible = true;
-                                bus.$emit("cart", 1);
+                                this.$store.commit("ORDER",{
+                                    id:item.data.orderId,
+                                    address:item.data.address,
+                                    product:item.data.orderProduct
+                                });
+                                this.$router.push({path: "/mallCheck", query: {type: 1}})
+                            }else{
+                                throw item.errorMsg;
                             }
                         }
-                    });
+                    }).catch(errorMsg => {
+                        this.$message.error(errorMsg);
+                    })
                 }
                 else {
-                    this.centerDialogVisible = true
+                    sessionStorage.setItem('pageHistory',this.$route.fullPath);
+                    this.$router.push({path: "/login"});
                 }
+            },
+            addCart() {
+                let buyForm = {
+                    "proId": this.$route.query.proId,
+                    "imgUrl": this.form.imgUrl,
+                    "title": this.common.name + " " + this.form.nettype + " " + this.form.color + " " + this.form.rom,
+                    "price": this.form.price,
+                    "number": this.form.buyCount
+                }
+                var url = this.$rootUrl + "/api/carts/addCart";
+                const options = {
+                    method: 'POST',
+                    url: url,
+                    data: buyForm
+                };
+                this.$axios(options).then((res) => {
+                    let item = res.data.data;
+                    if (item.data) {
+                        if (item.errorCode == 0) {
+                            this.centerDialogVisible = true;
+                            if (item.cookie) {
+                                document.cookie = 'cart=' + item.cookie;
+                            }
+                            bus.$emit("cart", 1);
+                        }else{
+                            throw item.errorMsg;
+                        }
+                    }
+                }).catch(errorMsg => {
+                    this.$message.error(errorMsg);
+                });
 
             },
             changeColor(name, index) {
@@ -203,50 +214,60 @@
                     this.$router.push({path: "/mallProductOther", query: {proId: id}})
             },
             getData() {
-                var proId = this.$route.query.proId
+                var proId = this.$route.query.proId;
                 var url = this.$rootUrl + "/api/product/productDetail";
 
                 const options = {
                     method: 'POST',
                     url: url,
                     data: {
-                        proId:proId
+                        proId: proId
                     }
                 };
 
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
-                    if (item.data) {
+                    if (item.errorCode == 0 && item.data.itemDetail.specificationJson) {
                         this.common = JSON.parse(item.data.itemDetail.specificationJson);
                         this.form.rom = this.common.rom[0].size;
                         this.form.price = this.common.rom[0].price;
                         this.form.nettype = this.common.nettype[0];
+                        this.detailData = item.data.itemDetail.detailImg.replace(/data-original/g,"src");
 
+                    } else if (item.errorCode != 0) {
+                        throw item.errorMsg;
+                    } else if (!item.data.itemDetail.specificationJson) {
+                        throw '产品信息加载错误';
+                        this.$router.go(-1);
                     }
-                })
+                }).catch(errorMsg => {
+                    this.$message.error(errorMsg);
+                });
             }
-
-
         },
 
         computed: {
             filterColor() {
                 let color = []
                 const item = this.common.color;
-                for (let i = 0; i < item.length; i++) {
-                    let index = item[i].lastIndexOf(":")
-                    color.push({name: item[i].substr(index + 1), img: item[i].slice(0, index)})
+                if (item) {
+                    for (let i = 0; i < item.length; i++) {
+                        let index = item[i].lastIndexOf(":")
+                        color.push({name: item[i].substr(index + 1), img: item[i].slice(0, index)})
+                    }
+                    this.form.color = color[0].name;
+                    this.form.imgUrl = color[0].img;
                 }
-                return color
+                return color;
             }
-            ,
         },
         created() {
             this.getData();
+            window.scroll(0, 0);
         },
         watch: {
             '$route'(to, from) {
-                this.getData()
+                this.getData();
             }
         }
 
@@ -438,6 +459,16 @@
     }
 
     .cartDialog {
-        color: #00a7ea;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 14px;
+    }
+    .cartDialog p {
+        margin-top: 10px;
+        margin-left: 18px;
+        color: #31a5e7;
+        cursor: pointer;
     }
 </style>

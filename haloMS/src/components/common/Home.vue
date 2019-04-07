@@ -33,7 +33,7 @@
 <style>
   .content-box {
     position: absolute;
-    left: 250px;
+    left: 200px;
     right: 0;
     top: 70px;
     bottom: 0;
@@ -45,7 +45,7 @@
 
   .content {
     width: auto;
-    padding: 40px;
+    padding: 20px;
   }
   .content-collapse{
     left: 65px;

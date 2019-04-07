@@ -11,7 +11,7 @@
         <el-form-item prop="pwd">
           <el-input type="password" v-model="loginForm.pwd" placeholder="密码" id="password"></el-input>
         </el-form-item>
-        <el-button type="primary" size="medium" @click="next()">提交</el-button>
+        <el-button type="primary" @click="next()" style="height:36px">提交</el-button>
       </el-form>
 
     </div>
@@ -30,9 +30,13 @@ export default {
       else callback()
     };
     var validatePassword = (rule, value, callback) => {
-      var reg = /^(?!^\\d+$)(?!^[a-zA-Z]+$)(?!^[_#@]+$).{8,}/;
-      if (reg.exec(value) != null) callback();
-      else callback(new Error("密码格式不准确"));
+      var reg = /^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?![,\.#%'\+\*\-:;^_`]+$)[,\.#%'\+\*\-:;^_`0-9A-Za-z]{8,16}$/;
+      if (reg.test(value)){
+        callback();
+      }
+      else {
+        callback(new Error("密码格式不准确"));
+      }
     };
     return {
       loginForm: {
@@ -57,19 +61,23 @@ export default {
     goRouter(that) {
       this.$router.push({path: "/" + that});
     },
+    check(){
+      const reg = /^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?![,\.#%'\+\*\-:;^_`]+$)[,\.#%'\+\*\-:;^_`0-9A-Za-z]{8,20}$/;
+      return reg.test(this.loginForm.pwd);
+    },
     next() {
-      this.loginForm.phone = this.$route.query.phone
-      var url = this.$rootUrl + "/api/user/registerByPhone";
-      const option = {
-        method: 'POST',
-        url: url,
-        data: this.loginForm
-      };
-      this.$axios(options).then((res) => {
-        let item = res.data.data;
+        this.loginForm.phone = this.$route.query.phone;
+        var url = this.$rootUrl + "/api/user/registerByPhone";
+        const option = {
+          method: 'POST',
+          url: url,
+          data: this.loginForm
+        };
+        this.$axios(option).then((res) => {
+          let item = res.data.data;
         if (item.data) {
           if (item.errorCode == 0) {
-            sessionStorage.setItem('accessToken',item.data.access_token)
+            sessionStorage.setItem('accessToken', item.data.access_token)
             this.$router.go(-3);
           }
           else {
@@ -77,11 +85,10 @@ export default {
           }
         }
       })
-
     }
   },
   created(){
-    this.loginForm.phone = this.$route.query.phone
+    this.loginForm.phone = this.$route.query.phone;
   }
 }
 </script>

@@ -1,13 +1,13 @@
 <template>
   <div class="goodsmanage">
-    <div class="crumbs">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item>
-          <i class="el-icon-goods"></i>
-          商品管理
-        </el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
+    <!--<div class="crumbs">-->
+      <!--<el-breadcrumb separator="/">-->
+        <!--<el-breadcrumb-item>-->
+          <!--<i class="el-icon-goods"></i>-->
+          <!--商品管理-->
+        <!--</el-breadcrumb-item>-->
+      <!--</el-breadcrumb>-->
+    <!--</div>-->
     <div class="container">
       <div class="order_handleBox">
         <el-select v-model="select_cate" placeholder="筛选种类" class="handle-select mr10">
@@ -20,41 +20,15 @@
       </div>
       <el-table :data="dataTable" ref="multipleTable" @selection-change="handleSelectionChange" style="width: 100%"
                 class="elTable">
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-form label-position="left" inline class="order_form">
-              <el-form-item label="商品ID">
-                <span>&nbsp;&nbsp;&nbsp;&nbsp;{{props.row.id}}</span>
-              </el-form-item>
-              <el-form-item label="商品名称">
-                <span>{{props.row.name}}</span>
-              </el-form-item>
-              <el-form-item label="商品价格">
-                <span>{{props.row.price}}</span>
-              </el-form-item>
-              <el-form-item label="库存量">
-                <span>&nbsp;&nbsp;&nbsp;&nbsp;{{props.row.stock}}</span>
-              </el-form-item>
-              <el-form-item label="商品类别">
-                <span>{{props.row.typeName}}</span>
-              </el-form-item>
-              <el-form-item label="创建时间">
-                <span>{{GMTToStrCreate}}</span>
-              </el-form-item>
-              <el-form-item label="最后修改">
-                <span>{{GMTToStrUpdate}}</span>
-              </el-form-item>
-            </el-form>
-          </template>
-        </el-table-column>
-        <el-table-column type="selection" width="40"></el-table-column>
         <el-table-column label="商品ID" prop="id"></el-table-column>
         <el-table-column label="商品名称" prop="name"></el-table-column>
         <el-table-column label="商品价格" prop="price"></el-table-column>
+        <el-table-column label="库存量" prop="stock"></el-table-column>
         <el-table-column label="商品类别" prop="typeName"></el-table-column>
-        <el-table-column label="操作" width="200">
+        <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="small" @click="handleEdit(scope.$index,scope.row)">编辑</el-button>
+            <el-button size="small" @click="handleDetail(scope.$index,scope.row)">查看</el-button>
+            <el-button size="small" type="primary" @click="handleEdit(scope.$index,scope.row)">编辑</el-button>
             <el-button size="small" type="danger" @click="handleDel(scope.$index,scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -90,11 +64,27 @@
                 <el-button type="primary" @click="saveEdit">确 定</el-button>
             </span>
     </el-dialog>
+
+    <el-dialog :visible.sync="detailDialogVisible" width="740px" title="商品详情">
+      <div class="detailDialog-header">
+        <p><label>商品编号：</label>{{productDetail.id}}</p>
+        <p><label>商品类别：</label>{{productDetail.typeName}}</p>
+        <p><label>商品名称：</label>{{productDetail.name}}</p>
+        <p><label>商品价格：</label>{{productDetail.price}}</p>
+        <p><label>商品库存量：</label>{{productDetail.stock}}</p>
+        <p><label>创建时间：</label>{{productDetail.createTime}}</p>
+        <p><label>最近更新时间：</label>{{productDetail.updateTime}}</p>
+      </div>
+      <div class="detailDialog-description">
+        <p>产品描述: </p>
+        <div v-html="detailDesc" class="detailDialog-description-div"></div>
+      </div>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-  import qs from 'qs';
   export default {
     data() {
       return {
@@ -113,7 +103,10 @@
         idx: -1,
         multipleSelection: [],
         del_list: [],
-        pages: 0
+        pages: 0,
+        productDetail:{},
+        detailDesc:'',
+        detailDialogVisible:false
       }
     },
     methods: {
@@ -206,8 +199,12 @@
       handleDel(index, row) {
         this.idx = index;
         this.delVisible = true;
-      }
-      ,
+      },
+      handleDetail(index,row){
+        this.productDetail = this.dataTable[index];
+        this.detailDesc = this.productDetail.description.replace(/data-original/g,"src");
+        this.detailDialogVisible = true;
+      },
       deleteRow() {
         var id=this.dataTable[this.idx].id
         var url = this.$rootUrl + "/api/ms/delProduct";
@@ -248,8 +245,8 @@
       ,
     },
     created() {
-      this.getPages()
-      this.getData()
+      this.getPages();
+      this.getData();
     },
     computed:{
       GMTToStrCreate() {
@@ -261,7 +258,7 @@
             date.getHours() + ':' +
             date.getMinutes() + ':' +
             date.getSeconds()
-          return Str
+          return Str;
         }
       },
       GMTToStrUpdate() {
@@ -273,13 +270,14 @@
             date.getHours() + ':' +
             date.getMinutes() + ':' +
             date.getSeconds()
-          return Str
+          return Str;
         }
       }
     }
   }
 </script>
-<style>
+<style lang="less">
+  @import "common.less";
   .order_handleBox {
     margin-bottom: 20px;
   }
@@ -293,11 +291,6 @@
     display: inline-block;
   }
 
-  .elTable {
-    border: 0.5px solid #ddd;
-    border-radius: 5px;
-  }
-
   .order_form .el-form-item {
     margin-right: 0;
     margin-bottom: 0;
@@ -305,7 +298,7 @@
   }
 
   .container {
-    padding: 30px;
+    padding: 20px;
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -317,7 +310,47 @@
   }
 
   .el-button {
-    width: 80px !important;
+    width: 50px !important;
     height: 31px !important;
+    padding-left:10px ;
+    padding-right: 10px;
+  }
+
+  .detailDialog-header{
+    p{
+      padding: 10px 0;
+
+    &:first-child{
+      padding-top: 0;
+     }
+
+     p{
+       color: #666666;
+     }
+      label{
+        color: #999999;
+        display: inline-block;
+        width: 100px;
+      }
+    }
+  }
+  .detailDialog-description{
+    margin-top: 20px;
+    line-height: 0;
+  p{
+    color: #666666;
+  }
+
+  .detailDialog-description-div{
+    height: 500px;
+    overflow-y: auto;
+    margin-top: 20px;
+  }
+
+    img{
+      display: inline-block;
+      width: 700px!important;
+      text-align: center;
+    }
   }
 </style>

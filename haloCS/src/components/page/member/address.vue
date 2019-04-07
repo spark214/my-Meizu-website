@@ -22,16 +22,15 @@
           width="150"></el-table-column>
         <el-table-column
           prop="address"
-          width="450"></el-table-column>
+          width="500"></el-table-column>
         <el-table-column
           prop="phone"
           width="200"></el-table-column>
         <el-table-column
-          width="200">
+          width="150">
           <template slot-scope="scope">
             <span class="blue" @click="updateAddr(scope.$index, scope.row)">修改</span>
             <span style="color:#ccc;cursor: pointer" @click="delAddr(scope.$index, scope.row)">删除</span>
-            <span class="blue">设为默认</span>
           </template>
         </el-table-column>
       </el-table>
@@ -56,17 +55,22 @@
     },
     methods: {
       updateDate(msg){
-        if(msg==1){
-          this.getData()
+        if(msg == 1){
+          this.form = {id:"",name: "", phone: "", address: ""};
+          this.content = "新增收货地址";
+          this.getData();
+          this.$message({
+            message: '收货人信息更新成功',
+            type: 'success'
+          });
+          this.type = 1;
         }
       },
       delAddr(index, row){
         var id=this.addrDate[index].id
         var url = this.$rootUrl + "/api/user/delAddress";
-        var token = sessionStorage.getItem('accessToken');
         const options = {
           method: 'POST',
-          headers: {'token': token},
           url: url,
           data: {
             id:id
@@ -77,9 +81,17 @@
           if (item.data) {
             if (item.errorCode == 0) {
               this.getData();
+            }else if (item.errorCode == 403) {
+              sessionStorage.setItem('pageHistory', this.$route.fullPath);
+              this.$router.push({path: "/login"});
+              throw item.errorMsg;
+            } else {
+              throw item.errorMsg;
             }
           }
-        })
+        }).catch(errorMsg => {
+          this.$message.error(errorMsg);
+        });
       },
       updateAddr(index, row) {
         this.form = this.addrDate[index]
@@ -88,10 +100,8 @@
       },
       getData(){
         var url = this.$rootUrl + "/api/user/getAddress";
-        var token = sessionStorage.getItem('accessToken');
         const options = {
           method: 'GET',
-          headers: {'token': token},
           url: url,
           data: {}
         };
@@ -100,9 +110,17 @@
           if (item.data) {
             if (item.errorCode == 0) {
               this.addrDate = item.data.address;
+            }else if (item.errorCode == 403) {
+              sessionStorage.setItem('pageHistory', this.$route.fullPath);
+              this.$router.push({path: "/login"});
+              throw item.errorMsg;
+            } else {
+              throw item.errorMsg;
             }
           }
-        })
+        }).catch(errorMsg => {
+          this.$message.error(errorMsg);
+        });
       }
     },
     updated() {

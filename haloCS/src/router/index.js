@@ -8,7 +8,7 @@ export default new Router({
     routes: [
         {
             path: '/',
-            component: resolve => require(['../components/page/index.vue'], resolve),
+            component: resolve => require(['../components/page/Index/mall-index.vue'], resolve),
         },
         {
             path: '/haloCenter',

@@ -2,7 +2,7 @@
   <div>
     <div class="hoverbar clearfix" id="hoverbar" v-show="barShow">
       <div class="bar-button">
-        <a href="login.html"><span>现在购买</span></a>
+        <a @click="buyNow"><span>现在购买</span></a>
       </div>
       <div class="bar-desc">
         <span>{{name}}&nbsp;<span
@@ -40,9 +40,14 @@
       }
     },
     methods:{
+      buyNow(){
+        this.$emit('buyNow');
+      },
       handleScroll() {
-        var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-        var detailPosition = document.getElementById("contain_detail").offsetTop
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+        if(document.getElementById("contain_detail")){
+          var detailPosition = document.getElementById("contain_detail").offsetTop;
+        }
         if (scrollTop > detailPosition) {
           this.barShow = true;
         }
@@ -57,7 +62,6 @@
       }, 300)
       window.addEventListener('scroll', this.handleScroll)
       window.addEventListener('resize', this.handleScroll)
-
     }
   }
 </script>

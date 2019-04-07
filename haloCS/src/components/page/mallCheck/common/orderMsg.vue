@@ -10,7 +10,7 @@
       </tr>
       <tr v-for="item in products">
         <td width="500px">
-          <img :src="item.imgUrl" width="100" height="100" class="table_product_img">
+          <img :src="item.imgUrl" width="50" height="50" class="table_product_img">
           <div class="table_product_msg">
             <p>{{item.title}}</p>
           </div>
@@ -63,7 +63,7 @@
         }
       },
       getData() {
-          this.products = JSON.parse(sessionStorage.getItem('orderProduct'));
+          this.products = this.$store.state.orders.product;
       }
     },
     computed: {
@@ -80,7 +80,7 @@
     }
   }
 </script>
-<style>
+<style lang="less">
   .orderMsg_table {
     width: 96%;
     position: relative;
@@ -93,11 +93,21 @@
     justify-content: center;
     border: 0.5px solid #dcdcdc;
     color: #666666;
+
+    tr:first-child td{
+      padding-top: 15px;
+    }
+
+    td{
+      text-align: center;
+      position: relative;
+    }
   }
 
   .table_product_img {
     float: left;
     margin-left: 20px;
+    margin-top: 25px;
   }
 
   .table_product_msg {
@@ -107,7 +117,7 @@
     justify-content: center;
     align-items: self-start;
     flex-direction: column;
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .table_product_msg p {

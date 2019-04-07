@@ -5,7 +5,6 @@
 
     <div class="pageContain">
       <v-banner></v-banner>
-      <v-msc></v-msc>
 
       <v-section :img="phoneSec" title="手机"></v-section>
       <v-list :item="phoneItem"></v-list>

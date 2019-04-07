@@ -57,7 +57,7 @@ module.exports = {
     historyApiFallback: true,
     noInfo: true,
     overlay: true,
-    port:8888,
+    port:8686,
     // proxy:{
     //   '/proxy':{
     //     target:'http://115.159.53.208:8080',

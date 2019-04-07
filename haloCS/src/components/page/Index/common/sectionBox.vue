@@ -16,8 +16,12 @@
 <script>
   export default {
     props: {
-      img: [],
-      title: ""
+      img: {
+        type:Array
+      },
+      title: {
+        type:String
+      }
     },
     data() {
       return {}

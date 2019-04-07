@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <v-order v-if="order.length>0" :datas="order"></v-order>
-        <v-unfound v-if="order.length==0"></v-unfound>
+    <div v-loading="orderLoading" class="allOrder">
+        <v-order v-if="order.length > 0" :datas="order" ></v-order>
+        <v-unfound v-if="orderLoading == false && order.length == 0"></v-unfound>
     </div>
 </template>
 <script>
@@ -11,26 +11,35 @@
         data() {
             return {
                 order: [],
+                orderLoading:false
             }
         },
         methods: {
             getData(){
-                var token = sessionStorage.getItem('accessToken');
+               this.orderLoading = true;
                 var url = this.$rootUrl + "/api/order/myOrder";
                 const options = {
                     method: 'POST',
-                    headers: {'token': token},
                     url: url,
-                    data: {}
+                    data: {
+                        status:'all'
+                    }
                 };
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
-                    if (item.data) {
                         if (item.errorCode == 0) {
                             this.order = item.data.orderDetailList;
+                            this.orderLoading = false;
+                        } else if (item.errorCode == 403) {
+                            sessionStorage.setItem('pageHistory', this.$route.fullPath);
+                            this.$router.push({path: "/login"});
+                            throw item.errorMsg;
+                        } else {
+                            throw item.errorMsg;
                         }
-                    }
-                })
+                }).catch(errorMsg => {
+                    this.$message.error(errorMsg);
+                });
             }
         },
         components: {
@@ -41,6 +50,8 @@
         }
     }
 </script>
-<style>
-
+<style lang="less">
+.allOrder{
+    min-height: 300px;
+}
 </style>

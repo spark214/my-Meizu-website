@@ -2,7 +2,7 @@
   <div class="banner">
     <div class="carousel clearfix">
       <el-carousel height="560px" trigger="click" arrow="never">
-        <el-carousel-item v-for="(item,index) in banner" :key="item">
+        <el-carousel-item v-for="(item,index) in bannerList" :key="item">
           <div class="banner-content" :style="item" @click="banner(index)"></div>
         </el-carousel-item>
       </el-carousel>
@@ -17,7 +17,7 @@
           </li>
         </ul>
       </div>
-      <div class="side-detail" v-show="goodsStatus" @mouseenter="evtSideEnter(item.type)">
+      <div class="side-detail" v-show="goodsStatus" @mouseenter="evtSideEnter(item.type)" @mouseleave="evtSideLeave">
         <ul class="detail-item" v-for="goods in filterCurrGoods">
           <li class="datail-goods" v-for="item in goods">
             <a class="goods-link" @click="goProduct(item.proId)">
@@ -36,7 +36,7 @@
   export default {
     data() {
       return {
-        banner: [
+        bannerList: [
           {
             backgroundImage: "url(//img.tozlam.cn/mallIndex-halo-1240x500.jpg)",
             backgroundRepeat: "no-repeat",
@@ -160,12 +160,14 @@
     },
     computed: {
       filterCurrGoods: function () {
-        let filterGoods = [[], [], [], [], []]
-        this.currGoods.forEach(function (item, index) {
-          let goodsIndex = Math.floor(index / 6)
-          filterGoods[goodsIndex].push(item)
-        })
-        return filterGoods
+        let filterGoods = [[], [], [], [], []];
+        if(this.currGoods){
+          this.currGoods.forEach(function (item, index) {
+            let goodsIndex = Math.floor(index / 6);
+            filterGoods[goodsIndex].push(item);
+          })
+        }
+        return filterGoods;
       }
     }
   }
@@ -177,9 +179,9 @@
   }
 
   .banner {
+    margin-bottom: 40px;
     position: relative;
     top: 30px
-
   }
 
   .banner-content {
@@ -197,7 +199,7 @@
     position: absolute;
     left: 40px;
     top: 56px;
-    z-index: 1000;
+    z-index: 10;
     color: #515151;
   }
 
@@ -223,9 +225,9 @@
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
-    left: 235px;
+    left: 237px;
     top: 0;
-    z-index: 1000;
+    z-index: 10;
     border: 1px solid #e0e0e0;
   }
 

@@ -10,9 +10,9 @@
         <tr class="table_product clearfix" align="center">
           <td width="498px">
             <div v-for="its in item.products" class="table_product_detail clearfix table_product_border">
-              <img :src="its.imgUrl" width="100" height="100" class="table_product_img">
+              <img :src="its.imgUrl" width="80" height="80" class="table_product_img">
               <div class="table_product_msg">
-                <p>{{its.title}}</p> ×<span>{{its.number}}</span>
+                <span>{{its.title}}</span> × <span>{{its.number}}</span>
               </div>
             </div>
           </td>
@@ -24,7 +24,7 @@
           </td>
           <td width="140px" :rowspan="item.products.length">
             <el-button v-if="item.status==0" type="danger">立即付款</el-button>
-            <p v-if="item.status!=3" style="cursor:pointer;">取消订单</p>
+            <p v-if="item.status!=3" style="cursor:pointer;margin: 10px 0;">取消订单</p>
             <p style="cursor: pointer" @click="goDetail(index)">查看详情</p>
           </td>
         </tr>
@@ -35,10 +35,12 @@
 <script>
   export default {
     props: {
-      datas: []
+      datas: [],
     },
     data() {
-      return {}
+      return {
+
+      }
     },
     methods: {
       goDetail(index){
@@ -84,7 +86,10 @@
             date.getSeconds()
           return Str
         }
-      },
+      }
+    },
+    created(){
+
     }
   }
 </script>
@@ -109,7 +114,8 @@
     color: #666;
     position: absolute;
     z-index: 100;
-    border-bottom: 0.5px solid #ccc;
+    border: 0.5px solid #ccc;
+    border-left: none;
   }
 
   .table_header_num {
@@ -135,7 +141,11 @@
     border-bottom: 0.5px solid #efefef;
   }
 
+  .table_product_img{
+    padding-top: 10px;
+  }
+
   .table_product_msg {
-    padding-bottom: 5px;
+    padding-bottom: 10px;
   }
 </style>

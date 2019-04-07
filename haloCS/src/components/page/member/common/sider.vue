@@ -10,15 +10,16 @@
       <div class="sider_user sider_item">
         <div class="sider_title"><img src="../../../../../static/img/account.png"></img><span> 个人中心</span></div>
         <ul class="sider_list">
+          <li @click="selectItem(6)"><router-link :to="item[6].route" >{{item[6].name}}</router-link></li>
           <li @click="selectItem(1)"><router-link :to="item[1].route" exact>{{item[1].name}}</router-link></li>
-          <li @click="selectItem(2)"><router-link :to="item[2].route" >{{item[2].name}}</router-link></li>
+          <!--<li @click="selectItem(2)"><router-link :to="item[2].route" >{{item[2].name}}</router-link></li>-->
         </ul>
       </div>
       <div class="sider_ser sider_item">
         <div class="sider_title"><i class="el-icon-news" style="font-size: 18px"></i> <span>Halo社区</span></div>
         <ul class="sider_list">
           <li  @click="selectItem(3)"><router-link :to="item[3].route" >{{item[3].name}}</router-link></li>
-          <li @click="selectItem(4)"><router-link :to="item[4].route" >{{item[4].name}}</router-link></li>
+          <!--<li @click="selectItem(4)"><router-link :to="item[4].route" >{{item[4].name}}</router-link></li>-->
           <li  @click="selectItem(5)"><router-link :to="item[5].route" >{{item[5].name}}</router-link></li>
         </ul>
       </div>
@@ -38,6 +39,7 @@
           {name:'我的帖子',route:'myPost'},
           {name:'意外保',route:'insurance'},
           {name:'我的消息',route:'myMessage'},
+          {name:'账号管理',route:'user'},
         ]
       }
     },

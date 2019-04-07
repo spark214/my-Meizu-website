@@ -16,7 +16,7 @@
       <span class="orderDetail_table_title ">订单号：{{orderDetail.id}}</span>
       <span class="orderDetail_table_title " style="margin-left: 15px"
             v-if="status!=5&&status!=0">支付方式：{{payType}}</span>
-      <el-table :data="orderDetail.products" clss="cart_table" id="cart_table" ref="multipleTable" border>
+      <el-table :data="orderDetail.products" class="cart_table" id="cart_table" ref="multipleTable" border>
 
         <el-table-column width="510" label="商品" class="table_product clearfix" align="center">
           <template scope="scope">
@@ -43,8 +43,6 @@
           </template>
         </el-table-column>
         </el-table-column>
-
-
       </el-table>
     </div>
     <div class="payment_computed clearfix">
@@ -83,10 +81,8 @@
       getData() {
         var id = this.$route.query.id
         var url = this.$rootUrl + "/api/order/orderDetail";
-        var token = sessionStorage.getItem('accessToken');
         const options = {
           method: 'POST',
-          headers: {'token': token},
           url: url,
           data: {
             id:id
@@ -98,8 +94,16 @@
           if (item.errorCode == 0) {
             this.orderDetail = item.data.orderDetail;
             this.status = item.data.status;
+          }else if (item.errorCode == 403) {
+            sessionStorage.setItem('pageHistory', this.$route.fullPath);
+            this.$router.push({path: "/login"});
+            throw item.errorMsg;
+          } else {
+            throw item.errorMsg;
           }
-        })
+        }).catch(errorMsg => {
+          this.$message.error(errorMsg);
+      });
       }
     },
     computed: {

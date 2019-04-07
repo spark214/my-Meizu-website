@@ -8,34 +8,21 @@
     </div>
 
     <section class="detail_section" v-show="sectionIndex==1">
-      <p v-html="common">
+      <p v-html="detailData">
         {{common}}
       </p>
     </section>
 
-    <section class="question_section" v-show="sectionIndex==2">
-      <div class="question-list">
-        <h4>热门回答</h4>
-        <dl v-for="(item,index) in questions">
-          <dt v-text="item.title"></dt>
-          <dd v-text="item.answer"></dd>
-        </dl>
-      </div>
-    </section>
 
   </div>
 </template>
 <script>
   export default {
-
+    props:{
+      detailData:[],
+    },
     data() {
       return {
-        common:[],
-        questions: [
-          {title: "魅族15 系列解锁方式是怎样的？", answer: "支持指纹识别解锁以及面部识别解锁；指纹解锁键位于手机屏幕下方。"},
-          {title: "魅族15 系列是否保留 mBack 实体按键？形状？", answer: "非物理按键，可识别轻触及按压，操作逻辑和 mBack 相同。7mm 直径圆圈。"},
-          {title: "魅族15 系列采用的系统是什么？", answer: "搭载全新的Flyme7系统。"}
-        ],
         sectionIndex: 1,
 
       }
@@ -57,13 +44,13 @@
           let item = res.data.data;
           if (item.data) {
             var src = item.data.itemDetail.detailImg;
-            this.common=src.replace(/data-original/g,"src");
+            this.detailData=src.replace(/data-original/g,"src");
           }
         })
       }
     },
     created() {
-      this.getData()
+//      this.getData()
     },
     watch: {
       '$route'(to, from) {

@@ -1,13 +1,13 @@
 <template>
   <div class="ordermanage">
-    <div class="crumbs">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item>
-          <i class="el-icon-tickets"></i>
-          订单管理
-        </el-breadcrumb-item>
-      </el-breadcrumb>
-    </div>
+    <!--<div class="crumbs">-->
+      <!--<el-breadcrumb separator="/">-->
+        <!--<el-breadcrumb-item>-->
+          <!--<i class="el-icon-tickets"></i>-->
+          <!--订单管理-->
+        <!--</el-breadcrumb-item>-->
+      <!--</el-breadcrumb>-->
+    <!--</div>-->
     <div class="container">
       <div class="order_handleBox">
         <el-select v-model="select_cate" placeholder="筛选种类" class="handle-select mr10" @change="selectChange">
@@ -20,49 +20,13 @@
         </el-select>
       </div>
       <el-table :data="dataTable"  ref="multipleTable"  @selection-change="handleSelectionChange" style="width: 100%" class="elTable">
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-form label-position="left" inline class="order_form">
-              <el-form-item label="订单ID">
-                <span>{{props.row.id}}</span>
-              </el-form-item>
-              <el-form-item label="商品ID">
-                <p v-for="item in props.row.products">{{item.proId}}</p>
-              </el-form-item>
-              <el-form-item label="商品名称">
-                <p v-for="item in props.row.products">{{item.title}}</p>
-              </el-form-item>
-              <el-form-item label="用户ID">
-                <span>{{props.row.uid}}</span>
-              </el-form-item>
-              <el-form-item label="商品单价">
-                <p v-for="item in props.row.products">{{item.price}}</p>
-              </el-form-item>
-              <el-form-item label="购买数量">
-                <p v-for="item in props.row.products">{{item.number}}</p>
-              </el-form-item>
-              <el-form-item label="商品总价">
-                <p v-for="item in props.row.products">{{item.total}}</p>
-              </el-form-item>
-                <el-form-item label="订单金额">
-                <span>{{props.row.price}}</span>
-              </el-form-item>
-              <el-form-item label="订单状态">
-              <span>{{orderStatus}}</span>
-            </el-form-item>
-              <el-form-item label="创建时间">
-              <span>{{GMTToStr}}</span>
-            </el-form-item>
-            </el-form>
-          </template>
-        </el-table-column>
-        <el-table-column type="selection" width="40"></el-table-column>
         <el-table-column label="订单ID" prop="id" ></el-table-column>
         <el-table-column label="用户ID" prop="uid" ></el-table-column>
-        <el-table-column label="订单金额" prop="price"  ></el-table-column>
-        <el-table-column label="订单状态" prop="status"></el-table-column>
+        <el-table-column label="订单状态" prop="statusName"></el-table-column>
+        <el-table-column label="最后修改时间" prop="lastUpdateTime"></el-table-column>
         <el-table-column label="操作" width="200">
           <template slot-scope="scope">
+            <el-button size="small" @click="handleDetail(scope.$index,scope.row)">查看详情</el-button>
             <el-button size="small" @click="handleEdit(scope.$index,scope.row)">编辑</el-button>
           </template>
         </el-table-column>
@@ -84,13 +48,59 @@
     <el-dialog title="编辑" :visible.sync="editVisible" width="40%">
       <el-form ref="form" label-width="40px" :model="form">
         <el-form-item label="状态">
-          <el-input v-model="form.status"></el-input>
+          <el-select v-model="form.status" class="handle-select mr10">
+            <el-option key="1" label="未付款" value="0"></el-option>
+            <el-option key="2" label="已付款" value="1"></el-option>
+            <el-option key="3" label="未发货" value="2"></el-option>
+            <el-option key="4" label="已发货" value="3"></el-option>
+            <el-option key="5" label="交易成功" value="4"></el-option>
+            <el-option key="6" label="交易关闭" value="5"></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible=false">取 消</el-button>
                 <el-button type="primary" @click="saveEdit">确 定</el-button>
             </span>
+    </el-dialog>
+
+    <el-dialog :visible.sync="orderDetailDialog" width="780px">
+      <div>
+        <p>订单号：{{orderDetail.id}}</p>
+        <p>订单状态：{{orderDetail.statusName}}</p>
+        <p>支付方式：{{orderDetail.payType}}</p>
+        <p>最后修改时间：{{orderDetail.lastUpdateTime}}</p>
+      </div>
+      <div>
+        <el-table :data="orderDetail.products" class="cart_table" ref="multipleTable" border>
+          <el-table-column max-width="510" label="商品" class="table_product clearfix" align="center">
+            <template scope="scope">
+              <img :src="scope.row.imgUrl" width="100" height="100" class="table_product_img">
+              <div class="table_product_msg">
+                <p>{{scope.row.title}}</p>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column max-width="169" label="单价(元)" align="center">
+            <template scope="scope">
+              <span class="table_price">￥{{scope.row.price}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column max-width="150" label="数量" align="center">
+            <template scope="scope">
+              <span>{{scope.row.number}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column max-width="170" label="小计(元)" prop="total" align="center">
+            <template scope="scope">
+              <span style="color: rgb(224, 43, 65)" class="table_price">￥{{scope.row.total}}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div>
+          <p>总金额:{{totalPrices}}</p>
+        </div>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -111,7 +121,9 @@
         idx: -1,
         multipleSelection:[],
         del_list:[],
-        pages:0
+        pages:0,
+        orderDetailDialog:false,
+        orderDetail:{}
       }
     },
     methods: {
@@ -137,7 +149,6 @@
         })
       },
       getData(){
-
         var url = this.$rootUrl + "/api/ms/getOrder";
         const options = {
           method: 'POST',
@@ -150,7 +161,7 @@
         this.$axios(options).then((res) => {
           let item = res.data.data;
           if (item.errorCode == 0) {
-            this.dataTable=item.data.orders;
+            this.dataTable = item.data.orders;
           }
         })
       },
@@ -158,9 +169,13 @@
         this.idx = index;
         this.editVisible = true;
       },
+      handleDetail(index,row){
+        this.orderDetail = this.dataTable[index];
+        this.orderDetailDialog = true;
+      },
       saveEdit(index) {
         let up={
-          "id":this.dataTable[this.idx],
+          "id":this.idx,
           "status":this.form.status
         }
         var url = this.$rootUrl + "/api/ms/updateOrderStatus";
@@ -224,35 +239,20 @@
       this.getData();
     },
     computed: {
-      orderStatus(){
-        for(let i=0;i<this.dataTable.length;i++){
-          switch (this.dataTable[i].status){
-            case 0:return "未付款";break;
-            case 1:return "已付款";break;
-            case 2:return "未发货";break;
-            case 3:return "已发货";break;
-            case 4:return "交易成功";break;
-            case 5:return "交易关闭";break;
+      totalPrices() {
+        let alltotal = 0;
+        if(this.orderDetail.products){
+          for (let i = 0; i < this.orderDetail.products.length; i++) {
+            alltotal += this.orderDetail.products[i].total;
           }
         }
-
-      },
-      GMTToStr() {
-        for (let i = 0; i < this.dataTable.length; i++) {
-          let date = new Date(this.dataTable[i].gmtUpdated)
-          let Str = date.getFullYear() + '-' +
-            (date.getMonth() + 1) + '-' +
-            date.getDate() + ' ' +
-            date.getHours() + ':' +
-            date.getMinutes() + ':' +
-            date.getSeconds()
-          return Str
-        }
+        return alltotal.toFixed(2);
       }
     }
   }
 </script>
-<style>
+<style lang="less">
+  @import "common.less";
   .order_handleBox {
     margin-bottom: 20px;
   }
@@ -266,10 +266,6 @@
     display: inline-block;
   }
 
-  .elTable{
-    border: 0.5px solid #ddd;
-    border-radius: 5px;
-  }
   .order_form .el-form-item {
     margin-right: 0;
     margin-bottom: 0;
@@ -278,5 +274,21 @@
   .el-button{
     width: 80px !important;
     height: 31px !important;
+  }
+
+  .table_product_img {
+    float: left;
+    margin-left: 20px;
+    margin-top: 25px;
+  }
+
+  .table_product_msg {
+    float: left;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: self-start;
+    flex-direction: column;
+    font-size: 15px;
   }
 </style>

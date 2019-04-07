@@ -1,8 +1,8 @@
 <template>
   <div class="dashboard clear">
-    <div class="calenderCard clear">
-      <v-calender></v-calender>
-    </div>
+    <!--<div class="calenderCard clear">-->
+      <!--<v-calender></v-calender>-->
+    <!--</div>-->
     <div class="statusCard clear">
       <el-row :gutter="10" class="clear">
         <el-col :span="6">
@@ -47,26 +47,75 @@
         </el-col>
       </el-row>
     </div>
-    <div class="schartCard clear">
-      <v-schart ></v-schart>
-      <v-schart2></v-schart2>
+    <div style="width: 98%;height: 384px">
+      <highcharts :options="allocateChart" ></highcharts>
     </div>
 
   </div>
 </template>
 <script>
-  import vCalender from './calendar.vue';
-  import vSchart from './schart';
-  import vSchart2 from './schart2';
+  import Highcharts from 'highcharts';
+  import { genComponent } from 'vue-highcharts';
 
   export default {
    data(){
      return{
-     msg:{}
+     msg:{},
+       allocateChart: {
+         chart: {
+           type: 'column',
+           spacing: [60, 20, 50, 20],
+           width:'640'
+         },
+         title: {
+           text: ''
+         },
+         xAxis: {
+           crosshair: true
+         },
+         yAxis: {
+           min: 0,
+           title: {
+             text: ''
+           },
+           tickPositions: [0, 20, 40, 60, 80, 100],
+           allowDecimals: true
+         },
+         tooltip: {
+           // head + 每个 point + footer 拼接成完整的 table
+           headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+           pointFormat: '<tr><td style="color:{series.color};padding:0"> </td>' +
+           '<td style="padding:0"><b>{series.y}</b></td></tr>',
+           footerFormat: '</table>',
+           shared: false,
+           useHTML: true
+         },
+         plotOptions: {
+           column: {
+             showInLegend: false,
+             borderWidth: 0,
+             dataLabels: {
+               enabled: true,  //显示数量提示
+               color: '#000000',
+               formatter: function () {
+                 var a = this.y / this.total * 100;    //a为当前柱状图y轴值除以总数然后乘以100
+                 return a.toFixed(2) + "%" + "<br/>";  //返回百分比和个数
+               }
+             },
+
+           }
+         },
+         series: [{
+           data: [{color: "#96BFFF", y: 12}, {color: "#67E0E3", y: 32}, {color: "#FFDB5B", y: 24}, {
+             color: "#FF9E7F",
+             y: 30
+           }]
+         }]
+       }
      }
    },
     components: {
-      vCalender, vSchart2, vSchart
+      Highcharts: genComponent('Highcharts', Highcharts),
     },
     methods: {
       alertCard(that) {
@@ -100,6 +149,7 @@
     },
     created() {
       this.getData()
+
     }
   }
 </script>
@@ -114,20 +164,11 @@
     clear: both;
   }
 
-  .schartCard {
-    float: left;
-    margin-top: 10px;
-    width: 68%;
-    height: 20%;
-    background-color: #A4A7B0;
-    border-radius: 5px;
-    display: flex;
-    justify-content: space-around;
-  }
-
   .statusCard {
-    float: left;
-    width: 68%;
+    padding: 20px;
+    width: 600px;
+    height: 100px;
+    background-color: #fff;
   }
 
   .el-card {
@@ -139,6 +180,7 @@
     font-size: 32px;
     padding-top: 5px;
     float: left;
+    margin-right: 5px;
   }
 
   .el-card {
