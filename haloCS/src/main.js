@@ -8,12 +8,13 @@ import VueWechatTitle from 'vue-wechat-title';
 import Vuelazyload from 'vue-lazyload';
 import store from './store';
 import vuex from 'vuex'
-import VueSocketio from 'vue-socket.io'
-
+// import VueSocketio from 'vue-socket.io'
+//
 // Vue.use(new VueSocketio({
 //   debug: true,
-//   connection: 'http://123.207.121.122:8868'
+//   connection: 'ws://121.40.165.18:8800'
 // }));
+
 Vue.use(vuex)
 Vue.use(VueWechatTitle)
 Vue.use(ElementUI, { size: 'small' });

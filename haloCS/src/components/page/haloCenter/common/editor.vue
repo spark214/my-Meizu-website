@@ -1,6 +1,9 @@
 <template>
     <div>
-        <vue-ueditor-wrap v-model="msg" :config="myConfig"></vue-ueditor-wrap>
+        <vue-ueditor-wrap v-model="msg" :config="myConfig" @ready="editR"></vue-ueditor-wrap>
+        <div class="newPost-footer">
+            <el-button type="primary" @click="postMsg">发表帖子</el-button>
+        </div>
     </div>
 </template>
 <script>
@@ -33,9 +36,37 @@
                 }
             }
         },
+        methods:{
+            editR(ueditor){
+                console.log(ueditor);
+                ueditor.addListener('myImg',(link,title) => {
+                    var url = this.$rootUrl + "/api/forum/handleImg";
+                    const options = {
+                        method: 'POST',
+                        url: url,
+                        data: {
+                            path:title
+                        }
+                    };
+                    this.$axios(options).then((res) => {
+                        let item = res.data.data;
+                        if (item.errorCode == 0) {
+                            let t = title.toString();
+                            this.msg = this.msg.replace(t,item.data.imgUrl);
+                            console.log(this.msg);
+                        }
+                    })
+                });
+            },
+            postMsg(){
+                this.$emit('newPost',this.msg);
+            }
+        },
     }
 </script>
 <style lang="less">
     @import "../../../common.less";
-
+    .newPost-footer{
+        padding: 20px 60px;
+    }
 </style>

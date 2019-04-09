@@ -6,8 +6,8 @@
         <div class="sectionBoard-container">
             <div class="sectionBoard-header">热门版块</div>
             <div class="sectionBoard-body">
-                <div class="sectionBoard-item" v-for="item in sectionList" @click="goRouter('/centerSection')">
-                    {{item.name}}
+                <div class="sectionBoard-item" v-for="item in sectionList" @click="goRouter('/centerSection',item.id)">
+                    {{item.typeName}}
                 </div>
             </div>
         </div>
@@ -17,21 +17,30 @@
 export default{
     data(){
         return{
-            sectionList: [
-                {name: '综合讨论', url: ''},
-                {name: '综合讨论', url: ''},
-                {name: '综合讨论', url: ''},
-                {name: '综合讨论', url: ''},
-                {name: '综合讨论', url: ''},
-                {name: '综合讨论', url: ''},
-                {name: '综合讨论', url: ''},
-            ]
+            sectionList: []
         }
     },
     methods:{
-        goRouter(item){
-            this.$router.push({path: item, query: {}});
+        goRouter(item,id){
+            this.$router.push({path: item, query: {id:id}});
+        },
+        getData(){
+            var url = this.$rootUrl + "/api/forum/getType";
+            const options = {
+                method: 'GET',
+                url: url,
+                data: {}
+            };
+            this.$axios(options).then((res) => {
+                let item = res.data.data;
+                if (item.code == 0) {
+                    this.sectionList = item.data;
+                }
+            })
         }
+    },
+    created(){
+        this.getData();
     }
 }
 </script>

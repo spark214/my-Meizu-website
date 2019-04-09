@@ -13,7 +13,6 @@
                             <el-dropdown-item>默认排序</el-dropdown-item>
                             <el-dropdown-item>发帖时间</el-dropdown-item>
                             <el-dropdown-item>最新回复</el-dropdown-item>
-                            <el-dropdown-item>阅读数</el-dropdown-item>
                             <el-dropdown-item>热度</el-dropdown-item>
                         </el-dropdown-menu>
 
@@ -23,10 +22,9 @@
                     <div class="section-item" v-for="item in sectionList" @click="goRouter('/postDetail')">
                         <p class="section-item-title">{{item.title}}</p>
                         <div class="section-item-data">
-                            <span>{{item.author}}</span>
-                            <span>浏览：{{item.view}}</span>
-                            <span>回复：{{item.reply}}</span>
-                            <span>{{item.replyUser}} &nbsp;&nbsp;{{item.replyTime}}</span>
+                            <span>{{item.userName}}</span>
+                            <span>回复：{{item.backNumber}}</span>
+                            <span>{{item.lastBack}} &nbsp;&nbsp;{{item.lastTime}}</span>
                         </div>
                     </div>
                 </div>
@@ -51,73 +49,42 @@
         data(){
             return {
                 sectionName: '闲置交易',
-                sectionList: [
-                    {
-                        author: "halo user",
-                        title: "欢迎来到Halo社区闲置交易版块",
-                        view: 1100,
-                        reply: 320,
-                        replyUser: "halo",
-                        replyTime: "16分钟前"
-                    },
-                    {
-                        author: "halo user",
-                        title: "欢迎来到Halo社区闲置交易版块",
-                        view: 1100,
-                        reply: 320,
-                        replyUser: "halo",
-                        replyTime: "16分钟前"
-                    },
-                    {
-                        author: "halo user",
-                        title: "欢迎来到Halo社区闲置交易版块",
-                        view: 1100,
-                        reply: 320,
-                        replyUser: "halo",
-                        replyTime: "16分钟前"
-                    },
-                    {
-                        author: "halo user",
-                        title: "欢迎来到Halo社区闲置交易版块",
-                        view: 1100,
-                        reply: 320,
-                        replyUser: "halo",
-                        replyTime: "16分钟前"
-                    },
-                    {
-                        author: "halo user",
-                        title: "欢迎来到Halo社区闲置交易版块",
-                        view: 1100,
-                        reply: 320,
-                        replyUser: "halo",
-                        replyTime: "16分钟前"
-                    },
-                    {
-                        author: "halo user",
-                        title: "欢迎来到Halo社区闲置交易版块",
-                        view: 1100,
-                        reply: 320,
-                        replyUser: "halo",
-                        replyTime: "16分钟前"
-                    },
-                    {
-                        author: "halo user",
-                        title: "欢迎来到Halo社区闲置交易版块",
-                        view: 1100,
-                        reply: 320,
-                        replyUser: "halo",
-                        replyTime: "16分钟前"
-                    },
-                ]
+                sectionList: []
             }
         },
         methods: {
-            goRouter(item){
-                this.$router.push({path: item, query: {}});
+            goRouter(item,id){
+                this.$router.push({path: item, query: {topicId:id}});
+            },
+            getData(){
+                const typeId = this.$route.query.id;
+                const url = this.$rootUrl + "/api/forum/getTypePage";
+
+                const options = {
+                    method: 'POST',
+                    url: url,
+                    data: {
+                        id: typeId,
+                        pageSize:10,
+                        pageNum:1
+                    }
+                };
+
+                this.$axios(options).then((res) => {
+                    let item = res.data.data;
+                    if (item.code == 0) {
+                        this.sectionList = item.data.topics;
+                    }
+                })
             }
         },
-        created: {
-
+        watch: {
+            '$route'(to, from) {
+                this.getData();
+            }
+        },
+        created(){
+            this.getData();
         }
     }
 </script>

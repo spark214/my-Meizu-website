@@ -11,36 +11,35 @@
                         <div class="body-context-header-right">
                             <p class="title">{{post.title}}</p>
                             <div class="header-info clearfix">
-                                <p class="header-info-author">{{post.author}}</p>
+                                <p class="header-info-author">{{post.userName}}</p>
                                 <p class="header-info-right">
-                                    <span class="header-info-postTime">{{post.postTime}}</span>
-                                    <span class="header-info-view">{{post.view}}<i class="el-icon-view"></i></span>
-                                    <span class="header-info-replyNum">{{post.replyNum}}<i
-                                            class="el-icon-message"></i></span>
+                                    <span class="header-info-postTime">{{post.updateTime}}</span>
+                                    <!--<span class="header-info-view">{{post.view}}<i class="el-icon-view"></i></span>-->
+                                    <span class="header-info-replyNum"> <i class="el-icon-message"></i>回复: {{post.backNumber}}</span>
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <div class="postDetail-body-context-body" v-html="post.context">
+                    <div class="postDetail-body-context-body" v-html="post.content">
                     </div>
                     <div class="postDetail-body-context-footer">
                         <el-button type="primary">回复</el-button>
-                        <el-button class="body-reply-backBtn" @click="goRouter('/centerSection')" v-if="post.reply.length === 0">返回列表</el-button>
+                        <el-button class="body-reply-backBtn" @click="goRouter('/centerSection')" v-if="!post.backList || post.backList.length === 0">返回列表</el-button>
                     </div>
                 </div>
-                <div class="postDetail-body-reply clearfix" v-if="post.reply.length > 0">
+                <div class="postDetail-body-reply clearfix" v-if="post.backList && post.backList.length > 0">
                     <div class="postDetail-body-reply-header">
-                        <span style="font-size: 24px">{{post.reply.length}} </span>条回复
+                        <span style="font-size: 24px">{{post.backList.length}} </span>条回复
                     </div>
-                    <div class="postDetail-body-reply-item clearfix" v-for="(item,index) in post.reply">
+                    <div class="postDetail-body-reply-item clearfix" v-for="(item,index) in post.backList">
                         <div class="body-reply-left">
                             <img :src="item.avatar">
                         </div>
                         <div class="body-reply-right">
-                            <p class="body-reply-left-info"><span class="reply-left-info-userName">{{item.user}} </span><span
-                                    class="reply-left-info-time">{{item.replyTime}} </span><span
-                                    class="reply-left-info-position">{{index+1}}楼</span></p>
-                            <p class="body-reply-left-context" v-html="item.context"></p>
+                            <p class="body-reply-left-info"><span class="reply-left-info-userName">{{item.userName}} </span>
+                                <span class="reply-left-info-time">{{item.backTime}} </span>
+                                <span class="reply-left-info-position">{{index+1}}楼</span></p>
+                            <p class="body-reply-left-context" v-html="item.content"></p>
                             <p class="body-reply-left-btn">
                                 <span>回复</span>
                             </p>
@@ -73,38 +72,45 @@
         },
         data(){
             return {
-                post: {
-                    title: "欢迎来到Halo社区",
-                    author: 'halo user',
-                    avatar: '//cdn.v2ex.com/gravatar/7c3d2db8337080adfccf106782b5b866?s=48&d=retro',
-                    postTime: "30分钟前",
-                    view: "1100",
-                    replyNum: "200",
-                    context: "<p>halo</p><p>center</p>",
-                    reply: [
-//                        {
-//                            user: "zijian",
-//                            avatar: '//cdn.v2ex.com/gravatar/7c3d2db8337080adfccf106782b5b866?s=48&d=retro',
-//                            replyTime: "10分钟前",
-//                            context: "欢迎"
-//                        },
-//                        {
-//                            user: "mello",
-//                            avatar: '//cdn.v2ex.com/gravatar/7c3d2db8337080adfccf106782b5b866?s=48&d=retro',
-//                            replyTime: "9分钟前",
-//                            context: "欢迎+1"
-//                        },
-                    ]
-                }
+                post: {}
             }
         },
         methods: {
             goRouter(item){
                 this.$router.push({path: item, query: {}});
+            },
+            getData(){
+                const topicId = this.$route.query.topicId;
+                const url = this.$rootUrl + "/api/forum/getTopicDetail";
+
+                const options = {
+                    method: 'POST',
+                    url: url,
+                    data: {
+                        id: topicId,
+                        pageSize:10,
+                        pageNum:1
+                    }
+                };
+
+                this.$axios(options).then((res) => {
+                    let item = res.data.data;
+                    if (item.code == 0) {
+                        this.post = item.data;
+                        if(this.post.avatar == ''){
+                            this.post.avatar = '../../../../../static/img/user.png';
+                        }
+                    }
+                })
+            }
+        },
+        watch: {
+            '$route'(to, from) {
+                this.getData();
             }
         },
         created(){
-
+            this.getData();
         }
     }
 </script>
@@ -222,6 +228,7 @@
         margin-left: 20px;
 
     .body-reply-left-btn{
+        width: 680px;
         color: #999;
         font-size: 14px;
         text-align: right;
@@ -230,11 +237,13 @@
     }
 
     .body-reply-left-info {
-        width: 640px;
+        width: 680px;
         color: #666;
         margin-bottom: 8px;
 
     .reply-left-info-userName {
+        position: relative;
+        left: -10px;
         cursor: pointer;
         font-weight: 600;
         color: #00a0e9;
@@ -247,6 +256,7 @@
     }
 
     .reply-left-info-position {
+
         color: #999;
         font-size: 14px;
         float: right;
@@ -255,6 +265,7 @@
     }
     .body-reply-left-context {
         line-height: 32px;
+        color: #666;
     }
 
     }

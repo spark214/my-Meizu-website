@@ -18,6 +18,8 @@
     </div>
 </template>
 <script>
+    import SockJS from  'sockjs-client';
+    import  Stomp from 'stompjs';
     export default{
         data(){
             return {
@@ -29,20 +31,62 @@
                         user: "zijian",
                         time: "2019年3月12日"
                     }
-                ]
+                ],
+                stompClient:'',
+                timer:'',
+                token:''
             }
         },
         methods:{
             goRouter(){
                 this.$router.push({path: "/postDetail", query: {}});
             },
+            initWebSocket() {
+                this.connection();
+                let that= this;
+                // 断开重连机制,尝试发送消息,捕获异常发生时重连
+                this.timer = setInterval(() => {
+                    try {
+                        that.stompClient.send("test");
+                    } catch (err) {
+                        console.log("断线了: " + err);
+                        that.connection();
+                    }
+                }, 5000);
+            },
+            connection() {
+                // 建立连接对象
+                let socket = new SockJS('http://123.207.121.122:8868/api/halo/ws');
+                // 获取STOMP子协议的客户端对象
+                this.stompClient = Stomp.over(socket);
+                // 定义客户端的认证信息,按需求配置
+                let headers = {
+                    access_token:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjQsImV4cCI6MTU1Mzk2MjA0MywiaWF0IjoxNTUzOTU4NDQzfQ.rVAvJ7PA8Z3mD4DWjjmuU0mmKo1LHhSPuo6h3WOKLqc',
+                }
+                // 向服务器发起websocket连接
+                this.stompClient.connect(headers,() => {
+                    console.log("okkkk");
+                    this.stompClient.subscribe('/user/1/message', (msg) => { // 订阅服务端提供的某个topic
+                        console.log('广播成功')
+                        console.log(msg);  // msg.body存放的是服务端发送给我们的信息
+                    },headers);
+                }, (err) => {
+                    // 连接发生错误时的处理函数
+                    console.log('失败')
+                    console.log(err);
+                });
+            },    //连接 后台
+            disconnect() {
+                if (this.stompClient) {
+                    this.stompClient.disconnect();
+                }
+            },  // 断开连接
             websocket () {
-                let ws = new WebSocket('ws://123.207.121.122:8868/api/halo/user/1/message');
+                const access_Token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjQsImV4cCI6MTU1Mzk2MjA0MywiaWF0IjoxNTUzOTU4NDQzfQ.rVAvJ7PA8Z3mD4DWjjmuU0mmKo1LHhSPuo6h3WOKLqc';
+                let ws = new WebSocket('ws://123.207.121.122:8868/api/halo/ws',[access_Token]);
                 ws.onopen = () => {
                     // Web Socket 已连接上，使用 send() 方法发送数据
                     console.log('数据发送中...')
-                    ws.send('Holle')
-                    console.log('数据发送完成')
                 }
                 ws.onmessage = evt => {
                     console.log('数据已接收...')
@@ -51,14 +95,17 @@
                     // 关闭 websocket
                     console.log('连接已关闭...')
                 }
-                // 路由跳转时结束websocket链接
-                this.$router.afterEach(function () {
-                    ws.close()
-                })
+//                // 路由跳转时结束websocket链接
+//                this.$router.afterEach(function () {
+//                    ws.close()
+//                })
             }
         },
+
         created(){
+            this.initWebSocket();
 //            this.websocket();
+
         }
     }
 </script>

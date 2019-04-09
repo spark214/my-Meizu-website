@@ -7,13 +7,12 @@
                     <h3>社区热帖</h3>
                 </div>
                 <div class="section-list">
-                    <div class="section-item" v-for="item in sectionList" @click="goRouter('/postDetail')">
+                    <div class="section-item" v-for="item in sectionList" @click="goRouter('/postDetail',item.topicId)">
                         <p class="section-item-title">{{item.title}}</p>
                         <div class="section-item-data">
-                            <span>{{item.author}}</span>
-                            <span>浏览：{{item.view}}</span>
-                            <span>回复：{{item.reply}}</span>
-                            <span>{{item.replyUser}} &nbsp;&nbsp;{{item.replyTime}}</span>
+                            <span>{{item.userName}}</span>
+                            <span>回复：{{item.backNumber}}</span>
+                            <span>{{item.lastBack}} &nbsp;&nbsp;{{item.lastTime}}</span>
                         </div>
                     </div>
                 </div>
@@ -38,89 +37,33 @@
         data(){
             return {
                 sectionName: '闲置交易',
-                sectionList: [
-                    {
-                        author: "halo user",
-                        title: "欢迎来到Halo社区闲置交易版块",
-                        view: 1100,
-                        reply: 320,
-                        replyUser: "halo",
-                        replyTime: "16分钟前"
-                    },
-                    {
-                        author: "halo user",
-                        title: "欢迎来到Halo社区闲置交易版块",
-                        view: 1100,
-                        reply: 320,
-                        replyUser: "halo",
-                        replyTime: "16分钟前"
-                    },
-                    {
-                        author: "halo user",
-                        title: "欢迎来到Halo社区闲置交易版块",
-                        view: 1100,
-                        reply: 320,
-                        replyUser: "halo",
-                        replyTime: "16分钟前"
-                    },
-                    {
-                        author: "halo user",
-                        title: "欢迎来到Halo社区闲置交易版块",
-                        view: 1100,
-                        reply: 320,
-                        replyUser: "halo",
-                        replyTime: "16分钟前"
-                    },
-                    {
-                        author: "halo user",
-                        title: "欢迎来到Halo社区闲置交易版块",
-                        view: 1100,
-                        reply: 320,
-                        replyUser: "halo",
-                        replyTime: "16分钟前"
-                    },
-                    {
-                        author: "halo user",
-                        title: "欢迎来到Halo社区闲置交易版块",
-                        view: 1100,
-                        reply: 320,
-                        replyUser: "halo",
-                        replyTime: "16分钟前"
-                    },
-                    {
-                        author: "halo user",
-                        title: "欢迎来到Halo社区闲置交易版块",
-                        view: 1100,
-                        reply: 320,
-                        replyUser: "halo",
-                        replyTime: "16分钟前"
-                    },
-                    {
-                        author: "halo user",
-                        title: "欢迎来到Halo社区闲置交易版块",
-                        view: 1100,
-                        reply: 320,
-                        replyUser: "halo",
-                        replyTime: "16分钟前"
-                    },
-                    {
-                        author: "halo user",
-                        title: "欢迎来到Halo社区闲置交易版块",
-                        view: 1100,
-                        reply: 320,
-                        replyUser: "halo",
-                        replyTime: "16分钟前"
-                    },
-                ]
+                sectionList: []
             }
         },
         methods: {
-            goRouter(item){
-                this.$router.push({path: item, query: {}});
+            goRouter(item,id){
+                this.$router.push({path: item, query: {topicId:id}});
+            },
+            getData(){
+                var url = this.$rootUrl + "/api/forum/getAllTopic";
+                const options = {
+                    method: 'POST',
+                    url: url,
+                    data: {
+                        pageSize:10,
+                        pageNum:1
+                    }
+                };
+                this.$axios(options).then((res) => {
+                    let item = res.data.data;
+                    if (item.code == 0) {
+                        this.sectionList = item.data.topics;
+                    }
+                })
             }
         },
-        created: {
-
+        created() {
+            this.getData();
         }
     }
 </script>

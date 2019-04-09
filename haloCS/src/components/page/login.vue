@@ -135,7 +135,8 @@
                                 this.$store.commit('LOGIN', {
                                     username: userInfo.username,
                                     avatar: userInfo.avatar,
-                                    phone:userInfo.phone
+                                    phone:userInfo.phone,
+                                    token:item.token
                                 });
                                 sessionStorage.setItem('expireTime', (new Date().getTime() + 58 * 60 * 1000));
                                 let pageHistory = sessionStorage.getItem('pageHistory');
@@ -166,7 +167,8 @@
                                 this.$store.commit('LOGIN',{
                                     username:userInfo.username,
                                     avatar:userInfo.avatar,
-                                    phone:userInfo.phone
+                                    phone:userInfo.phone,
+                                    token:item.token
                                 });
                                 sessionStorage.setItem('expireTime', (new Date().getTime() + 60 * 60 * 1000));
                                 let pageHistory = sessionStorage.getItem('pageHistory');

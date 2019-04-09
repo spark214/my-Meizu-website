@@ -8,7 +8,8 @@ const store = new Vuex.Store({
         userInfo: {
             username: null,
             avatar:null,
-            phone:null
+            phone:null,
+            token:null
         },
         receiver:{
             name:null,
@@ -25,7 +26,8 @@ const store = new Vuex.Store({
             address:null,
             product:{}
         },
-        orderLoading:false
+        orderLoading:false,
+        imgUpload:false,
     },
     mutations: {
         LOGIN(state,userInfo) {
@@ -42,6 +44,9 @@ const store = new Vuex.Store({
         },
         ORDERLOADING(state,info){
             state.orderLoading = info;
+        },
+        IMGUPLOAD(state,info){
+            state.imgUpload = info;
         }
     },
     actions: {
@@ -59,6 +64,9 @@ const store = new Vuex.Store({
         },
         orderLoading(ctx,info){
             ctx.commit('ORDERLOADING',info);
+        },
+        imgUpload(ctx,info){
+            ctx.commit('IMGUPLOAD',info);
         }
     }
 });

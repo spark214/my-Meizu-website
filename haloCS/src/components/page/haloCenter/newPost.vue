@@ -20,12 +20,10 @@
                     <span class="numTips">还可输入{{80-form.title.length}}个字符</span>
                 </div>
                 <div class="newPost-editor">
-                    <editor></editor>
+                    <editor @newPost="newPost"></editor>
                 </div>
             </div>
-            <div class="newPost-footer">
-                <el-button type="primary">发表帖子</el-button>
-            </div>
+
         </div>
         <v-footer></v-footer>
     </div>
@@ -54,7 +52,23 @@
                 haveSection:''
             }
         },
-        methods: {}
+        methods: {
+            newPost(msg){
+                var url = this.$rootUrl + "/api/forum/newTopic";
+                const options = {
+                    method: 'POST',
+                    url: url,
+                    data: {
+                        content:msg,
+                        title:this.form.title,
+                        typeId:this.section
+                    }
+                };
+                this.$axios(options).then((res) => {
+
+                })
+            }
+        }
     }
 </script>
 <style lang="less">
