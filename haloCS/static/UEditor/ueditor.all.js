@@ -11116,7 +11116,7 @@ UE.commands['imagefloat'] = {
 
 UE.commands['insertimage'] = {
     execCommand:function (cmd, opt) {
-
+        console.log("111112");
         opt = utils.isArray(opt) ? opt : [opt];
         if (!opt.length) {
             return;
@@ -11198,7 +11198,7 @@ UE.commands['insertimage'] = {
                     html.push(str);
                 }
             }
-
+            console.log("111111");
             me.execCommand('insertHtml', html.join(''));
         }
 
@@ -24554,6 +24554,7 @@ UE.plugin.register('simpleupload', function() {
             loader.setAttribute('alt', res.original || '');
             loader.removeAttribute('id');
             domUtils.removeClasses(loader, 'loadingclass');
+            me.fireEvent("myImg",link,res.title);
             me.fireEvent("contentchange");
           } else {
             showErrorLoader(res.state);
