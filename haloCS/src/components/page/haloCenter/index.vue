@@ -11,8 +11,8 @@
                         <p class="section-item-title">{{item.title}}</p>
                         <div class="section-item-data">
                             <span>{{item.userName}}</span>
-                            <span>回复：{{item.backNumber}}</span>
-                            <span>{{item.lastBack}} &nbsp;&nbsp;{{item.lastTime}}</span>
+                            <span>回复：{{item.backNumber || 0}}</span>
+                            <span>{{item.lastBack }} &nbsp;&nbsp;{{item.lastTime }}</span>
                         </div>
                     </div>
                 </div>

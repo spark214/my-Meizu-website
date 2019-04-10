@@ -28,6 +28,12 @@ const store = new Vuex.Store({
         },
         orderLoading:false,
         imgUpload:false,
+        typeList:[],
+        updateTopic:{
+            typeName:null,
+            title:null,
+            content:null
+        }
     },
     mutations: {
         LOGIN(state,userInfo) {
@@ -47,6 +53,12 @@ const store = new Vuex.Store({
         },
         IMGUPLOAD(state,info){
             state.imgUpload = info;
+        },
+        TYPELIST(state,info){
+            state.typeList = info;
+        },
+        UPDATETOPIC(state,info){
+            state.updateTopic = info;
         }
     },
     actions: {
@@ -67,6 +79,12 @@ const store = new Vuex.Store({
         },
         imgUpload(ctx,info){
             ctx.commit('IMGUPLOAD',info);
+        },
+        typeList(ctx,info){
+            ctx.commit('TYPELIST',info);
+        },
+        updateTopic(ctx,info){
+            ctx.commit('UPDATETOPIC',info);
         }
     }
 });

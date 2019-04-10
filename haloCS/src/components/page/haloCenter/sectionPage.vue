@@ -19,12 +19,12 @@
                     </el-dropdown>
                 </div>
                 <div class="section-list">
-                    <div class="section-item" v-for="item in sectionList" @click="goRouter('/postDetail')">
+                    <div class="section-item" v-for="item in sectionList" @click="goRouter('/postDetail',item.topicId)">
                         <p class="section-item-title">{{item.title}}</p>
                         <div class="section-item-data">
                             <span>{{item.userName}}</span>
-                            <span>回复：{{item.backNumber}}</span>
-                            <span>{{item.lastBack}} &nbsp;&nbsp;{{item.lastTime}}</span>
+                            <span>回复：{{item.backNumber || 0}}</span>
+                            <span>{{item.lastBack }} &nbsp;&nbsp;{{item.lastTime }}</span>
                         </div>
                     </div>
                 </div>
@@ -48,7 +48,7 @@
         },
         data(){
             return {
-                sectionName: '闲置交易',
+                sectionName: '',
                 sectionList: []
             }
         },
@@ -58,6 +58,7 @@
             },
             getData(){
                 const typeId = this.$route.query.id;
+                this.sectionName = this.$route.query.name;
                 const url = this.$rootUrl + "/api/forum/getTypePage";
 
                 const options = {
@@ -102,7 +103,7 @@
     .section-container {
         float: left;
         position: relative;
-        margin: 10px auto;
+        margin: 20px auto;
         width: 716px;
         border: 1px solid #e6e6e6;
         background-color: #fff;

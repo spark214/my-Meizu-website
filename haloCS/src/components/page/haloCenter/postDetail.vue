@@ -1,5 +1,5 @@
 <template>
-    <div class="postDetail">
+    <div class="postDetail" id="postDetail">
         <center-header></center-header>
         <div class="postDetail-coontainer clearfix">
             <div class="postDetail-body">
@@ -15,7 +15,7 @@
                                 <p class="header-info-right">
                                     <span class="header-info-postTime">{{post.updateTime}}</span>
                                     <!--<span class="header-info-view">{{post.view}}<i class="el-icon-view"></i></span>-->
-                                    <span class="header-info-replyNum"> <i class="el-icon-message"></i>回复: {{post.backNumber}}</span>
+                                    <span class="header-info-replyNum"> <i class="el-icon-message"></i> {{post.backNumber || 0}}</span>
                                 </p>
                             </div>
                         </div>
@@ -23,7 +23,8 @@
                     <div class="postDetail-body-context-body" v-html="post.content">
                     </div>
                     <div class="postDetail-body-context-footer">
-                        <el-button type="primary">回复</el-button>
+                        <el-button type="primary" @click="update(post.topicId)">编辑</el-button>
+                        <el-button type="primary" @click="topicBack">回复</el-button>
                         <el-button class="body-reply-backBtn" @click="goRouter('/centerSection')" v-if="!post.backList || post.backList.length === 0">返回列表</el-button>
                     </div>
                 </div>
@@ -33,7 +34,7 @@
                     </div>
                     <div class="postDetail-body-reply-item clearfix" v-for="(item,index) in post.backList">
                         <div class="body-reply-left">
-                            <img :src="item.avatar">
+                            <img :src="item.avatar" width="40px" height="40px">
                         </div>
                         <div class="body-reply-right">
                             <p class="body-reply-left-info"><span class="reply-left-info-userName">{{item.userName}} </span>
@@ -41,15 +42,14 @@
                                 <span class="reply-left-info-position">{{index+1}}楼</span></p>
                             <p class="body-reply-left-context" v-html="item.content"></p>
                             <p class="body-reply-left-btn">
-                                <span>回复</span>
+                                <span @click="replyBack(item.userId,item.userName,item.content)">回复</span>
                             </p>
                         </div>
                     </div>
                     <el-button class="body-reply-backBtn" @click="goRouter('/centerSection')">返回列表</el-button>
                 </div>
                 <div class="postDetail-body-editor clearfix">
-                    <editor></editor>
-                    <el-button type="primary">发表评论</el-button>
+                    <editor type="2" :reply="quote" @newPost="newBack"></editor>
                 </div>
 
             </div>
@@ -72,7 +72,12 @@
         },
         data(){
             return {
-                post: {}
+                post: {},
+                reply:{
+                    content:'',
+                    userId:[]
+                },
+                quote:''
             }
         },
         methods: {
@@ -102,6 +107,61 @@
                         }
                     }
                 })
+            },
+            replyBack(userId,userName,content){
+                content = content.replace(/<blockquote(([\s\S])*?)<\/blockquote>/g, "");
+                content = content.replace(/(\n)/g, "");
+                content = content.replace(/(\t)/g, "");
+                content = content.replace(/(\r)/g, "");
+                content = content.replace(/<\/?[^>]*>/g, "");
+                content = content.replace(/\s*/g, "");
+                this.quote = '<blockquote style="display: block;background: #f0f0f0;padding: 10px;font-size: 14px;color: #666;max-height: 100px;margin-bottom: 10px;overflow: hidden;text-overflow: ellipsis;display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;"><font size="2" color="#999">' + userName + ':</font><br>' + content + '</blockquote>';
+                this.reply.userId.push(userId);
+                const div = document.getElementById('postDetail');
+                window.scroll(0, div.scrollHeight);
+            },
+            topicBack(){
+                this.quote = '';
+                this.reply.userId = [];
+                const div = document.getElementById('postDetail');
+                window.scroll(0, div.scrollHeight);
+            },
+            newBack(msg){
+                this.reply.userId.push(this.post.userId);
+                const url = this.$rootUrl + "/api/forum/newBack";
+
+                const options = {
+                    method: 'POST',
+                    url: url,
+                    data: {
+                        topicId:this.post.topicId,
+                        content:msg,
+                        receivers:this.reply.userId
+                    }
+                };
+
+                this.$axios(options).then((res) => {
+                    let item = res.data.data;
+                    if (item.code == 0) {
+                        this.getData();
+                        this.quote = '';
+                        this.reply = {
+                            content:'',
+                            userId:[]
+                        };
+                    }
+                })
+            },
+            update(id){
+                let newContent = this.post.content.replace(/<p style='margin-top: 20px;font-size: 14px;color: #999999'(([\s\S])*?)<\/p>/g, "");
+                console.log(newContent);
+                const list = {
+                    typeName:this.post.typeName,
+                    title:this.post.title,
+                    content:newContent
+                }
+                this.$store.commit('UPDATETOPIC',list);
+                this.$router.push({path: '/newPost', query: {id:id,type:3}});
             }
         },
         watch: {
@@ -171,7 +231,7 @@
     }
 
     .header-info-right {
-        color: #999;
+        color: #dcdcdc;
         float: right;
         position: relative;
         top: -2px;
@@ -224,11 +284,12 @@
     }
 
     .body-reply-right {
+        width: 620px;
         float: left;
-        margin-left: 20px;
+        margin-left: 10px;
 
     .body-reply-left-btn{
-        width: 680px;
+        width: 650px;
         color: #999;
         font-size: 14px;
         text-align: right;
@@ -237,13 +298,12 @@
     }
 
     .body-reply-left-info {
-        width: 680px;
+        width: 650px;
         color: #666;
         margin-bottom: 8px;
 
     .reply-left-info-userName {
         position: relative;
-        left: -10px;
         cursor: pointer;
         font-weight: 600;
         color: #00a0e9;

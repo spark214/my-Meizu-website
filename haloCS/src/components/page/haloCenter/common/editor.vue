@@ -1,8 +1,9 @@
 <template>
-    <div>
+    <div class="editor">
         <vue-ueditor-wrap v-model="msg" :config="myConfig" @ready="editR"></vue-ueditor-wrap>
-        <div class="newPost-footer">
-            <el-button type="primary" @click="postMsg">发表帖子</el-button>
+        <div class="editor-footer">
+            <el-button type="primary" @click="postMsg" v-if="type == 1 || type == 3">发表帖子</el-button>
+            <el-button type="primary" @click="postMsg" v-if="type == 2">发表评论</el-button>
         </div>
     </div>
 </template>
@@ -11,6 +12,18 @@
     export default{
         components: {
             VueUeditorWrap
+        },
+        props:{
+            type:{
+                type:Number,
+                default:0
+            },
+            reply:{
+                type:String
+            },
+            content:{
+                type:String
+            }
         },
         data(){
             return{
@@ -53,7 +66,6 @@
                         if (item.errorCode == 0) {
                             let t = title.toString();
                             this.msg = this.msg.replace(t,item.data.imgUrl);
-                            console.log(this.msg);
                         }
                     })
                 });
@@ -62,11 +74,27 @@
                 this.$emit('newPost',this.msg);
             }
         },
+        created(){
+            if(this.type == 3){
+                this.msg = this.$store.state.updateTopic.content;
+            }
+        },
+        watch:{
+            reply:function(value){
+                this.msg = value + "<br>";
+            }
+        }
     }
 </script>
 <style lang="less">
     @import "../../../common.less";
-    .newPost-footer{
-        padding: 20px 60px;
+    .editor{
+    .editor-footer{
+        padding: 20px 0px;
+    .el-button{
+        margin-top: 0;
     }
+    }
+    }
+
 </style>

@@ -1,12 +1,12 @@
 <template>
     <div class="sectionBoard">
-        <div class="addSection" @click="goRouter('/newPost')">
+        <div class="addSection" @click="goNew('/newPost',1)">
             <i class="el-icon-edit"></i><span>发布帖子</span>
         </div>
         <div class="sectionBoard-container">
             <div class="sectionBoard-header">热门版块</div>
             <div class="sectionBoard-body">
-                <div class="sectionBoard-item" v-for="item in sectionList" @click="goRouter('/centerSection',item.id)">
+                <div class="sectionBoard-item" v-for="item in sectionList" @click="goRouter('/centerSection',item.id,item.typeName)">
                     {{item.typeName}}
                 </div>
             </div>
@@ -21,8 +21,11 @@ export default{
         }
     },
     methods:{
-        goRouter(item,id){
-            this.$router.push({path: item, query: {id:id}});
+        goNew(item,type){
+            this.$router.push({path: item, query: {type:type}});
+        },
+        goRouter(item,id,name){
+            this.$router.push({path: item, query: {id:id,name:name}});
         },
         getData(){
             var url = this.$rootUrl + "/api/forum/getType";
@@ -35,12 +38,17 @@ export default{
                 let item = res.data.data;
                 if (item.code == 0) {
                     this.sectionList = item.data;
+                    this.$store.commit('TYPELIST',item.data);
                 }
             })
         }
     },
     created(){
-        this.getData();
+        if(this.$store.state.typeList.length == 0){
+            this.getData();
+        }else{
+            this.sectionList = this.$store.state.typeList;
+        }
     }
 }
 </script>
