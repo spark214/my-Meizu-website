@@ -25,7 +25,8 @@
                     <div class="postDetail-body-context-footer">
                         <el-button type="primary" @click="update(post.topicId)">编辑</el-button>
                         <el-button type="primary" @click="topicBack">回复</el-button>
-                        <el-button class="body-reply-backBtn" @click="goRouter('/centerSection')" v-if="!post.backList || post.backList.length === 0">返回列表</el-button>
+                        <el-button type="danger" @click="delTopic">删除</el-button>
+                        <el-button class="body-reply-backBtn" @click="goRouter('/centerSection',post.typeId,post.typeName)" v-if="!post.backList || post.backList.length === 0">返回列表</el-button>
                     </div>
                 </div>
                 <div class="postDetail-body-reply clearfix" v-if="post.backList && post.backList.length > 0">
@@ -81,8 +82,8 @@
             }
         },
         methods: {
-            goRouter(item){
-                this.$router.push({path: item, query: {}});
+            goRouter(item,id,name){
+                this.$router.push({path: item, query: {id:id,name:name}});
             },
             getData(){
                 const topicId = this.$route.query.topicId;
@@ -102,6 +103,11 @@
                     let item = res.data.data;
                     if (item.code == 0) {
                         this.post = item.data;
+                        this.quote = '';
+                        this.reply = {
+                            content:'',
+                            userId:[]
+                        };
                         if(this.post.avatar == ''){
                             this.post.avatar = '../../../../../static/img/user.png';
                         }
@@ -154,7 +160,6 @@
             },
             update(id){
                 let newContent = this.post.content.replace(/<p style='margin-top: 20px;font-size: 14px;color: #999999'(([\s\S])*?)<\/p>/g, "");
-                console.log(newContent);
                 const list = {
                     typeName:this.post.typeName,
                     title:this.post.title,
@@ -162,15 +167,45 @@
                 }
                 this.$store.commit('UPDATETOPIC',list);
                 this.$router.push({path: '/newPost', query: {id:id,type:3}});
+            },
+            delTopic(){
+                this.$confirm('此操作将永久删除该帖子, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    const url = this.$rootUrl + "/api/forum/delTopic";
+
+                    const options = {
+                        method: 'POST',
+                        url: url,
+                        data: {
+                            id:this.post.topicId
+                        }
+                    };
+
+                    this.$axios(options).then((res) => {
+                        let item = res.data.data;
+                        if (item.code == 0) {
+                            this.$message({
+                                message: '删除成功',
+                                type: 'success'
+                            });
+                            this.$route.go(-1);
+                        }
+                    })
+                })
             }
         },
         watch: {
             '$route'(to, from) {
                 this.getData();
+                window.scroll(0, 0);
             }
         },
         created(){
             this.getData();
+            window.scroll(0, 0);
         }
     }
 </script>

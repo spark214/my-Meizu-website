@@ -34,18 +34,23 @@
     <div class="login clearfix">
       <ul>
         <li>
-          <el-dropdown trigger="hover" @command=" handleCommand" placement="bottom">
-          <span class="el-dropdown-link" @click="goRouter('member')">
-           <img src="../../../../../static/img/user.png" width="24px">
-          </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="login" v-if="!isLogin">立即登录</el-dropdown-item>
-              <el-dropdown-item command="register" divided v-if="!isLogin">立即注册</el-dropdown-item>
+          <el-badge :value="nowMessage" class="item" max="10" :hidden="!isLogin">
+            <el-dropdown trigger="hover" @command=" handleCommand" placement="bottom">
+              <span class="el-dropdown-link" @click="goRouter('member')">
+                <img src="../../../../../static/img/user.png" width="24px">
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="login" v-if="!isLogin">立即登录</el-dropdown-item>
+                <el-dropdown-item command="register" divided v-if="!isLogin">立即注册</el-dropdown-item>
 
-              <el-dropdown-item command="myorder" v-if="isLogin">我的订单</el-dropdown-item>
-              <el-dropdown-item command="loginout" divided v-if="isLogin">退出登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+                <el-dropdown-item command="myorder" v-if="isLogin">我的订单</el-dropdown-item>
+                <el-badge :value="nowMessage" class="item" max="10" is-dot="true" :hidden="!isLogin">
+                  <el-dropdown-item command="myMessage" v-if="isLogin">我的消息</el-dropdown-item>
+                </el-badge>
+                <el-dropdown-item command="loginout" divided v-if="isLogin">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </el-badge>
 
         </li>
         <li>
@@ -59,6 +64,8 @@
 </template>
 <script>
   import vCart from "../common/cartShow";
+  import SockJS from  'sockjs-client';
+  import  Stomp from 'stompjs';
 
   export default {
     data() {
@@ -83,7 +90,11 @@
         ],
         isLogin: false,
         userIcon: "../../../static/img/21.jpg",
-        keyword:'魅族15'
+        keyword:'魅族15',
+        stompClient:'',
+        timer:'',
+        token:'',
+        nowMessage:0
       }
     },
     components: {
@@ -135,6 +146,8 @@
         }
         else if (command == 'myorder') {
           this.$router.push('/myOrder');
+        } else if (command == 'myMessage') {
+          this.$router.push('/myMessage');
         }
       },
       getData() {
@@ -142,9 +155,48 @@
         const nowTime = new Date().getTime();
         if(expireTime && nowTime < expireTime){
           this.isLogin = true;
+          this.initWebSocket();
         }
-      }
-
+      },
+      initWebSocket() {
+        this.connection();
+        let that= this;
+        // 断开重连机制,尝试发送消息,捕获异常发生时重连
+        this.timer = setInterval(() => {
+          try {
+            that.stompClient.send("test");
+          } catch (err) {
+            that.connection();
+          }
+        }, 5000);
+      },
+      connection() {
+        // 建立连接对象
+        let socket = new SockJS('http://123.207.121.122:8868/api/halo/ws');
+        // 获取STOMP子协议的客户端对象
+        this.stompClient = Stomp.over(socket);
+        // 定义客户端的认证信息,按需求配置
+        let headers = {
+//          access_token:this.$store.state.login.token,
+          access_token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjIsImV4cCI6MTU1NDg2NzAyNCwiaWF0IjoxNTU0ODYzNDI0fQ.GbVb4bq2w75LVEjAhBN_sYGqws-F0dJhyFeNKBmtjLE"
+        }
+        // 向服务器发起websocket连接
+        this.stompClient.connect(headers,() => {
+          this.stompClient.subscribe('/user/1/message', (msg) => { // 订阅服务端提供的某个topic
+            let value = JSON.parse(msg.body);
+            this.nowMessage = value.data; // msg.body存放的是服务端发送给我们的信息
+          },headers);
+        }, (err) => {
+          // 连接发生错误时的处理函数
+          console.log('失败')
+          console.log(err);
+        });
+      },    //连接 后台
+      disconnect() {
+        if (this.stompClient) {
+          this.stompClient.disconnect();
+        }
+      },  // 断开连接
     },
     created() {
       this.getData();
