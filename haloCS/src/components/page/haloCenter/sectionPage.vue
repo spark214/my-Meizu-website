@@ -28,6 +28,10 @@
                         </div>
                     </div>
                 </div>
+                <div class="section-footer">
+                    <el-pagination @current-change="handlePage" layout="total, prev, pager, next" :total="total" page-size="10">
+                    </el-pagination>
+                </div>
             </div>
             <div class="right">
                 <section-board></section-board>
@@ -49,7 +53,10 @@
         data(){
             return {
                 sectionName: '',
-                sectionList: []
+                sectionList: [],
+                total:0,
+                pageNum:1,
+                typeId:1
             }
         },
         methods: {
@@ -57,7 +64,7 @@
                 this.$router.push({path: item, query: {topicId:id}});
             },
             getData(){
-                const typeId = this.$route.query.id;
+                this.typeId = this.$route.query.id || 1;
                 this.sectionName = this.$route.query.name;
                 const url = this.$rootUrl + "/api/forum/getTypePage";
 
@@ -65,9 +72,9 @@
                     method: 'POST',
                     url: url,
                     data: {
-                        id: typeId,
+                        id: this.typeId,
                         pageSize:10,
-                        pageNum:1
+                        pageNum:this.pageNum
                     }
                 };
 
@@ -75,8 +82,13 @@
                     let item = res.data.data;
                     if (item.code == 0) {
                         this.sectionList = item.data.topics;
+                        this.total = item.data.count;
                     }
                 })
+            },
+            handlePage(value){
+                this.pageNum = value;
+                this.getData();
             }
         },
         watch: {
@@ -168,6 +180,10 @@
     }
     }
     }
+    }
+    .section-footer{
+        text-align: right;
+        margin-top: 20px;
     }
     }
     }

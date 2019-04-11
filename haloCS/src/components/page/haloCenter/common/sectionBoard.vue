@@ -54,6 +54,7 @@ export default{
 </script>
 <style lang='less'>
     .sectionBoard{
+        padding-top: 10px;
     .sectionBoard-container {
         margin: 10px auto;
         width: 280px;

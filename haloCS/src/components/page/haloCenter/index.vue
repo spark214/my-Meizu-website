@@ -81,7 +81,7 @@
     .section-container {
         float: left;
         position: relative;
-        margin: 10px auto;
+        margin: 20px auto;
         width: 716px;
         border: 1px solid #e6e6e6;
         background-color: #fff;

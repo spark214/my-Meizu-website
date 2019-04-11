@@ -10,20 +10,21 @@
             <div class="header-right">
                 <div class="header-right-nav">
                     <ul>
-                        <li>商城</li>
-                        <li>产品讨论</li>
-                        <li>闲置交易</li>
-                        <li>建议反馈</li>
+                        <li @click="goRouter('/')">商城首页</li>
+                        <li @click="goRouter('/haloCenter')">社区首页</li>
+                        <li @click="goRouter('/centerSection',1,'杂谈')">产品讨论</li>
+                        <li @click="goRouter('/centerSection',3,'交易')">闲置交易</li>
+                        <li @click="goRouter('/centerSection',2,'摸鱼')">建议反馈</li>
                     </ul>
                 </div>
-                <div class="header-right-search">
-                    <el-input v-model="searchKey" suffix-icon="el-icon-search" placeholder="搜索"></el-input>
-                </div>
+                <!--<div class="header-right-search">-->
+                    <!--<el-input v-model="searchKey" suffix-icon="el-icon-search" placeholder="搜索"></el-input>-->
+                <!--</div>-->
                 <div class="header-right-user">
-                    <span class="header-right-user-name"><span v-if="userName !== ''" style="color: #666;cursor: default">hi, </span>{{userName}}</span>
-                    <span class="header-right-user-tip">消息</span>
-                    <span class="header-right-user-logout" v-if="userName !== ''">登出</span>
-                    <span class="header-right-user-logout" v-if="userName === ''">登录</span>
+                    <span class="header-right-user-name" @click="user"><span v-if="isLogin" style="color: #666;cursor: default">hi, </span>{{userName}}</span>
+                    <span class="header-right-user-tip" @click="myMessage"  v-if="isLogin"><el-badge :value="nowMessage" style="padding-right:10px" max="10" :hidden="!isLogin || nowMessage == 0">消息</el-badge></span>
+                    <span class="header-right-user-logout" v-if="isLogin" @click="loginout">退出</span>
+                    <span class="header-right-user-logout" v-if="!isLogin" @click="login">登录</span>
                 </div>
             </div>
         </div>
@@ -31,41 +32,111 @@
 </template>
 <script>
     import _ from 'lodash';
+    import SockJS from  'sockjs-client';
+    import  Stomp from 'stompjs';
     export default{
         name: "haloCenter_Header",
-        props:{
-            userName:{
-                type:String,
-                default:''
-            }
-        },
         data(){
             return {
                 searchKey: '',
+                userName:'',
+                stompClient:'',
+                timer:'',
+                token:'',
+                nowMessage:0,
+                isLogin: false,
             }
         },
         methods: {
-            handleCommand(command) {
-                if (command == 'loginout') {
-                    sessionStorage.removeItem('accessToken');
-                    this.$router.push('/login');
-                }
-                else if (command == 'login') {
-                    this.$router.push('/login');
-                }
-                else if (command == 'register') {
-                    this.$router.push('/register');
-                }
-                else if (command == 'myorder') {
-                    this.$router.push('/myOrder');
-                }
+            goRouter(item,id,name){
+                this.$router.push({path: item, query: {id:id,name:name}});
+            },
+            loginout(){
+                var url = this.$rootUrl + "/api/user/logout";
+                const options = {
+                    method: 'GET',
+                    url: url,
+                    data: {}
+                };
+                this.$axios(options).then((res) => {
+                    let item = res.data.data;
+                    if (item.errorCode == 0) {
+                        sessionStorage.setItem('expireTime', 0);
+                        this.disconnect();
+                        const path = this.$route.path;
+                        if (path == '/newPost' || path == '/user' || path == '/mallCheck' || this.$route.matched[0].path == '/member') {
+                            this.$router.push({path: '/'});
+                        } else {
+                            this.getData();
+                        }
+                    }
+                });
+            },
+            login(){
+                sessionStorage.setItem('pageHistory',this.$route.fullPath);
+                this.$router.push('/login');
+            },
+            user(){
+                this.$router.push('/user');
+            },
+            myMessage(){
+                this.$router.push('/myMessage');
             },
             goRouter(item){
                 this.$router.push({path: item, query: {}});
-            }
+            },
+            getData(){
+                const expireTime = sessionStorage.getItem('expireTime');
+                const nowTime = new Date().getTime();
+                if(expireTime && nowTime < expireTime){
+                    this.isLogin = true;
+                    this.initWebSocket();
+                }else{
+                    this.isLogin = false;
+                }
+            },
+            initWebSocket() {
+                this.connection();
+                let that= this;
+                // 断开重连机制,尝试发送消息,捕获异常发生时重连
+                this.timer = setInterval(() => {
+                    try {
+                        that.stompClient.send("test");
+                    } catch (err) {
+                        that.connection();
+                    }
+                }, 5000);
+            },
+            connection() {
+                // 建立连接对象
+                let socket = new SockJS('http://123.207.121.122:8868/api/halo/ws');
+                // 获取STOMP子协议的客户端对象
+                this.stompClient = Stomp.over(socket);
+                // 定义客户端的认证信息,按需求配置
+                let headers = {
+                    access_token:sessionStorage.getItem('token')
+                }
+                // 向服务器发起websocket连接
+                this.stompClient.connect(headers,() => {
+                    this.stompClient.subscribe('/user/1/message', (msg) => { // 订阅服务端提供的某个topic
+                        let value = JSON.parse(msg.body);
+                        this.nowMessage = value.data; // msg.body存放的是服务端发送给我们的信息
+                    },headers);
+                }, (err) => {
+                    // 连接发生错误时的处理函数
+                    console.log('失败')
+                    console.log(err);
+                });
+            },    //连接 后台
+            disconnect() {
+                if (this.stompClient) {
+                    this.stompClient.disconnect();
+                }
+            },  // 断开连接
         },
         created(){
-
+            this.userName = sessionStorage.getItem('userName');
+            this.getData();
         }
     }
 </script>
@@ -139,7 +210,7 @@
             top:3px;
             font-size: 15px;
             display: inline-block;
-            width: 100px;
+            width: 90px;
             overflow-x: hidden;
             text-overflow:ellipsis;
             white-space:nowrap;

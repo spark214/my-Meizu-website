@@ -10,9 +10,9 @@
                     <el-select v-model="section" placeholder="请选择版块" v-if="haveSection === ''" :disabled="type == 3">
                         <el-option
                                 v-for="item in options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                                :key="item.id"
+                                :label="item.typeName"
+                                :value="item.id">
 
                         </el-option>
                     </el-select>
@@ -42,12 +42,7 @@
                     title: "",
                     word: ""
                 },
-                options: [
-                    {value: '1', label: '综合讨论'},
-                    {value: '2', label: '闲置交易'},
-                    {value: '3', label: '建议反馈'},
-                    {value: '4', label: '谈天说地'},
-                ],
+                options: [],
                 section: '',
                 haveSection:'',
                 type:1,
@@ -56,6 +51,9 @@
             }
         },
         methods: {
+            goRouter(item){
+                this.$router.push({path: item, query: {}});
+            },
             newPost(msg){
                 if(this.type == 1){
                     var url = this.$rootUrl + "/api/forum/newTopic";
@@ -71,7 +69,21 @@
                     this.$axios(options).then((res) => {
                         let item = res.data.data;
                         if (item.code == 0) {
+                            this.$message({
+                                message: '发帖成功',
+                                type: 'success'
+                            });
+                            this.$router.push({path: '/postDetail', query: {topicId:item.data}});
+                        }else{
+                            this.$alert(item.message, '失败', {
+                                confirmButtonText: '返回首页',
+                                cancelButtonText: '取消',
+                                type: 'warning'
+                            }).then(() => {
+                                this.goRouter('/haloCenter');
+                            }).catch(() => {
 
+                            });
                         }
                     })
                 }else if(this.type == 3){
@@ -90,18 +102,49 @@
                         let item = res.data.data;
                         if (item.code == 0) {
                             this.$router.push({path: '/postDetail', query: {topicId:this.topicId}});
+                        }else{
+                            this.$alert(item.message, '失败', {
+                                confirmButtonText: '返回首页',
+                                cancelButtonText: '取消',
+                                type: 'warning'
+                            }).then(() => {
+                                this.goRouter('/haloCenter');
+                            }).catch(() => {
+
+                            });
                         }
                     })
                 }
+            },
+            getType(){
+                var url = this.$rootUrl + "/api/forum/getType";
+                const options = {
+                    method: 'GET',
+                    url: url,
+                    data: {}
+                };
+                this.$axios(options).then((res) => {
+                    let item = res.data.data;
+                    if (item.code == 0) {
+                        this.options = item.data;
+                        this.$store.commit('TYPELIST',item.data);
+                    }
+                })
             }
         },
         created(){
-            this.type = this.$route.query.type;
+            this.type = this.$route.query.type || 1;
             if (this.type == 3) {
                 this.topicId = this.$route.query.id;
                 this.content = this.$store.state.updateTopic.content;
                 this.section = this.$store.state.updateTopic.typeName;
                 this.form.title = this.$store.state.updateTopic.title;
+            }else{
+                if(this.$store.state.typeList.length == 0){
+                    this.getType();
+                }else{
+                    this.options = this.$store.state.typeList;
+                }
             }
         }
     }

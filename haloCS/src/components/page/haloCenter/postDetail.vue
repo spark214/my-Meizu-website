@@ -23,9 +23,9 @@
                     <div class="postDetail-body-context-body" v-html="post.content">
                     </div>
                     <div class="postDetail-body-context-footer">
-                        <el-button type="primary" @click="update(post.topicId)">编辑</el-button>
+                        <el-button type="primary" @click="update(post.topicId)" v-if="userName == post.userName">编辑</el-button>
                         <el-button type="primary" @click="topicBack">回复</el-button>
-                        <el-button type="danger" @click="delTopic">删除</el-button>
+                        <el-button type="danger" @click="delTopic" v-if="userName == post.userName">删除</el-button>
                         <el-button class="body-reply-backBtn" @click="goRouter('/centerSection',post.typeId,post.typeName)" v-if="!post.backList || post.backList.length === 0">返回列表</el-button>
                     </div>
                 </div>
@@ -47,7 +47,11 @@
                             </p>
                         </div>
                     </div>
-                    <el-button class="body-reply-backBtn" @click="goRouter('/centerSection')">返回列表</el-button>
+                    <div class="postDetail-body-footer">
+                        <el-button class="body-reply-backBtn" @click="goRouter('/centerSection')">返回列表</el-button>
+                        <el-pagination @current-change="handlePage" layout="total, prev, pager, next" :total="total" page-size="10">
+                        </el-pagination>
+                    </div>
                 </div>
                 <div class="postDetail-body-editor clearfix">
                     <editor type="2" :reply="quote" @newPost="newBack"></editor>
@@ -78,12 +82,19 @@
                     content:'',
                     userId:[]
                 },
-                quote:''
+                quote:'',
+                userName:'',
+                total:0,
+                pageNum:1
             }
         },
         methods: {
-            goRouter(item,id,name){
-                this.$router.push({path: item, query: {id:id,name:name}});
+            handlePage(value){
+                this.pageNum = value;
+                this.getData();
+            },
+            goRouter(item, id, name){
+                this.$router.push({path: item, query: {id: id, name: name}});
             },
             getData(){
                 const topicId = this.$route.query.topicId;
@@ -95,7 +106,7 @@
                     data: {
                         id: topicId,
                         pageSize:10,
-                        pageNum:1
+                        pageNum:this.pageNum
                     }
                 };
 
@@ -103,6 +114,7 @@
                     let item = res.data.data;
                     if (item.code == 0) {
                         this.post = item.data;
+                        this.total = item.data.backNumber;
                         this.quote = '';
                         this.reply = {
                             content:'',
@@ -155,6 +167,16 @@
                             content:'',
                             userId:[]
                         };
+                    }else{
+                        this.$alert(item.message, '失败', {
+                            confirmButtonText: '确认',
+                            cancelButtonText: '取消',
+                            type: 'warning'
+                        }).then(() => {
+
+                        }).catch(() => {
+
+                        });
                     }
                 })
             },
@@ -205,6 +227,7 @@
         },
         created(){
             this.getData();
+            this.userName = sessionStorage.getItem('userName');
             window.scroll(0, 0);
         }
     }
@@ -230,6 +253,7 @@
         box-shadow: 1px 1px 10px #e2e2e2;
         float: left;
         margin: 10px;
+        margin-top:0;
 
     .postDetail-body-context {
         background-color: #fff;
@@ -367,9 +391,12 @@
 
     }
     .body-reply-backBtn {
-        margin-top: 15px;
+        /*margin-top: 15px;*/
       float:right;
     }
+    }
+    .postDetail-body-footer{
+        margin-top: 15px;
     }
     .postDetail-body-editor{
         margin-top: 10px;

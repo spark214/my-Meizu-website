@@ -115,15 +115,19 @@
           img:this.headerImage
         };
         var url = this.$rootUrl + "/api/user/saveAvatar";
-        var token = sessionStorage.getItem('accessToken');
-        let config = {
-          headers: {'token': token}
-        }
-        this.$axios.post(url, param, config).then((res) => {
-          if (res.data.data) {
-            if (res.data.errorCode == 0) {
-              if (res.data.data.avatarUrl) {
-                this.getData()
+
+        this.$axios.post(url, param).then((res) => {
+          let item = res.data.data;
+          if (item.data) {
+            if (item.errorCode == 0) {
+              if (item.data.url) {
+                this.$message({
+                  message: '修改头像成功',
+                  type: 'success'
+                });
+                this.getData();
+                this.headerImage = '';
+                sessionStorage.setItem('avatar',item.data.url);
               }
             }
           }

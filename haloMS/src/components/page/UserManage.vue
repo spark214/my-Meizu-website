@@ -19,29 +19,30 @@
                 <el-table-column label="用户名" prop="username"></el-table-column>
                 <el-table-column label="绑定手机" prop="phone"></el-table-column>
                 <el-table-column label="绑定邮箱" prop="email"></el-table-column>
+                <el-table-column label="状态" prop="status"></el-table-column>
                 <el-table-column label="创建时间" prop="createTime"></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button size="small" type="danger" @click="handleHonor(scope.$index,scope.row)">
+                        <el-button size="small" type="danger" @click="handleHonor(scope.row.userId)" v-if="scope.row.status == '正常'" style="width: 80px">
                             封号
                         </el-button>
-                        <el-button size="small" type="primary" @click="handleCancelHonor(scope.$index,scope.row)">
+                        <el-button size="small" type="primary" @click="handleCancelHonor(scope.row.userId)" v-if="scope.row.status == '封禁'">
                             解除封号
                         </el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <div class="pagination">
-                <el-pagination @current-change="handleCurrentChange" layout="prev, pager, next" :page-count="pages">
+                <el-pagination @current-change="handleCurrentChange" layout="total, prev, pager, next" :total="total" page-size="10">
                 </el-pagination>
             </div>
         </div>
 
-        <el-dialog title="提示" width="300px" center :visible.sync="honorVisible">
+        <el-dialog title="封号" width="300px" :visible.sync="honorVisible">
             <div>
                 <p>
                     <lable>封号时长：</lable>
-                    <el-select v-model="honor.time" placeholder="请选择">
+                    <el-select v-model="honorParams.time" placeholder="请选择">
                         <el-option
                                 v-for="item in honorTimeOptions"
                                 :key="item.value"
@@ -56,41 +57,33 @@
                             type="textarea"
                             :autosize="{ minRows: 4, maxRows: 4}"
                             placeholder="请输入内容"
-                            v-model="honor.reason">
+                            v-model="honorParams.reason">
                     </el-input>
                 </p>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="delVisible=false" size="small">取 消</el-button>
-                <el-button type="primary" @click="deleteRow" size="small">确 定</el-button>
+                <el-button @click="honorVisible = false" size="small">取 消</el-button>
+                <el-button type="primary" @click="settleHonor" size="small">确 定</el-button>
             </span>
         </el-dialog>
 
-        <el-dialog title="提示" width="300px" center :visible.sync="cancelHonorVisible">
-            <div>
-                <p>
-                    <label>解除封号理由：</label>
-                    <el-input
-                            type="textarea"
-                            :autosize="{ minRows: 4, maxRows: 4}"
-                            placeholder="请输入内容"
-                            v-model="cancelHonor.reason">
-                    </el-input>
-                </p>
-            </div>
+        <el-dialog title="解除封号" width="300px" :visible.sync="cancelHonorVisible">
+            <p>是否确认解除该用户封号状态？</p>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="delVisible=false" size="medium">取 消</el-button>
-                <el-button type="primary" @click="deleteRow" size="medium">确 定</el-button>
+                <el-button @click="cancelHonorVisible = false" size="small">取 消</el-button>
+                <el-button type="primary" @click="cancelHonor()" size="small">确 定</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
+    import _ from 'lodash';
     export default {
         data() {
             return {
                 currentPage: 1,
+                total:0,
                 select_cate: '',
                 select_word: '',
                 honorVisible: false,
@@ -112,17 +105,21 @@
                 pages: 0,
                 honorTimeOptions:[
                     {value:'1',label:'一天'},
-                    {value:'2',label:'一周'},
-                    {value:'3',label:'一个月'},
-                    {value:'4',label:'一年'},
-                    {value:'5',label:'永久'},
+                    {value:'7',label:'一周'},
+                    {value:'30',label:'一个月'},
+                    {value:'365',label:'一年'},
+                    {value:'99999',label:'永久'},
                 ],
-                honor:{
-                    time:'',
-                    reason:''
+                honorParams: {
+                    userId:'',
+                    reason: '',
+                    duration: '',
+                    status: -1,
+                    time:''
                 },
-                cancelHonor:{
-                    reason:''
+                cancelHonorParams:{
+                    userId:'',
+                    status:0
                 }
             }
         },
@@ -133,37 +130,23 @@
                     method: 'POST',
                     url: url,
                     data: {
-                        key: this.select_word
+                        key: this.select_word,
+                        pageNum:this.currentPage,
+                        pageSize:10
                     }
                 };
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
-                if (item.errorCode == 0) {
-                    this.dataTable = [];
-                    this.dataTable.push(item.data.user);
-                }
+                    if (item.code == 0) {
+                        this.dataTable = item.data.users;
+                        this.total = item.data.count;
+                    }
             })
             },
             // 分页导航
             handleCurrentChange(val) {
                 this.currentPage = val;
                 this.getData();
-            },
-            getPages() {
-                var url = this.$rootUrl + "/api/ms/getUserPage";
-                const options = {
-                    method: 'POST',
-                    url: url,
-                    data: {
-                        pageSize: 10
-                    }
-                };
-                this.$axios(options).then((res) => {
-                    let item = res.data.data;
-                if (item.errorCode == 0) {
-                    this.pages = item.data.pages;
-                }
-            })
             },
             getData() {
                 var url = this.$rootUrl + "/api/ms/getUser";
@@ -177,8 +160,9 @@
                 };
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
-                if (item.errorCode == 0) {
+                if (item.code == 0) {
                     this.dataTable = item.data.users;
+                    this.total = item.data.count;
                 }
             })
             },
@@ -192,12 +176,12 @@
                 this.editVisible = false;
                 this.$message.success("修改" + this.form.id + "成功");
             },
-            handleHonor(index, row){
-                this.idx = index;
+            handleHonor(id){
+                this.honorParams.userId = id;
                 this.honorVisible = true;
             },
-            handleCancelHonor(index, row){
-                this.idx = index;
+            handleCancelHonor(id){
+                this.cancelHonorParams.userId = id;
                 this.cancelHonorVisible = true;
             },
             deleteRow(){
@@ -232,9 +216,76 @@
             handleSelectionChange(val) {
                 this.multipleSelection = val;
             },
+            settleHonor(){
+                this.honorParams.duration = this.afterDate(parseInt(this.honorParams.time)) + " 23:59:59";
+                var url = this.$rootUrl + "/api/ms/settleUserStatus";
+                const options = {
+                    method: 'POST',
+                    url: url,
+                    data: this.honorParams
+                };
+                this.$axios(options).then((res) => {
+                    let item = res.data.data;
+                    if (item.code == 0) {
+                        _.each(this.dataTable,item => {
+                            if(item.userId == this.honorParams.userId){
+                                item.status = '封禁';
+                            }
+                        });
+                        this.$message.success("封号成功");
+                        this.honorVisible = false;
+                        this.honorParams = {
+                            userId:'',
+                            reason: '',
+                            duration: '',
+                            status: -1,
+                            time:''
+                        };
+                    }
+                })
+            },
+            cancelHonor(){
+                var url = this.$rootUrl + "/api/ms/settleUserStatus";
+                const options = {
+                    method: 'POST',
+                    url: url,
+                    data: this.cancelHonorParams
+                };
+                this.$axios(options).then((res) => {
+                    let item = res.data.data;
+                    if (item.code == 0) {
+                        _.each(this.dataTable,item => {
+                            if(item.userId == this.cancelHonorParams.userId){
+                                item.status = '正常';
+                            }
+                        });
+                        this.$message.success("解除封号成功");
+                        this.cancelHonorVisible = false;
+                        this.cancelHonorParams = {
+                            userId: '',
+                            status: 0
+                        };
+                    }
+                })
+            },
+            afterDate(num) {
+                var d = new Date();
+                d.setTime(d.getTime() + num * 3600 * 24 * 1000);
+
+                var myyear = d.getFullYear();
+                var mymonth = d.getMonth() + 1;
+                var myweekday = d.getDate();
+
+                if (mymonth < 10) {
+                    mymonth = "0" + mymonth;
+                }
+                if (myweekday < 10) {
+                    myweekday = "0" + myweekday;
+                }
+                return (myyear + "-" + mymonth + "-" + myweekday);
+            }
         },
         created() {
-            this.getPages()
             this.getData()
         },
         computed: {

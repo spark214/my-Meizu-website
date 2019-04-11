@@ -24,7 +24,7 @@
           </td>
           <td width="140px" :rowspan="item.products.length">
             <el-button v-if="item.status==0" type="danger">立即付款</el-button>
-            <p v-if="item.status!=3" style="cursor:pointer;margin: 10px 0;">取消订单</p>
+            <!--<p v-if="item.status!=3" style="cursor:pointer;margin: 10px 0;">取消订单</p>-->
             <p style="cursor: pointer" @click="goDetail(index)">查看详情</p>
           </td>
         </tr>

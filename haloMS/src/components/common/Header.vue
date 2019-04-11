@@ -59,13 +59,25 @@
       // 用户名下拉菜单选择事件
       handleCommand(command) {
         if (command == 'loginout') {
-          sessionStorage.removeItem('username');
-          this.$router.push('/login');
+          const url = this.$rootUrl + "/api/ms/logout";
+
+          const options = {
+            method: 'GET',
+            url: url,
+            data: {}
+          };
+
+          this.$axios(options).then((res) => {
+            let item = res.data.data;
+            if (item.code == 0) {
+              this.$router.push('/login');
+            }
+          })
         }
       },
     },
     created(){
-      this.username=sessionStorage.getItem('username');
+
     }
 
   }

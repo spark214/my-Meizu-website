@@ -138,6 +138,9 @@
                                     phone:userInfo.phone,
                                     token:item.token
                                 });
+                                sessionStorage.setItem('token',item.token);
+                                sessionStorage.setItem('userName',userInfo.username);
+                                sessionStorage.setItem('avatar',userInfo.avatar);
                                 sessionStorage.setItem('expireTime', (new Date().getTime() + 58 * 60 * 1000));
                                 let pageHistory = sessionStorage.getItem('pageHistory');
                                 if (pageHistory) {
@@ -170,7 +173,10 @@
                                     phone:userInfo.phone,
                                     token:item.token
                                 });
-                                sessionStorage.setItem('expireTime', (new Date().getTime() + 60 * 60 * 1000));
+                                sessionStorage.setItem('token',item.token);
+                                sessionStorage.setItem('userName',userInfo.username);
+                                sessionStorage.setItem('avatar',userInfo.avatar);
+                                sessionStorage.setItem('expireTime', (new Date().getTime() + 58 * 60 * 1000));
                                 let pageHistory = sessionStorage.getItem('pageHistory');
                                 if (pageHistory) {
                                     this.$router.push({path: pageHistory});

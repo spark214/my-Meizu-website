@@ -18,7 +18,7 @@
       <div class="sider_ser sider_item">
         <div class="sider_title"><i class="el-icon-news" style="font-size: 18px"></i> <span>Halo社区</span></div>
         <ul class="sider_list">
-          <li  @click="selectItem(3)"><router-link :to="item[3].route" >{{item[3].name}}</router-link></li>
+          <!--<li  @click="selectItem(3)"><router-link :to="item[3].route" >{{item[3].name}}</router-link></li>-->
           <!--<li @click="selectItem(4)"><router-link :to="item[4].route" >{{item[4].name}}</router-link></li>-->
           <li  @click="selectItem(5)"><router-link :to="item[5].route" >{{item[5].name}}</router-link></li>
         </ul>

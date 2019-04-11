@@ -6,11 +6,11 @@
           <el-header id="login_container_header">
             <p>Halo. 后台系统登录</p>
           </el-header>
+          <p style="color:#e22841;font-size: 12px;text-align: center">{{errormsg}}</p>
           <el-container id="login_container_main">
             <el-form :model="loginForm" :rules="rules" ref="loginForm">
               <el-form-item prop="username">
                 <el-input v-model="loginForm.username" placeholder="Halo. 员工ID" @change="vp"></el-input>
-                <p style="color:#e22841;font-size: 12px">{{errormsg}}</p>
               </el-form-item>
               <el-form-item prop="password">
                 <el-input placeholder="密码" type="password" v-model="loginForm.password" @keyup.enter.native="submitForm()"></el-input>
@@ -31,6 +31,7 @@
   export default {
     data: function () {
       return {
+        errormsg:'',
         loginForm: {
           username: "",
           password: ""
@@ -58,11 +59,9 @@
         this.$axios(options).then((res) => {
           let item = res.data.data;
           if (item.data) {
-            if (item.errorCode == 0) {
-            }
-            else {
-              this.errormsg=item.msg;
-            }
+
+          } else {
+            this.errormsg = '用户名无效';
           }
         })
       },
@@ -75,15 +74,12 @@
         };
         this.$axios(options).then((res) => {
           let item = res.data.data;
-          if (item.data) {
-            if (item.errorCode == 0) {
-              sessionStorage.setItem('username',item.data.username);
-              this.$router.push({path: '/', });
+            if (item.code == 0) {
+              this.$router.push({path: '/'});
+              sessionStorage.setItem('expireTime', (new Date().getTime() + 58 * 60 * 1000));
+            } else {
+              this.errormsg = '请检查账号及密码';
             }
-            else {
-              this.errormsg=item.msg;
-            }
-          }
         })
       }
     }

@@ -10,38 +10,38 @@
         <!--</div>-->
         <div class="container">
             <div class="post-header">
-                <el-input v-model="select_word" placeholder="" class="searchInput"></el-input>
-                <el-button icon="search" @click="search">搜索</el-button>
-                <el-button type="primary" @click="handleNew()" class="newBtn">发帖</el-button>
-                <loader exportName="ll"  :headMapping="headMapping"
-                        :exportData="validTableData" class="loadBtn"></loader>
+                <el-input v-model="keyword" placeholder="" class="searchInput"></el-input>
+                <el-button icon="search" @click="search" type="primary">搜索</el-button>
+                <!--<el-button type="primary" @click="handleNew()" class="newBtn">发帖</el-button>-->
+                <loader exportName="帖子列表"  :headMapping="headMapping"
+                        :exportData="dataTable" class="loadBtn"></loader>
             </div>
-            <el-table :data="dataTable" ref="multipleTable" @selection-change="handleSelectionChange"
+            <el-table :data="dataTable" ref="multipleTable"
                       style="width: 100%" class="elTable">
+                <el-table-column label="ID" prop="topicId"></el-table-column>
                 <el-table-column label="标题" prop="title"></el-table-column>
-                <el-table-column label="版块" prop="section"></el-table-column>
+                <el-table-column label="版块" prop="typeName"></el-table-column>
                 <el-table-column label="用户ID" prop="userId"></el-table-column>
-                <el-table-column label="用户名" prop="username"></el-table-column>
-                <el-table-column label="浏览量" prop="viewNum"></el-table-column>
-                <el-table-column label="回复量" prop="replyNum"></el-table-column>
-                <!--<el-table-column label="创建时间" prop="createTime"></el-table-column>-->
-                <el-table-column label="最后回复时间" prop="replyTime"></el-table-column>
-                <el-table-column label="操作" min-width="150">
+                <el-table-column label="用户名" prop="userName"></el-table-column>
+                <el-table-column label="回复量" prop="backNumber">
                     <template slot-scope="scope">
-                        <el-button size="small"  @click="handleView(scope.$index,scope.row)">
+                        {{scope.row.backNumber || 0}}
+                        </template>
+                </el-table-column>
+                <el-table-column label="最后回复时间" prop="lastTime"></el-table-column>
+                <el-table-column label="操作" min-width="100">
+                    <template slot-scope="scope">
+                        <el-button size="small" type="primary" @click="getTopicDetail(scope.row.topicId,scope.row.typeName,scope.row.backNumber,scope.row.userName)">
                             查看
                         </el-button>
-                        <el-button size="small" type="primary" @click="handleEdit(scope.$index,scope.row)" >
-                            编辑
-                        </el-button>
-                        <el-button size="small" type="danger" @click="handleCancelHonor(scope.$index,scope.row)">
+                        <el-button size="small" type="danger" @click="delTopic(scope.row.topicId)">
                             删除
                         </el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <div class="pagination">
-                <el-pagination @current-change="handleCurrentChange" layout="prev, pager, next" :page-count="pages">
+                <el-pagination @current-change="handleCurrentChange" layout="total, prev, pager, next" :total="total" page-size="10">
                 </el-pagination>
             </div>
         </div>
@@ -75,23 +75,28 @@
         <el-dialog :visible.sync="viewVisible" :title="查看帖子">
             <div class="viewDialog-header">
                 <p class="view-title">{{view.title}}</p>
-                <p class="view-info"><span>作者：{{view.author}}</span><span> 版块: {{view.section}}</span><span>浏览量：{{view.viewNum}}</span><span>回复量：{{view.replyNum}}</span><span>发帖时间：{{view.createTime}}</span>
+                <p class="view-info"><span>作者：{{view.userName}}</span><span> 版块: {{view.typeName}}</span><span>回复量：{{backTotal || 0}}</span><span>发帖时间：{{view.gmtCreate}}</span>
                 </p>
                 <div class="view-header-button">
-                    <el-button type="primary">编辑</el-button>
-                    <el-button type="danger">删帖</el-button>
+                    <!--<el-button type="primary">编辑</el-button>-->
+                    <el-button type="danger" @click="delTopic(view.topicId)">删帖</el-button>
                 </div>
             </div>
             <div class="viewDialog-body">
-                <p v-html="view.context"></p>
+                <p v-html="view.content"></p>
             </div>
-            <div class="viewDialog-comment">
+            <div class="viewDialog-comment" >
                 <h4>回复</h4>
-                <div v-for="(item,index) in view.reply" class="comment-item">
-                    <p class="comment-item-floor">F{{index+1}}</p>
-                    <p class="comment-item-context">{{item.context}}</p>
-                    <p class="comment-item-info"><span>回复者：{{item.author}}</span><span>回复时间：{{item.replytime}}</span><span class="comment-item-delReply">删除该回复</span></p>
+                <div class="backPagination">
+                    <el-pagination @current-change="handleBackPageChange" layout="total, prev, pager, next" :total="backTotal" page-size="10">
+                    </el-pagination>
                 </div>
+                <div v-for="(item,index) in reply" class="comment-item" v-if="reply.length > 0">
+                    <p class="comment-item-floor">F{{index+1}}</p>
+                    <p class="comment-item-context" v-html="item.content"></p>
+                    <p class="comment-item-info"><span>回复者：{{item.userName}}</span><span>回复时间：{{item.backTime}}</span><span class="comment-item-delReply" @click="delBack(item.backId)">删除该回复</span></p>
+                </div>
+                <p v-if="reply.length == 0" style="margin-left: 6px;color: #333333">暂无回复</p>
             </div>
         </el-dialog>
     </div>
@@ -111,39 +116,41 @@ export default{
                 {value: '3', label: '建议反馈'},
                 {value: '4', label: '谈天说地'},
             ],
-            dataTable:[
-                {title:'123',section:'123',userId:'123',username:'123',viewNum:'123',createTime:'1',replyNum:'1',replyTime:'2'},
-            ],
-            view: {
-                section: '鹅',
-                title: '666',
-                author: '333',
-                viewNum: '12',
-                replyNum: '12',
-                context:'<a href="404.vue">ni hao</a>',
-                createTime: '1',
-                reply: [
-                    {context: '123', author: '1', replytime: '1'},
-                    {context: '145', author: '8', replytime: '1'},
-                    {context: '567', author: '9', replytime: '1'},
-                ]
-            },
+            keyword:'',
+            dataTable:[],
+            view: {},
+            reply: [],
             editorVisible:false,
             editorTitle:'发布帖子',
             viewVisible:false,
             idx:-1,
             headMapping : [
-                {header: '店铺编码', key: 'storeCode'},
-                {header: '店铺名称', key: 'storeName'},
-                {header: '店铺级别', key: 'storeLevel'}],
-            validTableData:[
-                {storeCode: "1601",storeLevel: "A+",storeName: "MISS SIXTY广州正佳广场天河路店"}]
+                {header: '帖子ID', key: 'topicId'},
+                {header: '标题', key: 'title'},
+                {header: '版块ID', key: 'typeId'},
+                {header: '版块名称', key: 'typeName'},
+                {header: '用户头像', key: 'avatar'},
+                {header: '用户ID', key: 'userId'},
+                {header: '用户名', key: 'userName'},
+                {header: '回复量', key: 'backNumber'},
+                {header: '最后回复', key: 'lastBack'},
+                {header: '最后活跃时间', key: 'lastTime'},
+            ],
+            validTableData:[],
+            pageNum:1,
+            total:0,
+            backTotal:0,
+            backPageNum:1
         }
     },
     methods:{
-        handleView(index,row){
-            this.idx = index;
-            this.viewVisible = true;
+        handleCurrentChange(value){
+            this.pageNum = value;
+            this.getData();
+        },
+        handleBackPageChange(value){
+            this.backPageNum = value;
+            this.getBack();
         },
         handleEdit(index,row){
             this.idx = index;
@@ -153,7 +160,154 @@ export default{
         handleNew(){
             this.editorTitle = '发布帖子';
             this.editorVisible = true;
+        },
+        getData(){
+            const url = this.$rootUrl + "/api/ms/getTopicList";
+
+            const options = {
+                method: 'POST',
+                url: url,
+                data: {
+                    pageNum:this.pageNum,
+                    pageSize:10
+                }
+            };
+
+            this.$axios(options).then((res) => {
+                let item = res.data.data;
+                if (item.code == 0) {
+                    this.total = item.data.count;
+                    this.dataTable = item.data.topics;
+                }
+            })
+        },
+        getTopicDetail(id,typeName,backNumber,userName){
+            const url = this.$rootUrl + "/api/ms/getTopicDetail";
+
+            const options = {
+                method: 'POST',
+                url: url,
+                data: {
+                    pageNum:this.backPageNum,
+                    pageSize:10,
+                    id:id
+                }
+            };
+
+            this.$axios(options).then((res) => {
+                let item = res.data.data;
+                if (item.code == 0) {
+                    this.view = item.data.topic;
+                    this.view.typeName = typeName;
+                    this.view.backNumber = backNumber;
+                    this.view.userName = userName;
+                    this.reply = item.data.backs;
+                    this.backTotal = item.data.count;
+                    this.viewVisible = true;
+                }
+            })
+        },
+        getBack(id){
+            const url = this.$rootUrl + "/api/ms/topicBack";
+
+            const options = {
+                method: 'POST',
+                url: url,
+                data: {
+                    pageNum:this.backPageNum,
+                    pageSize:10,
+                    id:id
+                }
+            };
+
+            this.$axios(options).then((res) => {
+                let item = res.data.data;
+                if (item.code == 0) {
+                    this.reply = item.data.backs;
+                    this.backTotal = item.data.count;
+                }
+            })
+        },
+        search(){
+            const url = this.$rootUrl + "/api/ms/searchTopic";
+
+            const options = {
+                method: 'POST',
+                url: url,
+                data: {
+                    pageNum:this.pageNum,
+                    pageSize:10,
+                    keyword:this.keyword
+                }
+            };
+
+            this.$axios(options).then((res) => {
+                let item = res.data.data;
+                if (item.code == 0) {
+                    this.total = item.data.count;
+                    this.dataTable = item.data.topics;
+                }
+            })
+        },
+        delTopic(id){
+            this.$confirm('此操作将永久删除该帖子, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                const url = this.$rootUrl + "/api/ms/delTopic";
+
+                const options = {
+                    method: 'POST',
+                    url: url,
+                    data: {
+                        ids: id
+                    }
+                };
+
+                this.$axios(options).then((res) => {
+                    let item = res.data.data;
+                    if (item.code == 0) {
+                        this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        });
+                        this.getData();
+                    }
+                })
+            })
+        },
+        delBack(id){
+            this.$confirm('此操作将永久删除该回复, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                const url = this.$rootUrl + "/api/ms/delBack";
+
+                const options = {
+                    method: 'POST',
+                    url: url,
+                    data: {
+                        ids: id
+                    }
+                };
+
+                this.$axios(options).then((res) => {
+                    let item = res.data.data;
+                    if (item.code == 0) {
+                        this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        });
+                        this.getBack(id);
+                    }
+                })
+            })
         }
+    },
+    created(){
+        this.getData();
     }
 }
 </script>
@@ -173,7 +327,7 @@ export default{
     }
     .loadBtn{
         position: absolute;
-        right: 70px;
+        right: 0px;
         top:0px;
     }
 }
@@ -228,7 +382,8 @@ export default{
     padding: 20px 10px;
 }
 .viewDialog-comment{
-    max-height: 250px;
+    position: relative;
+    max-height: 350px;
     overflow-y: auto;
     margin: 20px 0;
     border-radius: 3px;
@@ -266,9 +421,15 @@ export default{
            }
            .comment-item-delReply{
                color: #409EFF;
+               cursor: pointer;
            }
        }
     }
+}
+.backPagination{
+    position: absolute;
+    right: 20px;
+    top: 5px;
 }
 }
 </style>

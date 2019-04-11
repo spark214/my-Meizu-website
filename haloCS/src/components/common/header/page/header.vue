@@ -27,26 +27,26 @@
       </li>
       <li><a @click="goRouter('haloCenter')">社区</a></li>
       <li class="nav-search">
-        <input type="text" placeholder="魅族15" v-model="keyword" id="searchInput">
+        <input type="text" placeholder="魅族 15" v-model="keyword" id="searchInput">
         <i class="el-icon-search" @click="goSearch"></i>
       </li>
     </ul>
     <div class="login clearfix">
       <ul>
         <li>
-          <el-badge :value="nowMessage" class="item" max="10" :hidden="!isLogin">
+          <el-badge :value="nowMessage" class="item" max="10" :hidden="!isLogin || nowMessage == 0">
             <el-dropdown trigger="hover" @command=" handleCommand" placement="bottom">
               <span class="el-dropdown-link" @click="goRouter('member')">
-                <img src="../../../../../static/img/user.png" width="24px">
+                <img :src="avatar" width="24px">
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="login" v-if="!isLogin">立即登录</el-dropdown-item>
                 <el-dropdown-item command="register" divided v-if="!isLogin">立即注册</el-dropdown-item>
 
                 <el-dropdown-item command="myorder" v-if="isLogin">我的订单</el-dropdown-item>
-                <el-badge :value="nowMessage" class="item" max="10" is-dot="true" :hidden="!isLogin">
-                  <el-dropdown-item command="myMessage" v-if="isLogin">我的消息</el-dropdown-item>
-                </el-badge>
+                  <el-dropdown-item command="myMessage" v-if="isLogin">
+                    <el-badge :value="nowMessage" class="item" max="10" is-dot="true" :hidden="!isLogin || nowMessage == 0" v-if="isLogin">我的消息</el-badge>
+                  </el-dropdown-item>
                 <el-dropdown-item command="loginout" divided v-if="isLogin">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -90,11 +90,12 @@
         ],
         isLogin: false,
         userIcon: "../../../static/img/21.jpg",
-        keyword:'魅族15',
+        keyword:'',
         stompClient:'',
         timer:'',
         token:'',
-        nowMessage:0
+        nowMessage:0,
+        avatar:'../../../../../static/img/user.png'
       }
     },
     components: {
@@ -114,7 +115,7 @@
           this.$router.push({path: "/mallProductOther", query: {proId: id}})
       },
       goSearch() {
-        var name = this.keyword;
+        var name = this.keyword || "魅族 15";
         this.$router.push({path: "/mallList", query: {name: name, cateId: -1}});
       },
       handleCommand(command) {
@@ -129,6 +130,7 @@
             let item = res.data.data;
             if (item.errorCode == 0) {
               sessionStorage.setItem('expireTime',0);
+              this.disconnect();
               const path = this.$route.path;
               if(path == '/newPost' || path == '/user' || path == '/mallCheck' || this.$route.matched[0].path == '/member'){
                 this.$router.push({path:'/'});
@@ -139,6 +141,7 @@
         });
         }
         else if (command == 'login') {
+          sessionStorage.setItem('pageHistory',this.$route.fullPath);
           this.$router.push('/login');
         }
         else if (command == 'register') {
@@ -156,6 +159,9 @@
         if(expireTime && nowTime < expireTime){
           this.isLogin = true;
           this.initWebSocket();
+          this.avatar = sessionStorage.getItem('avatar') || '../../../../../static/img/user.png';
+        }else{
+          this.isLogin = false;
         }
       },
       initWebSocket() {
@@ -177,8 +183,7 @@
         this.stompClient = Stomp.over(socket);
         // 定义客户端的认证信息,按需求配置
         let headers = {
-//          access_token:this.$store.state.login.token,
-          access_token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjIsImV4cCI6MTU1NDg2NzAyNCwiaWF0IjoxNTU0ODYzNDI0fQ.GbVb4bq2w75LVEjAhBN_sYGqws-F0dJhyFeNKBmtjLE"
+          access_token:sessionStorage.getItem('token')
         }
         // 向服务器发起websocket连接
         this.stompClient.connect(headers,() => {
