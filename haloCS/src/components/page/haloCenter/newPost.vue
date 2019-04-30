@@ -3,7 +3,8 @@
         <center-header></center-header>
         <div class="newPost-container">
             <div class="newPost-header">
-                <p>发表帖子</p>
+                <p v-if="type == 1">发表帖子</p>
+                <p v-if="type == 3">编辑帖子</p>
             </div>
             <div class="newPost-body">
                 <div>
@@ -56,6 +57,7 @@
             },
             newPost(msg){
                 if(this.type == 1){
+
                     var url = this.$rootUrl + "/api/forum/newTopic";
                     const options = {
                         method: 'POST',
@@ -81,8 +83,8 @@
                                 type: 'warning'
                             }).then(() => {
                                 this.goRouter('/haloCenter');
-                            }).catch(() => {
-
+                            }).catch((err) => {
+                                this.$message.error(err);
                             });
                         }
                     })
@@ -128,8 +130,12 @@
                     if (item.code == 0) {
                         this.options = item.data;
                         this.$store.commit('TYPELIST',item.data);
+                    }else {
+                        throw item.message;
                     }
-                })
+            }).catch(errorMsg => {
+                    this.$message.error(errorMsg);
+            });
             }
         },
         created(){

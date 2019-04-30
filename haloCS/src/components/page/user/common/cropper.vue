@@ -1,5 +1,5 @@
 <template>
-  <div class="crop">
+  <div class="crop" v-loading="loading">
 
     <div class="now_pro">
       <h3 class="title">当前头像</h3>
@@ -18,7 +18,7 @@
         <div class="btn_ok">
           <el-button type="primary" class="choose_btn" style="margin-bottom: 5px" @click="save">保存</el-button>
           <br>
-          <el-button class="choose_btn">取消</el-button>
+          <el-button class="choose_btn" @click='backToIndex'>取消</el-button>
         </div>
 
       </div>
@@ -55,7 +55,8 @@
         panel: false,
         url: '',
         file: {},
-        avatar: ""
+        avatar: "",
+        loading:false
       }
     },
     mounted() {
@@ -82,6 +83,9 @@
       });
     },
     methods: {
+      backToIndex(){
+        this.$emit('edit', '1');
+      },
       getData() {
         var url = this.$rootUrl + "/api/user/userData";
         var token = sessionStorage.getItem('accessToken');
@@ -94,23 +98,27 @@
         };
         this.$axios(options).then((res) => {
           let item = res.data.data;
-          if (item.data) {
             if (item.errorCode == 0) {
               var avatar = item.data.userinfo.avatar;
-              if (avatar == "//") {
-                this.avatar = "//image-res.mzres.com/image/uc/80f8d55d49464e3e90d72f6679cbf970z?t=946656000000";
+              if (avatar == "//" || avatar == "") {
+                this.avatar = "https://image-res.mzres.com/img/download/uc/11/03/57/90/00/11035790/w100h100?t=1556275801"
               }
               else {
                 this.avatar = avatar;
               }
+            }else if (item.errorCode == 403) {
+              sessionStorage.setItem('pageHistory', this.$route.fullPath);
+              this.$router.push({path: "/login"});
+              throw item.msg;
+            } else {
+              throw item.msg;
             }
-
-          }
-        })
+      }).catch(errorMsg => {
+          this.$message.error(errorMsg);
+      });
       },
       save() {
-//        let param = new FormData();
-//        param.append("imgFile", this.headerImage);
+        this.loading = true;
         let param = {
           img:this.headerImage
         };
@@ -118,20 +126,28 @@
 
         this.$axios.post(url, param).then((res) => {
           let item = res.data.data;
-          if (item.data) {
             if (item.errorCode == 0) {
               if (item.data.url) {
                 this.$message({
                   message: '修改头像成功',
                   type: 'success'
                 });
-                this.getData();
+//                this.getData();
                 this.headerImage = '';
                 sessionStorage.setItem('avatar',item.data.url);
+                this.backToIndex();
               }
+            }else if (item.errorCode == 403) {
+              sessionStorage.setItem('pageHistory', this.$route.fullPath);
+              this.$router.push({path: "/login"});
+              throw item.msg;
+            } else {
+              throw item.msg;
             }
-          }
-        })
+          this.loading = false;
+        }).catch(errorMsg => {
+          this.$message.error(errorMsg);
+        });
       },
       getObjectURL(file) {
         var url = null;

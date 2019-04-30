@@ -8,12 +8,6 @@ import VueWechatTitle from 'vue-wechat-title';
 import Vuelazyload from 'vue-lazyload';
 import store from './store';
 import vuex from 'vuex'
-// import VueSocketio from 'vue-socket.io'
-//
-// Vue.use(new VueSocketio({
-//   debug: true,
-//   connection: 'ws://121.40.165.18:8800'
-// }));
 
 Vue.use(vuex)
 Vue.use(VueWechatTitle)
@@ -25,18 +19,18 @@ Vue.prototype.$rootUrl = '/proxy';
 Vue.use(Vuelazyload, {loading: require('../static/img/lazyloadPanda.gif')});
 
 router.beforeEach((to, from, next) => {
-  // let expireTime = sessionStorage.getItem('expireTime');
-  // if(to.path === '/newPost' || to.path == '/user' || to.path == '/mallCheck' || to.matched[0].path == '/member'){
-  //   const nowTime = new Date().getTime();
-  //   if(expireTime && nowTime < expireTime){
-  //     next();
-  //   }else{
-  //     sessionStorage.setItem('pageHistory',to.fullPath);
-  //     next('/login');
-  //   }
-  // }else{
+  let expireTime = sessionStorage.getItem('expireTime');
+  if(to.path === '/newPost' || to.path == '/user' || to.path == '/mallCheck' || to.matched[0].path == '/member'){
+    const nowTime = new Date().getTime();
+    if(expireTime && nowTime < expireTime){
+      next();
+    }else{
+      sessionStorage.setItem('pageHistory',to.fullPath);
+      next('/login');
+    }
+  }else{
     next();
-  // }
+  }
 })
 
 new Vue({

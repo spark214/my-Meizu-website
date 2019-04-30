@@ -27,7 +27,8 @@
 
   export default {
     props: {
-      type: 0
+      type: 0,
+      phone:''
     },
     data() {
       return {
@@ -41,7 +42,6 @@
 
           ],
         },
-
         content: '点击发送验证码',
         totalTime: 60,
         canClick: true,
@@ -51,7 +51,7 @@
     },
     methods: {
       next() {
-        if (this.type < 2) {
+        if (this.type == 0) {
           var url = this.$rootUrl + "/api/user/regVerifyCode";
           const options = {
             method: 'POST',
@@ -60,41 +60,52 @@
           };
           this.$axios(options).then((res) => {
             let item = res.data.data;
-            if (item.data) {
               if (item.errorCode == 0) {
-                if (this.type == 0)
                   this.$router.push({path: '/userinfo', query: {phone: this.loginForm.phone}});
-                else if (this.type == 1) {
-                  this.$emit("ok", 1)
-                }
-              }
-              else {
+              }else {
                 this.$message.error(item.msg);
               }
+          })
+        }else if(this.type == 1){
+          var url = this.$rootUrl + "/api/user/authsVerifyCode";
+          const options = {
+            method: 'POST',
+            url: url,
+            data: this.loginForm
+          };
+          this.$axios(options).then((res) => {
+            let item = res.data.data;
+            if (item.errorCode == 0) {
+                this.$emit("ok", 1)
+            }else {
+              this.$message.error(item.msg);
             }
           })
-        }
-        else {
-          var token = sessionStorage.getItem('accessToken');
+        }else if(this.type == 2) {
+          this.loginForm.phone = this.phone;
           var url = this.$rootUrl + "/api/user/updatePhone";
           const options = {
             method: 'POST',
             url: url,
             data: {
               data:this.loginForm,
-              token:token
             }
           };
           this.$axios(options).then((res) => {
             let item = res.data.data;
-            if (item.data) {
               if (item.errorCode == 0) {
-                this.$emit("ok", 2)
-              }
-              else {
+                this.$emit("ok", 2);
+                this.$message({
+                  message: '更新手机号码成功',
+                  type: 'success'
+                });
+              }else if (item.errorCode == 403) {
+                sessionStorage.setItem('pageHistory', this.$route.fullPath);
+                this.$router.push({path: "/login"});
+                throw item.msg;
+              }else {
                 this.$message.error(item.msg);
               }
-            }
           })
         }
 
@@ -107,7 +118,6 @@
         let clock = window.setInterval(() => {
           this.totalTime--
           this.content = this.totalTime + "s后重新发送"
-          console.log(this.totalTime)
           if (this.totalTime <= 0) {
             window.clearInterval(clock)
             this.content = '重新发送验证码'
@@ -115,7 +125,10 @@
             this.canClick = true
           }
         }, 1000)
-        var phone = this.$route.query.phone
+        var phone = this.$route.query.phone;
+        if(this.type == 2){
+          phone = this.phone;
+        }
         this.loginForm.phone = this.$route.query.phone
         if (this.type == 0 || this.type == 2)
           var url = this.$rootUrl + "/api/user/regRequestSmsCode" ;
@@ -130,12 +143,9 @@
         };
         this.$axios(options).then((res) => {
           let item = res.data.data;
-          if (item.data) {
             if (item.errorCode != 0) {
-              this.errormsg = item.msg;
-              this.dialogVisible = true
+              this.$message.error(item.msg);
             }
-          }
         })
       },
 

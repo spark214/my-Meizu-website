@@ -8,9 +8,9 @@
                     <li :class="{on:select == 2}" @click="select = 2"><a>喜元</a></li>
                 </ul>
             </div>
-            <v-manage v-show="select == 1" @edit="selectEdit"></v-manage>
+            <v-manage v-show="select == 1" @edit="selectEdit" :reload="reload"></v-manage>
             <v-coin v-show="select == 2"></v-coin>
-            <v-crop v-show="select == 3"></v-crop>
+            <v-crop v-show="select == 3" @edit="back"></v-crop>
         </div>
 
         <v-footer></v-footer>
@@ -26,13 +26,17 @@
         data() {
             return {
                 select: 1,
+                reload:0
             }
         },
         methods: {
             selectEdit(msg){
                 this.select = msg;
-
-            }
+            },
+            back(msg){
+                this.select = msg;
+                this.reload++;
+            },
         },
         components: {
             vHeader, vFooter, vManage, vCoin, vCrop

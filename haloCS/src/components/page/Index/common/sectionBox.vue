@@ -1,13 +1,13 @@
 <template>
   <div class="sectionBox clearfix">
-    <h1 class="sectionBox_title" @click="goCate(1)">{{title}}</h1>
-    <div class="sectionBox_left clearfix" @click="goProduct(38)">
-      <img :src="img[0]" width="615px" @click="goProduct(38)">
+    <h1 class="sectionBox_title" @click="goCate()">{{title}}</h1>
+    <div class="sectionBox_left clearfix"  v-if="img.length > 0">
+      <img :src="img[0].img" width="615px" @click="goProduct(img[0].id)">
     </div>
-    <div class="sectionBox_right">
-      <img :src="img[1]" width="615px" @click="goProduct(1)">
-      <img :src="img[2]" width="303px" @click="goProduct(2)">
-      <img :src="img[3]" width="303px" @click="goProduct(3)">
+    <div class="sectionBox_right" v-if="img.length > 0">
+      <img :src="img[1].img" width="615px" @click="goProduct(img[1].id)">
+      <img :src="img[2].img" width="303px" @click="goProduct(img[2].id)">
+      <img :src="img[3].img" width="303px" @click="goProduct(img[3].id)">
     </div>
 
 
@@ -27,7 +27,13 @@
       return {}
     },
     methods: {
-      goCate(id) {
+      goCate() {
+        let id;
+        if(this.title == '手机'){
+          id = 0;
+        }else{
+          id = 0
+        }
         this.$router.push({path: "/mallList", query: {cateId: id}})
       },
       goRouter(that) {

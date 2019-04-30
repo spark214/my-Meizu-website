@@ -4,16 +4,23 @@
         <div class="sectionPage-container clearfix">
             <div class="section-container">
                 <div class="section-header">
-                    <h3>社区热帖</h3>
+                    <h3>社区新帖</h3>
                 </div>
-                <div class="section-list">
-                    <div class="section-item" v-for="item in sectionList" @click="goRouter('/postDetail',item.topicId)">
-                        <p class="section-item-title">{{item.title}}</p>
-                        <div class="section-item-data">
-                            <span>{{item.userName}}</span>
-                            <span>回复：{{item.backNumber || 0}}</span>
-                            <span>{{item.lastBack }} &nbsp;&nbsp;{{item.lastTime }}</span>
+                <div class="section-list" v-loading="loading">
+                    <div class="section-item" v-for="item in sectionList">
+                        <div class="section-item-left">
+                            <img :src="item.avatar" width="55px" height="55px" style="width: 55px;height: 55px;border: 1px solid #dcdcdc;border-radius: 5px" v-if="item.avatar">
+                            <img src="https://image-res.mzres.com/img/download/uc/11/03/57/90/00/11035790/w100h100?t=1556275801" width="55px" height="55px" style="width: 55px;height: 55px;border: 1px solid #dcdcdc;border-radius: 5px" v-else>
                         </div>
+                        <div class="section-item-right">
+                            <p class="section-item-title"  @click="goRouter('/postDetail',item.topicId)">{{item.title}}</p>
+                            <div class="section-item-data">
+                                <span class="section-item-data-type" @click="goType(item.typeId,item.typeName)">{{item.typeName}}</span><i class="point">&nbsp;</i>
+                                <span class="section-item-data-name">{{item.userName}}</span><i class="point" v-if="item.lastBack">&nbsp;</i>
+                                <span v-if="item.lastBack" @click="goRouter('/postDetail',item.topicId)">最后回复来自:{{item.lastBack }} &nbsp;&nbsp;{{item.lastTime }}</span>
+                            </div>
+                        </div>
+                        <p :class="[{'section-item-data-backNumber':!item.backNumber},{'section-item-data-backNumber_have':item.backNumber}]"  @click="goRouter('/postDetail',item.topicId)">{{item.backNumber || 0}}</p>
                     </div>
                 </div>
             </div>
@@ -37,14 +44,19 @@
         data(){
             return {
                 sectionName: '闲置交易',
-                sectionList: []
+                sectionList: [],
+                loading:false
             }
         },
         methods: {
+            goType(id,name){
+                this.$router.push({path: '/centerSection', query: {id:id,name:name}});
+            },
             goRouter(item,id){
                 this.$router.push({path: item, query: {topicId:id}});
             },
             getData(){
+                this.loading = true;
                 var url = this.$rootUrl + "/api/forum/getAllTopic";
                 const options = {
                     method: 'POST',
@@ -58,8 +70,13 @@
                     let item = res.data.data;
                     if (item.code == 0) {
                         this.sectionList = item.data.topics;
+                        this.loading = false;
+                    }else{
+                        throw item.message;
                     }
-                })
+            }).catch(errorMsg => {
+                    this.$message.error(errorMsg);
+            });
             }
         },
         created() {
@@ -111,39 +128,117 @@
     }
     }
     .section-list {
+        min-height: 400px;
         border-top: 1px solid #e6e6e6;
 
     .section-item {
+        height: 50px;
+        position: relative;
         padding: 15px;
         border-bottom: 1px solid #e6e6e6;
 
+    .section-item-left{
+        position: absolute;
+        top:12px;
+    }
+    .section-item-right{
+        position: absolute;
+        left: 90px;
+        top:17px;
+    }
+
     .section-item-title {
         cursor: pointer;
-        font-weight: 500;
-        color: #333;
+        font-weight: 400;
+        color: #777;
+        width: 500px;
+        overflow-x: hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
     &:hover {
          color: #00a7ea;
      }
     }
 
     .section-item-data {
-        margin-top: 5px;
+        margin-top: 6px;
         font-size: 14px;
-        color: #666;
+        color: #999;
+    .section-item-data-name{
+        display: inline-block;
+        max-width: 90px;
+        overflow-x: hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+    }
+
+    .section-item-data-type{
+        cursor: pointer;
+        display: inline-block;
+        background-color: #efefef;
+        text-align: center;
+        border-radius: 4px;
+        padding: 0 10px;
+        color: #999;
+        font-size: 13px;
+        margin-right: 10px;
+    }
 
     span {
+        cursor: pointer;
+        vertical-align: middle;
         padding: 0 15px;
-        border-right: 1px solid #666;
-
-    &:first-child {
-         padding-left: 0;
-     }
 
     &:last-child {
          border-right: 0;
      }
 
     }
+    }
+    .section-item-data-backNumber{
+        cursor: pointer;
+        position: absolute;
+        right: 10px;
+        top:30px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color:#999;
+        color: #FFFFFF;
+        height: 20px;
+        width: 40px;
+        opacity: 0.7;
+        border-radius: 10px;
+        text-align: center;
+    }
+    .section-item-data-backNumber_have{
+        cursor: pointer;
+        background-color:#00a2d4;
+        position: absolute;
+        right: 10px;
+        top:30px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #FFFFFF;
+        height: 20px;
+        width: 40px;
+        opacity: 0.7;
+        border-radius: 10px;
+        text-align: center;
+    }
+
+
+    .point {
+        display: inline-block;
+        width: 5px;
+        height: 5px;
+        background-color: #ccc;
+        border-radius: 50%;
+        position: relative;
+        top:8px;
     }
     }
     }

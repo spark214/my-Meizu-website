@@ -1,5 +1,5 @@
 <template>
-    <div class="product-grid">
+    <div class="product-grid" v-loading="loading">
         <el-row :gutter="7">
             <el-col :span="6" v-for="(item,index) in item">
                 <el-card shadow="hover" class="list_card">
@@ -8,10 +8,9 @@
                              @click="goProduct(item.proId)">
                         <div class="list_colorchoose">
                             <ul class="clearfix">
-                                <li v-for="(pic,picIndex) in  filterImg[index]" v-if="pic!==undefined">
+                                <li v-for="(pic,picIndex) in  filterImg[index]" v-if="pic !== undefined"  :class="{gridSelectPic:selectPic[index]==(picIndex)}">
                                     <img v-lazy="pic" :key="pic"
-                                         width="39px" @click="selectPic.splice(index,1,picIndex)"
-                                         :class="{selectPic:selectPic[index]==(picIndex)}">
+                                         width="39px" @click="selectPic.splice(index,1,picIndex)">
                                 </li>
                             </ul>
                         </div>
@@ -24,7 +23,7 @@
                 </el-card>
             </el-col>
         </el-row>
-        <div class="unfound" v-if="item.length == 0">
+        <div class="unfound" v-if="item.length == 0 && !loading">
             <h3>暂无商品</h3>
             <img src="http://store.res.meizu.com/member/img/noData-31ec95ea89.png">
         </div>
@@ -46,7 +45,8 @@
                 pageIndex: 1,
                 selectPic: [],
                 cateId: 0,
-                brandId:0
+                brandId:0,
+                loading:false
             }
         },
         methods: {
@@ -65,6 +65,7 @@
                     this.$router.push({path: "/mallProductOther", query: {proId: id}})
             },
             getData(cateId) {
+                this.loading = false;
                 var url;
                 var data = {};
                 var brandId = this.$route.query.brandId;
@@ -112,10 +113,13 @@
                                 this.selectPic[i] = 0
                             }
                             window.scroll(0, 0);
+                        }else{
+                            throw '搜索商品失败';
                         }
                     }else{
-                        throw item.errorMsg;
+                        throw item.msg;
                     }
+                    this.loading = false;
                 }).catch(errorMsg => {
                     this.$message.error(errorMsg);
                 });
@@ -240,5 +244,11 @@
 
     }
 
+    .gridSelectPic{
+        border: 1px solid #ccc;;
+    }
+
     }
 </style>
+
+

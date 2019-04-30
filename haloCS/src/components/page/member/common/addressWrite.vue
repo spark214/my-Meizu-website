@@ -48,54 +48,72 @@
             }
         },
         methods: {
+            check(){
+                let regPhone = /^1[3|4|5|7|8]\d{9}$/;
+                let regAddress = /.+?(省|市|自治区|自治州|县|区)/g;
+                if(this.form.name == ''){
+                    this.$message.error('请检查收货人姓名');
+                    return false;
+                }else if(!regPhone.test(this.form.phone)){
+                    this.$message.error('请检查收货人电话');
+                    return false;
+                }else if(!regAddress.test(this.form.address)){
+                    this.$message.error('请检查收货详细地址');
+                    return false;
+                }
+                return true;
+            },
             ok() {
-                if (this.type != 0) {
-                    if (this.length <= 10) {
-                        if (this.type == 1 || this.type == 3) {
-                            this.form.id = this.length + 1
-                        }
-                        var options;
-                        if (this.type == 2 || this.type == 4) {
-                            var url = this.$rootUrl + "/api/user/updateAddress";
-                            options = {
-                                method: 'POST',
-                                url: url,
-                                data: this.form
-                            };
+                if(this.check()){
+                    if (this.type != 0) {
+                        if (this.length <= 10) {
+                            if (this.type == 1 || this.type == 3) {
+                                this.form.id = this.length + 1
+                            }
+                            var options;
+                            if (this.type == 2 || this.type == 4) {
+                                var url = this.$rootUrl + "/api/user/updateAddress";
+                                options = {
+                                    method: 'POST',
+                                    url: url,
+                                    data: this.form
+                                };
+                            }
+                            else {
+                                var url = this.$rootUrl + "/api/user/addAddress";
+                                options = {
+                                    method: 'POST',
+                                    url: url,
+                                    data: this.form
+                                };
+                            }
+                            this.$axios(options).then((res) => {
+                                let item = res.data.data;
+                                if (item.id || item.errorCode == 0) {
+                                    if (this.type <= 2) {
+                                        this.$emit("ok", 1)
+                                    }
+                                    else {
+                                        bus.$emit('dialogVisible', false);
+                                    }
+                                }else if (item.errorCode == 403) {
+                                    sessionStorage.setItem('pageHistory', this.$route.fullPath);
+                                    this.$router.push({path: "/login"});
+                                    throw item.msg;
+                                } else {
+                                    throw item.msg;
+                                }
+
+                            }).catch(errorMsg => {
+                                this.$message.error(errorMsg);
+                            });
                         }
                         else {
-                            var url = this.$rootUrl + "/api/user/addAddress";
-                            options = {
-                                method: 'POST',
-                                url: url,
-                                data: this.form
-                            };
+                            this.dialogVisible = true
                         }
-                        this.$axios(options).then((res) => {
-                            let item = res.data.data;
-                            if (item.id || item.errorCode == 0) {
-                                if (this.type <= 2) {
-                                    this.$emit("ok", 1)
-                                }
-                                else {
-                                    bus.$emit('dialogVisible', false);
-                                }
-                            }else if (item.errorCode == 403) {
-                                sessionStorage.setItem('pageHistory', this.$route.fullPath);
-                                this.$router.push({path: "/login"});
-                                throw item.errorMsg;
-                            } else {
-                                throw item.errorMsg;
-                            }
-
-                        }).catch(errorMsg => {
-                            this.$message.error(errorMsg);
-                    });
-                    }
-                    else {
-                        this.dialogVisible = true
                     }
                 }
+
             }
         }
     }

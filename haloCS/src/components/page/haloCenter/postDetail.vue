@@ -5,11 +5,11 @@
             <div class="postDetail-body">
                 <div class="postDetail-body-context">
                     <div class="postDetail-body-context-header clearfix">
-                        <div class="body-context-header-left">
+                        <div class="postDetail-body-context-header-left">
                             <img :src="post.avatar" width="60px" height="60px">
                         </div>
-                        <div class="body-context-header-right">
-                            <p class="title">{{post.title}}</p>
+                        <div class="postDetail-body-context-header-right">
+                            <p class="postDetail-body-context-header-right-title">{{post.title}}</p>
                             <div class="header-info clearfix">
                                 <p class="header-info-author">{{post.userName}}</p>
                                 <p class="header-info-right">
@@ -40,6 +40,7 @@
                         <div class="body-reply-right">
                             <p class="body-reply-left-info"><span class="reply-left-info-userName">{{item.userName}} </span>
                                 <span class="reply-left-info-time">{{item.backTime}} </span>
+                                <span @click="delBack(item.backId)" class="reply-left-info-time" style="cursor: pointer" v-if="item.userName == userName || post.userName == userName">删除该回复</span>
                                 <span class="reply-left-info-position">{{index+1}}楼</span></p>
                             <p class="body-reply-left-context" v-html="item.content"></p>
                             <p class="body-reply-left-btn">
@@ -48,13 +49,13 @@
                         </div>
                     </div>
                     <div class="postDetail-body-footer">
-                        <el-button class="body-reply-backBtn" @click="goRouter('/centerSection')">返回列表</el-button>
+                        <el-button class="body-reply-backBtn" @click="goRouter('/centerSection',post.typeId,post.typeName)">返回列表</el-button>
                         <el-pagination @current-change="handlePage" layout="total, prev, pager, next" :total="total" page-size="10">
                         </el-pagination>
                     </div>
                 </div>
-                <div class="postDetail-body-editor clearfix">
-                    <editor type="2" :reply="quote" @newPost="newBack"></editor>
+                <div class="postDetail-body-editor clearfix" v-loading="!isLogin" element-loading-text="登录后可发表你的看法" element-loading-spinner="el-icon-caret-bottom">
+                    <editor type="2" :reply="quote" @newPost="newBack" :clear="clear"></editor>
                 </div>
 
             </div>
@@ -85,7 +86,9 @@
                 quote:'',
                 userName:'',
                 total:0,
-                pageNum:1
+                pageNum:1,
+                clear:0,
+                isLogin:false
             }
         },
         methods: {
@@ -123,11 +126,17 @@
                         if(this.post.avatar == ''){
                             this.post.avatar = '../../../../../static/img/user.png';
                         }
+                    }else{
+                        throw item.message;
                     }
-                })
+                }).catch(errorMsg => {
+                    this.$message.error(errorMsg);
+                });
             },
             replyBack(userId,userName,content){
                 content = content.replace(/<blockquote(([\s\S])*?)<\/blockquote>/g, "");
+                content = content.replace(/<img(([\s\S])*?)alt(([\s\S])*?)>/g, "[图片]");
+                content = content.replace(/<img(([\s\S])*?)>/g, "[表情]");
                 content = content.replace(/(\n)/g, "");
                 content = content.replace(/(\t)/g, "");
                 content = content.replace(/(\r)/g, "");
@@ -145,40 +154,46 @@
                 window.scroll(0, div.scrollHeight);
             },
             newBack(msg){
-                this.reply.userId.push(this.post.userId);
-                const url = this.$rootUrl + "/api/forum/newBack";
+                if(msg) {
+                    this.reply.userId.push(this.post.userId);
+                    const url = this.$rootUrl + "/api/forum/newBack";
 
-                const options = {
-                    method: 'POST',
-                    url: url,
-                    data: {
-                        topicId:this.post.topicId,
-                        content:msg,
-                        receivers:this.reply.userId
-                    }
-                };
+                    const options = {
+                        method: 'POST',
+                        url: url,
+                        data: {
+                            topicId: this.post.topicId,
+                            content: msg,
+                            receivers: this.reply.userId
+                        }
+                    };
 
-                this.$axios(options).then((res) => {
-                    let item = res.data.data;
-                    if (item.code == 0) {
-                        this.getData();
-                        this.quote = '';
-                        this.reply = {
-                            content:'',
-                            userId:[]
-                        };
-                    }else{
-                        this.$alert(item.message, '失败', {
-                            confirmButtonText: '确认',
-                            cancelButtonText: '取消',
-                            type: 'warning'
-                        }).then(() => {
+                    this.$axios(options).then((res) => {
+                        let item = res.data.data;
+                        if (item.code == 0) {
+                            this.pageNum = (this.total + 1) / 10;
+                            this.getData();
+                            this.quote = '';
+                            this.clear++;
+                            this.reply = {
+                                content: '',
+                                userId: []
+                            };
+                        } else {
+                            this.$alert(item.message, '失败', {
+                                confirmButtonText: '确认',
+                                cancelButtonText: '取消',
+                                type: 'warning'
+                            }).then(() => {
 
-                        }).catch(() => {
+                            }).catch(() => {
 
-                        });
-                    }
-                })
+                            });
+                        }
+                    })
+                }else{
+                    this.$message.error('内容不可为空');
+                }
             },
             update(id){
                 let newContent = this.post.content.replace(/<p style='margin-top: 20px;font-size: 14px;color: #999999'(([\s\S])*?)<\/p>/g, "");
@@ -213,11 +228,55 @@
                                 message: '删除成功',
                                 type: 'success'
                             });
-                            this.$route.go(-1);
+                            this.$router.push({path: '/haloCenter'});
+                        }else if (item.errorCode == 403) {
+                            sessionStorage.setItem('pageHistory', this.$route.fullPath);
+                            this.$router.push({path: "/login"});
+                            throw item.msg;
+                        } else {
+                            throw item.message;
                         }
-                    })
+                    }).catch(errorMsg => {
+                        this.$message.error(errorMsg);
+                    });
                 })
-            }
+            },
+            delBack(id){
+                this.$confirm('此操作将永久删除该回复, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    const url = this.$rootUrl + "/api/forum/delBack";
+
+                    const options = {
+                        method: 'POST',
+                        url: url,
+                        data: {
+                            id:id
+                        }
+                    };
+
+                    this.$axios(options).then((res) => {
+                        let item = res.data.data;
+                        if (item.code == 0) {
+                            this.$message({
+                                message: '删除成功',
+                                type: 'success'
+                            });
+                            this.getData();
+                        }else if (item.errorCode == 403) {
+                            sessionStorage.setItem('pageHistory', this.$route.fullPath);
+                            this.$router.push({path: "/login"});
+                            throw item.msg;
+                        } else {
+                            throw item.message;
+                        }
+                    }).catch(errorMsg => {
+                        this.$message.error(errorMsg);
+                    });
+                })
+            },
         },
         watch: {
             '$route'(to, from) {
@@ -228,6 +287,10 @@
         created(){
             this.getData();
             this.userName = sessionStorage.getItem('userName');
+            console.log(this.userName)
+            if(this.userName != 'null'){
+                this.isLogin = true;
+            }
             window.scroll(0, 0);
         }
     }
@@ -245,15 +308,14 @@
         /*left: 50%;*/
         /*transform: translateX(-50%);*/
         min-height: 700px;
-        margin: 20px auto;
+        margin: auto;
         width: 1100px;
 
     .postDetail-body {
         width: 750px;
         box-shadow: 1px 1px 10px #e2e2e2;
         float: left;
-        margin: 10px;
-        margin-top:0;
+        margin: 20px 10px;
 
     .postDetail-body-context {
         background-color: #fff;
@@ -261,16 +323,16 @@
     .postDetail-body-context-header {
         padding: 20px;
 
-    .body-context-header-left {
+    .postDetail-body-context-header-left {
         float: left;
     }
 
-    .body-context-header-right {
+    .postDetail-body-context-header-right {
         width: 630px;
         float: left;
         padding-left: 20px;
 
-    .title {
+    .postDetail-body-context-header-right-title {
         font-size: 24px;
     }
 
@@ -315,6 +377,10 @@
         word-break: break-all;
         color: #777;
         line-height: 32px;
+
+        img{
+            max-width: 700px;
+        }
     }
 
     .postDetail-body-context-footer {
@@ -385,6 +451,25 @@
     .body-reply-left-context {
         line-height: 32px;
         color: #666;
+
+    blockquote {
+        display: block;
+        background: #f0f0f0;
+        padding: 10px;
+        font-size: 14px;
+        color: #666;
+        max-height: 100px;
+        margin-bottom: 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+        img{
+            max-width: 600px;
+        }
     }
 
     }
@@ -413,6 +498,9 @@
         float: left;
     }
 
+    }
+    .el-loading-spinner .el-loading-text{
+        color: #31a5e7;
     }
     }
 </style>

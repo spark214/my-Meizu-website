@@ -8,8 +8,8 @@
         </el-form-item>
 
         <p class="tips">密码长度为 8-16 位，至少包含字母、数字和符号中的两种类型</p>
-        <el-form-item prop="pwd">
-          <el-input type="password" v-model="loginForm.pwd" placeholder="密码" id="password"></el-input>
+        <el-form-item prop="loginPwd">
+          <el-input type="password" v-model="loginForm.loginPwd" placeholder="密码" id="password"></el-input>
         </el-form-item>
         <el-button type="primary" @click="next()" style="height:36px">提交</el-button>
       </el-form>
@@ -20,6 +20,7 @@
 <script>
   import vButton from '../common/nextButton';
   import qs from 'qs';
+  import { JSEncrypt } from 'jsencrypt';
 export default {
 
   data() {
@@ -42,16 +43,18 @@ export default {
       loginForm: {
         phone: "",
         username: "",
-        pwd: ""
+        pwd: "",
+        loginPwd:''
       },
       rules: {
         username: [
           {required: true, validator: validateUsername, trigger: "blur"}
         ],
-        password: [
+        loginPwd: [
           {required: true, validator: validatePassword, trigger: "blur"}
         ]
-      }
+      },
+      publicDer:''
     }
   },
   components: {
@@ -66,29 +69,67 @@ export default {
       return reg.test(this.loginForm.pwd);
     },
     next() {
-        this.loginForm.phone = this.$route.query.phone;
+      this.loginForm.phone = this.$route.query.phone;
+      var encrypt = new JSEncrypt();
+      encrypt.setPublicKey(this.publicDer);
+      this.loginForm.pwd = encrypt.encrypt(this.loginForm.loginPwd);
         var url = this.$rootUrl + "/api/user/registerByPhone";
         const option = {
           method: 'POST',
           url: url,
-          data: this.loginForm
+          data: {
+            username:this.loginForm.username,
+            phone: this.loginForm.phone,
+            pwd: this.loginForm.pwd
+          }
         };
         this.$axios(option).then((res) => {
           let item = res.data.data;
-        if (item.data) {
           if (item.errorCode == 0) {
-            sessionStorage.setItem('accessToken', item.data.access_token)
-            this.$router.go(-3);
+            this.$message({
+              message: '注册成功',
+              type: 'success'
+            });
+            this.$store.commit('LOGIN', {
+              username: userInfo.username,
+              avatar: userInfo.avatar,
+              phone:userInfo.phone,
+              token:item.token
+            });
+            sessionStorage.setItem('token',item.token);
+            sessionStorage.setItem('userName',userInfo.username);
+            sessionStorage.setItem('avatar',userInfo.avatar);
+            sessionStorage.setItem('expireTime', (new Date().getTime() + 58 * 60 * 1000));
+            let pageHistory = sessionStorage.getItem('pageHistory');
+            if (pageHistory) {
+              this.$router.push({path: pageHistory});
+            } else {
+              this.$router.push({path: "/"});
+            }
           }
           else {
             this.$message.error(item.msg);
           }
+      })
+    },
+    publicKey(){
+      var url = this.$rootUrl + "/api/user/publicKey";
+      const options = {
+        method: 'GET',
+        url: url,
+        data: {}
+      };
+      this.$axios(options).then((res) => {
+        let item = res.data.data;
+        if (item.errorCode == 0) {
+          this.publicDer = item.data;
         }
       })
     }
   },
   created(){
     this.loginForm.phone = this.$route.query.phone;
+    this.publicKey();
   }
 }
 </script>

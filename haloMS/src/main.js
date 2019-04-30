@@ -14,13 +14,18 @@ Vue.prototype.$rootUrl = '/proxy';
 Vue.use(VueHighcharts);
 
 router.beforeEach((to,from,next)=>{
-    // let expireTime = sessionStorage.getItem('expireTime');
-    // const nowTime = new Date().getTime();
-    // if (expireTime && nowTime < expireTime) {
+    let expireTime = sessionStorage.getItem('expireTime');
+    if(to.path !== '/login'){
+        const nowTime = new Date().getTime();
+        if (expireTime && nowTime < expireTime) {
+            next();
+        } else {
+            sessionStorage.setItem('pageHistory',from.fullPath);
+            next({path: '/login'});
+        }
+    }else{
         next();
-    // } else {
-    //     next({path: '/login'});
-    // }
+    }
 })
 
 new Vue({

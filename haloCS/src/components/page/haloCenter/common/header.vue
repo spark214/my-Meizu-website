@@ -12,16 +12,17 @@
                     <ul>
                         <li @click="goRouter('/')">商城首页</li>
                         <li @click="goRouter('/haloCenter')">社区首页</li>
-                        <li @click="goRouter('/centerSection',1,'杂谈')">产品讨论</li>
-                        <li @click="goRouter('/centerSection',3,'交易')">闲置交易</li>
-                        <li @click="goRouter('/centerSection',2,'摸鱼')">建议反馈</li>
+                        <li @click="goRouter('/centerSection','1','杂谈')">杂谈</li>
+                        <li @click="goRouter('/centerSection','3','闲置交易')">闲置交易</li>
+                        <li @click="goRouter('/centerSection','7','建议反馈')">建议反馈</li>
                     </ul>
                 </div>
-                <!--<div class="header-right-search">-->
-                    <!--<el-input v-model="searchKey" suffix-icon="el-icon-search" placeholder="搜索"></el-input>-->
-                <!--</div>-->
+                <li class="nav-search">
+                    <input type="text" placeholder="" v-model="searchKey" id="searchInput">
+                    <i class="el-icon-search" @click="goSearch"></i>
+                </li>
                 <div class="header-right-user">
-                    <span class="header-right-user-name" @click="user"><span v-if="isLogin" style="color: #666;cursor: default">hi, </span>{{userName}}</span>
+                    <span class="header-right-user-name" @click="user" v-if="isLogin"><span style="color: #666;cursor: default">hi, </span>{{userName}}</span>
                     <span class="header-right-user-tip" @click="myMessage"  v-if="isLogin"><el-badge :value="nowMessage" style="padding-right:10px" max="10" :hidden="!isLogin || nowMessage == 0">消息</el-badge></span>
                     <span class="header-right-user-logout" v-if="isLogin" @click="loginout">退出</span>
                     <span class="header-right-user-logout" v-if="!isLogin" @click="login">登录</span>
@@ -48,6 +49,9 @@
             }
         },
         methods: {
+            goSearch(){
+                this.$router.push({path: '/centerSection', query: {id:0,name:this.searchKey}});
+            },
             goRouter(item,id,name){
                 this.$router.push({path: item, query: {id:id,name:name}});
             },
@@ -82,9 +86,6 @@
             myMessage(){
                 this.$router.push('/myMessage');
             },
-            goRouter(item){
-                this.$router.push({path: item, query: {}});
-            },
             getData(){
                 const expireTime = sessionStorage.getItem('expireTime');
                 const nowTime = new Date().getTime();
@@ -93,6 +94,8 @@
                     this.initWebSocket();
                 }else{
                     this.isLogin = false;
+                    this.disconnect();
+                    sessionStorage.setItem('userName',null);
                 }
             },
             initWebSocket() {
@@ -124,7 +127,6 @@
                     },headers);
                 }, (err) => {
                     // 连接发生错误时的处理函数
-                    console.log('失败')
                     console.log(err);
                 });
             },    //连接 后台
@@ -175,6 +177,28 @@
         display: flex;
         align-items: center;
 
+    .nav-search {
+        width: 135px !important;
+        height: 25px;
+        border-radius: 20px;
+        border: 0.5px solid #dcdcdc;
+    }
+
+    .nav-search input {
+        width: 100px;
+        border: none;
+        margin-left: 8px;
+        margin-top: 6px;
+        outline: none;
+        font-size: 11px;
+        background: transparent;
+    }
+
+    .nav-search i {
+        margin-right: 3px;
+        cursor: pointer;
+    }
+
     .el-input {
         width: 200px;
         margin-right: 20px;
@@ -196,6 +220,7 @@
         }
     }
     .header-right-user {
+        margin-left: 20px;
         width: 200px;
 
         span{

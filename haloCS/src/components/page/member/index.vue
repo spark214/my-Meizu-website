@@ -12,7 +12,7 @@
                 <ul>
                     <li><span class="info_msg_title">Halo.账号：</span><span>{{msg.username}}</span></li>
                     <li><span class="info_msg_title">绑定手机号：</span><span>{{filterPhone}}</span></li>
-                    <li v-if="msg.mail!==''"><span class="info_msg_title">绑定邮箱：</span><span>{{filterMail}}</span></li>
+                    <li v-if="msg.email !== '' "><span class="info_msg_title">绑定邮箱：</span><span>{{filterMail}}</span></li>
                 </ul>
             </div>
             <div class="info_enter">
@@ -26,25 +26,24 @@
                 <p>订单状态</p>
             </div>
             <div class="user_order_content clearfix">
-                <div class="order_pay clearfix  order_box" @click="goRouter('unpayOrder')">
+                <div class="order_pay clearfix  order_box" @click="goRouter('unsentOrder')">
                     <div class="order_pay_icon order_icon">
                         <img src="../../../../static/img/wallet.png">
                     </div>
                     <div class="order_info">
-                        <p>代付款订单：<span class="order_pay_num">{{unpay}}</span></p>
-                        <p class="order_seeall">查看全部待付款订单 ></p>
+                        <p>待发货订单：<span class="order_pay_num">{{unsend}}</span></p>
+                        <p class="order_seeall">查看全部待发货订单 ></p>
                     </div>
 
                 </div>
-                <div class="order_send clearfix order_box" @click="goRouter('unsentOrder')">
+                <div class="order_send clearfix order_box" @click="goRouter('sentOrder')">
                     <div class="order_send_icon order_icon">
                         <img src="../../../../static/img/send.png">
                     </div>
                     <div class="order_info clearfix">
-                        <p>待发货订单：<span class="order_send_num">{{unsend}}</span></p>
-                        <p class="order_seeall">查看全部待发货订单 ></p>
+                        <p>已发货订单：<span class="order_send_num">{{sent}}</span></p>
+                        <p class="order_seeall">查看全部已发货订单 ></p>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -55,7 +54,7 @@
         data() {
             return {
                 msg: {},
-                unpay: 0,
+                sent: 0,
                 unsend: 0,
                 avatar: ""
             }
@@ -79,17 +78,34 @@
                     if (item.data) {
                         if (item.errorCode == 0) {
                             this.msg = item.data.userinfo;
-                            if (this.msg.avatar == "//") {
-                                this.avatar = "//image-res.mzres.com/image/uc/80f8d55d49464e3e90d72f6679cbf970z?t=946656000000";
+                            if (this.msg.avatar == "//" || this.msg.avatar == "") {
+                                this.avatar = "https://image-res.mzres.com/img/download/uc/11/03/57/90/00/11035790/w100h100?t=1556275801"
                             }
                             else {
-                                this.avatar = this.msg.avatar;
+                                this.avatar = this.msg.avatar
                             }
                         }
 
                     }
                 })
 
+          },
+            getNum(){
+                var url = this.$rootUrl + "/api/order/indexOrderNum";
+                const options = {
+                    method: 'GET',
+                    url: url,
+                    data: {}
+                };
+                this.$axios(options).then((res) => {
+                    let item = res.data.data;
+                    if (item.data) {
+                        if (item.errorCode == 0) {
+                            this.sent = item.data.sent;
+                            this.unsend = item.data.unsent;
+                        }
+                    }
+                });
             }
         },
         computed: {
@@ -106,7 +122,8 @@
             }
         },
         created(){
-            this.getData()
+            this.getData();
+            this.getNum();
         }
     }
 </script>

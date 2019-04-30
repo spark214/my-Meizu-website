@@ -9,6 +9,8 @@
 </template>
 <script>
     import VueUeditorWrap from 'vue-ueditor-wrap';
+    import _ from 'lodash';
+
     export default{
         components: {
             VueUeditorWrap
@@ -23,6 +25,9 @@
             },
             content:{
                 type:String
+            },
+            clear:{
+                type:Number
             }
         },
         data(){
@@ -46,32 +51,53 @@
                     ],
                     //元素路径关闭
                     elementPathEnabled:false
-                }
+                },
+                imgArr:[]
             }
         },
         methods:{
             editR(ueditor){
-                console.log(ueditor);
-                ueditor.addListener('myImg',(link,title) => {
-                    var url = this.$rootUrl + "/api/forum/handleImg";
-                    const options = {
-                        method: 'POST',
-                        url: url,
-                        data: {
-                            path:title
-                        }
-                    };
-                    this.$axios(options).then((res) => {
-                        let item = res.data.data;
-                        if (item.errorCode == 0) {
-                            let t = title.toString();
-                            this.msg = this.msg.replace(t,item.data.imgUrl);
-                        }
-                    })
-                });
+                    ueditor.addListener('myImg',(link,title) => {
+                            var url = this.$rootUrl + "/api/forum/handleImg";
+                            const options = {
+                                method: 'POST',
+                                url: url,
+                                data: {
+                                    path:title
+                                }
+                            };
+                            this.$axios(options).then((res) => {
+                                let item = res.data.data;
+                                if (item.errorCode == 0) {
+                                    let t = title.toString();
+                                    this.imgArr.push({
+                                        title:t,
+                                        url:item.data.imgUrl
+                                    });
+                                }else if (item.errorCode == 403) {
+                                    sessionStorage.setItem('pageHistory', this.$route.fullPath);
+                                    this.$router.push({path: "/login"});
+                                    throw item.msg;
+                                } else {
+                                    throw item.msg;
+                                }
+                            }).catch(errorMsg => {
+                                this.$message.error(errorMsg);
+                            });
+                    });
             },
             postMsg(){
-                this.$emit('newPost',this.msg);
+                const expireTime = sessionStorage.getItem('expireTime');
+                const nowTime = new Date().getTime();
+                if(expireTime && nowTime < expireTime){
+                    _.each(this.imgArr,item => {
+                        this.msg = this.msg.replace(item.title,item.url);
+                    });
+                    this.$emit('newPost',this.msg);
+                }else{
+                    sessionStorage.setItem('pageHistory',this.$route.fullPath);
+                    this.$router.push('/login');
+                }
             }
         },
         created(){
@@ -82,6 +108,9 @@
         watch:{
             reply:function(value){
                 this.msg = value + "<br>";
+            },
+            clear:function (value) {
+                this.msg = '';
             }
         }
     }

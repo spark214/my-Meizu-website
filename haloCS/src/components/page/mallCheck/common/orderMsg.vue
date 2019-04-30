@@ -1,7 +1,7 @@
 <template>
   <div class="orderMsg clearfix">
     <h4 style="font-weight: bold">确定订单信息</h4>
-    <table class="orderMsg_table">
+    <table class="ordeCheckrMsg_table">
       <tr>
         <td width="500px">商品</td>
         <td width="200px">单价(元)</td>
@@ -10,8 +10,8 @@
       </tr>
       <tr v-for="item in products">
         <td width="500px">
-          <img :src="item.imgUrl" width="50" height="50" class="table_product_img">
-          <div class="table_product_msg">
+          <img :src="item.imgUrl" width="50" height="50" class="ordeChecktable_product_img">
+          <div class="ordeChecktable_product_msg">
             <p>{{item.title}}</p>
           </div>
         </td>
@@ -31,7 +31,7 @@
     <div class="orderMsg_table_footer clearfix">
       <div class="orderMsg_total" style="font-size: 16px">
         合计
-        <span style="font-size: 22px;color:#e02b41;font-weight: bold;" >{{totalPrices.toFixed(2)}}</span>
+        <span style="font-size: 22px;color:#e02b41;font-weight: bold;" >￥{{totalPrices.toFixed(2)}}</span>
       </div>
     </div>
 
@@ -81,7 +81,7 @@
   }
 </script>
 <style lang="less">
-  .orderMsg_table {
+  .ordeCheckrMsg_table {
     width: 96%;
     position: relative;
     left: 50%;
@@ -102,15 +102,15 @@
       text-align: center;
       position: relative;
     }
-  }
 
-  .table_product_img {
+
+  .ordeChecktable_product_img {
     float: left;
     margin-left: 20px;
     margin-top: 25px;
   }
 
-  .table_product_msg {
+  .ordeChecktable_product_msg {
     float: left;
     height: 100px;
     display: flex;
@@ -120,8 +120,9 @@
     font-size: 15px;
   }
 
-  .table_product_msg p {
+  .ordeChecktable_product_msg p {
     margin-left: 10px;
+  }
   }
 
   .orderMsg {

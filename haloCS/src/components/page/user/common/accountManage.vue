@@ -46,6 +46,7 @@
                                     <el-form-item prop="new">
                                         <el-input v-model="pwdForm.newPwd" style="width: 298px" placeholder="新密码"
                                                   type="password"></el-input>
+                                        <span style="font-size: 12px;line-height: 20px;color: #666;margin-left: 8px;">新密码长度为 8-16 位，至少包含字母、数字和符号中的两种类型且不可与当前密码相同</span>
                                     </el-form-item>
                                     <p><el-button type="primary" @click="updatePwd" style="width: 298px">提交</el-button></p>
                                     <p><el-button @click="pwdStep=0" style="width: 298px">取消</el-button></p>
@@ -128,7 +129,7 @@
                                 </el-form>
                             </div>
 
-                            <div class="mail_second" v-show="phoneStep==2">
+                            <div class="mail_second" v-show="phoneStep == 2">
                                 <h4 class="mail_title">验证手机</h4>
                                 <v-sms :type="1" @ok="checkPhone"></v-sms>
                                 <el-button @click="phoneStep==0" style="width: 298px;margin-top: 10px;margin-bottom: 30px">
@@ -136,16 +137,15 @@
                                 </el-button>
                             </div>
 
-                            <div class="mail_second" v-show="phoneStep==3">
+                            <div class="mail_second" v-show="phoneStep == 3">
                                 <h4 class="mail_title">修改手机</h4>
                                 <el-form :model="mailForm" :rules="rules" ref="mailForm" class="mailForm">
                                     <el-form-item prop="new">
-                                        <span class="label">新手机号码</span>
                                         <span>
-                                            <el-input type="text" v-model="phoneForm.new" @change="phoneChange" style="width: 298px"></el-input>
+                                            <el-input type="text" v-model="phoneForm.new" @change="phoneChange" style="width: 298px" placeholder="新手机号码"></el-input>
                                         </span>
                                     </el-form-item>
-                                    <v-sms :type="2" @ok="checkPhone"></v-sms>
+                                    <v-sms :type="2" :phone="phoneForm.new" @ok="checkPhone"></v-sms>
                                 </el-form>
                             </div>
                         </div>
@@ -169,8 +169,15 @@
 <script>
     import qs from 'qs';
     import vSms from "../../register/common/sms";
+    import { JSEncrypt } from 'jsencrypt';
 
     export default {
+        props:{
+            reload:{
+                type:Number,
+                default:0
+            }
+        },
         data() {
             return {
                 updateMail: true,
@@ -198,7 +205,8 @@
                 dialogVisible: false,
                 userinfo: {},
                 avatar: "",
-                pwd: ""
+                pwd: "",
+                publicDer:''
             }
         },
         components: {
@@ -218,74 +226,98 @@
                 return "";
             },
             updatePwd() {
-                var token = sessionStorage.getItem('accessToken');
-                var url = this.$rootUrl + "/api/user/updatePwd";
-                const options = {
-                    method: 'POST',
-                    url: url,
-                    data: {
-                        data: this.pwdForm,
-                        token: token
+                if(this.pwdForm.newPwd !== this.pwdForm.oldPwd) {
+                    var reg = /^(?![0-9]+$)(?![a-z]+$)(?![A-Z]+$)(?![,\.#%'\+\*\-:;^_`]+$)[,\.#%'\+\*\-:;^_`0-9A-Za-z]{8,16}$/;
+                    if (reg.test(this.pwdForm.newPwd)) {
+                        var encrypt = new JSEncrypt();
+                        encrypt.setPublicKey(this.publicDer);
+                        this.pwdForm.newPwd = encrypt.encrypt(this.pwdForm.newPwd);
+                        var url = this.$rootUrl + "/api/user/updatePwd";
+                        const options = {
+                            method: 'POST',
+                            url: url,
+                            data: {
+                                data: this.pwdForm,
+                            }
+                        };
+                        this.$axios(options).then((res) => {
+                            let item = res.data.data;
+                            if (item.errorCode == 0) {
+                                this.$message({
+                                    message: '密码修改成功',
+                                    type: 'success'
+                                });
+                                this.pwdStep = 0;
+                            } else if (item.errorCode == 403) {
+                                sessionStorage.setItem('pageHistory', this.$route.fullPath);
+                                this.$router.push({path: "/login"});
+                                throw item.msg;
+                            } else {
+                                throw item.msg;
+                            }
+                        }).catch(errorMsg => {
+                            this.$message.error(errorMsg);
+                        })
+                    } else {
+                        this.$message.error('新密码不符合规范，请检查！');
                     }
-                };
-                this.$axios(options).then((res) => {
-                    let item = res.data.data;
-                    if (item.data) {
-                        if (item.errorCode == 0) {
-                            this.pwdStep = 0
-                        } else if (item.errorCode == 403) {
-                            sessionStorage.setItem('pageHistory', this.$route.fullPath);
-                            this.$router.push({path: "/login"});
-                            throw item.errorMsg;
-                        } else {
-                            throw item.errorMsg;
-                        }
-                    }
-                }).catch(errorMsg => {
-                    this.$message.error(errorMsg);
-                })
+                }else{
+                    this.$message.error('新密码不可与当前密码相同，请检查！');
+                }
             },
             phoneChange() {
                 this.$router.push({path: '/user', query: {phone: this.phoneForm.new}});
             },
             checkPhonePwd(msg) {
                 if (msg == 1) {
-                    this.pwdStep = 2
+                    this.pwdStep = 2;
+                    this.publicKey();
                 }
+            },
+            publicKey(){
+                var url = this.$rootUrl + "/api/user/publicKey";
+                const options = {
+                    method: 'GET',
+                    url: url,
+                    data: {}
+                };
+                this.$axios(options).then((res) => {
+                    let item = res.data.data;
+                    if (item.errorCode == 0) {
+                        this.publicDer = item.data;
+                    }
+                })
             },
             checkPhone(msg) {
                 if (msg == 1) {
-                    this.phoneStep = 3
+                    this.phoneStep = 3;
                 }
                 else if (msg == 2) {
-                    this.phoneStep = 0
+                    this.phoneStep = 0;
+                    this.getData();
                 }
             },
             checkPwd() {
-                var token = sessionStorage.getItem('accessToken');
                 var url = this.$rootUrl + "/api/user/verifyPwd";
                 const options = {
                     method: 'POST',
                     url: url,
                     data: {
                         pwd: this.pwd,
-                        token: token
                     }
                 };
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
-                    if (item.data) {
                         if (item.errorCode == 0) {
                             this.phoneStep = 2
                             this.$router.push({path: '/user', query: {phone: this.phoneForm.old}});
                         } else if (item.errorCode == 403) {
                             sessionStorage.setItem('pageHistory', this.$route.fullPath);
                             this.$router.push({path: "/login"});
-                            throw item.errorMsg;
+                            throw item.msg;
                         } else {
-                            throw item.errorMsg;
+                            throw item.msg;
                         }
-                    }
                 }).catch(errorMsg => {
                     this.$message.error(errorMsg);
                 });
@@ -304,49 +336,51 @@
                 };
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
-                    if (item.data) {
                         if (item.errorCode == 0) {
-                            this.getData()
-                            this.mailStep = 0
+                            this.getData();
+                            this.mailStep = 0;
+                            this.$message({
+                                message: '邮箱设置成功',
+                                type: 'success'
+                            });
                         } else if (item.errorCode == 403) {
                             sessionStorage.setItem('pageHistory', this.$route.fullPath);
                             this.$router.push({path: "/login"});
-                            throw item.errorMsg;
+                            throw item.msg;
                         } else {
-                            throw item.errorMsg;
+                            throw item.msg;
                         }
-                    }
                 }).catch(errorMsg => {
                     this.$message.error(errorMsg);
                 });
 
             },
             updatePhone() {
-                var token = sessionStorage.getItem('accessToken');
                 let form = {"phone": this.phoneForm.new, "code": this.mailForm.sms2}
                 var url = this.$rootUrl + "/api/user/updatePhone";
                 const options = {
                     method: 'POST',
                     url: url,
                     data: {
-                        data: form,
-                        token: token
+                        data: form
                     }
                 };
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
-                    if (item.data) {
                         if (item.errorCode == 0) {
-                            this.getData()
-                            this.mailStep = 0
+                            this.getData();
+                            this.mailStep = 0;
+                            this.$message({
+                                message: '手机更新成功',
+                                type: 'success'
+                            });
                         } else if (item.errorCode == 403) {
                             sessionStorage.setItem('pageHistory', this.$route.fullPath);
                             this.$router.push({path: "/login"});
-                            throw item.errorMsg;
+                            throw item.msg;
                         } else {
-                            throw item.errorMsg;
+                            throw item.msg;
                         }
-                    }
                 }).catch(errorMsg => {
                     this.$message.error(errorMsg);
                 });
@@ -402,14 +436,13 @@
                 };
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
-                if (item.data) {
                     if (item.errorCode == 0) {
                         this.userinfo = item.data.userinfo
                         this.mailForm.old = item.data.userinfo.email
                         this.phoneForm.old = item.data.userinfo.phone
                         this.$router.push({path: '/user', query: {phone: this.phoneForm.old}});
-                        if (this.userinfo.avatar == "//") {
-                            this.avatar = "//image-res.mzres.com/image/uc/80f8d55d49464e3e90d72f6679cbf970z?t=946656000000"
+                        if (this.userinfo.avatar == "//" || this.userinfo.avatar == "") {
+                            this.avatar = "https://image-res.mzres.com/img/download/uc/11/03/57/90/00/11035790/w100h100?t=1556275801"
                         }
                         else {
                             this.avatar = this.userinfo.avatar
@@ -417,11 +450,10 @@
                     } else if (item.errorCode == 403) {
                         sessionStorage.setItem('pageHistory', this.$route.fullPath);
                         this.$router.push({path: "/login"});
-                        throw item.errorMsg;
+                        throw item.msg;
                     } else {
-                        throw item.errorMsg;
+                        throw item.msg;
                     }
-                }
             }).catch(errorMsg => {
                     this.$message.error(errorMsg);
             });
@@ -440,8 +472,17 @@
                 return phone;
             }
         },
-        created() {
+        mounted() {
             this.getData()
+        },
+        watch: {
+            '$route'(to, from) {
+                this.getData();
+            },
+            reload:function (msg) {
+                console.log(msg);
+                this.getData();
+            }
         }
     }
 </script>

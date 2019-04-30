@@ -4,7 +4,7 @@
       <img src="http://img.tozlam.cn/halo-230-40-blue.png" width="120px" height="24px"></a>
     <ul class="navs" id="navul">
       <li><a @click="goRouter('mallIndex')">首页</a></li>
-      <li class="nav-product" id="nav-phone"><a  @click="goList(0)">手机</a>
+      <li class="nav-product" id="nav-phone"><a  @click="goList(1)">手机</a>
         <dl>
           <dd v-for="(item,index) in mobPhone" @click="goProduct(item.id)">
             <img :src="item.url" class="nav-img">
@@ -37,7 +37,7 @@
           <el-badge :value="nowMessage" class="item" max="10" :hidden="!isLogin || nowMessage == 0">
             <el-dropdown trigger="hover" @command=" handleCommand" placement="bottom">
               <span class="el-dropdown-link" @click="goRouter('member')">
-                <img :src="avatar" width="24px">
+                <img :src="avatar" width="24px" style="border-radius: 50%">
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="login" v-if="!isLogin">立即登录</el-dropdown-item>
@@ -129,7 +129,11 @@
           this.$axios(options).then((res) => {
             let item = res.data.data;
             if (item.errorCode == 0) {
-              sessionStorage.setItem('expireTime',0);
+              sessionStorage.removeItem('expireTime');
+              sessionStorage.removeItem('token');
+              sessionStorage.removeItem('userName');
+              sessionStorage.removeItem('avatar');
+              this.avatar = '../../../../../static/img/user.png';
               this.disconnect();
               const path = this.$route.path;
               if(path == '/newPost' || path == '/user' || path == '/mallCheck' || this.$route.matched[0].path == '/member'){
@@ -145,6 +149,7 @@
           this.$router.push('/login');
         }
         else if (command == 'register') {
+          sessionStorage.setItem('pageHistory',this.$route.fullPath);
           this.$router.push('/register');
         }
         else if (command == 'myorder') {
@@ -162,6 +167,7 @@
           this.avatar = sessionStorage.getItem('avatar') || '../../../../../static/img/user.png';
         }else{
           this.isLogin = false;
+          this.disconnect();
         }
       },
       initWebSocket() {
@@ -193,7 +199,6 @@
           },headers);
         }, (err) => {
           // 连接发生错误时的处理函数
-          console.log('失败')
           console.log(err);
         });
       },    //连接 后台
@@ -220,7 +225,7 @@
 
   .navs {
     float: right;
-    margin-right: 150px;
+    margin-right: 250px;
     margin-top: 20px;
   }
 
@@ -235,7 +240,7 @@
   .login {
     margin-left: 10px;
     position: absolute;
-    left: 90%;
+    right: 140px;
     top: 20px;
     font-size: 14px;
   }
@@ -259,7 +264,7 @@
 
   .logo {
     position: absolute;
-    margin-left: 55px;
+    margin-left: 165px;
     z-index: 100;
   }
 
@@ -331,6 +336,7 @@
 
   .nav-search i {
     margin-right: 3px;
+    cursor: pointer;
   }
 
   .userIcon {

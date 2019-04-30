@@ -2,16 +2,16 @@
   <div class="orderTable_conatiner">
     <div v-for="(item,index) in datas" class="orderTable">
       <div class="table_header">
-        <span class="table_header_title">下单时间:</span> <span class="table_header_num">{{GMTToStrCreate}}</span>
+        <span class="table_header_title">下单时间:</span> <span class="table_header_num">{{item.gmtCreate}}</span>
         <span class="table_header_title">订单号:</span> <span class="table_header_num">{{item.id}}</span>
       </div>
 
       <table class="order_table" id="cart_table">
         <tr class="table_product clearfix" align="center">
           <td width="498px">
-            <div v-for="its in item.products" class="table_product_detail clearfix table_product_border">
-              <img :src="its.imgUrl" width="80" height="80" class="table_product_img">
-              <div class="table_product_msg">
+            <div v-for="its in item.products" class="order_table_product_detail clearfix table_product_border">
+              <img :src="its.imgUrl" width="80" height="80" class="order_table_product_img">
+              <div class="order_table_product_msg">
                 <span>{{its.title}}</span> × <span>{{its.number}}</span>
               </div>
             </div>
@@ -20,10 +20,10 @@
             <span style="color: rgb(224, 43, 65)" class="table_price ">￥{{item.price.toFixed(2)}}</span>
           </td>
           <td width="140px" :rowspan="item.products.length" class="table_product_border">
-            <span>{{orderStatus}}</span>
+            <span>{{item.statusName}}</span>
           </td>
           <td width="140px" :rowspan="item.products.length">
-            <el-button v-if="item.status==0" type="danger">立即付款</el-button>
+            <!--<el-button v-if="item.status==0" type="danger">立即付款</el-button>-->
             <!--<p v-if="item.status!=3" style="cursor:pointer;margin: 10px 0;">取消订单</p>-->
             <p style="cursor: pointer" @click="goDetail(index)">查看详情</p>
           </td>
@@ -51,42 +51,7 @@
       },
     },
     computed: {
-      orderStatus(){
-        for(let i=0;i<this.datas.length;i++) {
-          switch (this.datas[i].status) {
-            case 0:
-              return "未付款";
-              break;
-            case 1:
-              return "已付款";
-              break;
-            case 2:
-              return "未发货";
-              break;
-            case 3:
-              return "已发货";
-              break;
-            case 4:
-              return "交易成功";
-              break;
-            case 5:
-              return "交易关闭";
-              break;
-          }
-        }
-      },
-      GMTToStrCreate() {
-        for (let i = 0; i < this.datas.length; i++) {
-          let date = new Date(this.datas[i].gmtUpdated)
-          let Str = date.getFullYear() + '-' +
-            (date.getMonth() + 1) + '-' +
-            date.getDate() + ' ' +
-            date.getHours() + ':' +
-            date.getMinutes() + ':' +
-            date.getSeconds()
-          return Str
-        }
-      }
+
     },
     created(){
 
@@ -137,15 +102,15 @@
     border-right: 0.5px solid #efefef;
   }
 
-  .table_product_detail:not(:last-child) {
+  .order_table_product_detail:not(:last-child) {
     border-bottom: 0.5px solid #efefef;
   }
 
-  .table_product_img{
+  .order_table_product_img{
     padding-top: 10px;
   }
 
-  .table_product_msg {
+  .order_table_product_msg {
     padding-bottom: 10px;
   }
 </style>

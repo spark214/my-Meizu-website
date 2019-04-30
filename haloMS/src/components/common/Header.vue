@@ -12,7 +12,7 @@
         <!--用户名-->
         <el-dropdown class="header_right_user_username" trigger="click" @command=" handleCommand">
           <span class="el-dropdown-link">
-           Hello, {{username}}&nbsp;&nbsp;<i class="el-icon-caret-bottom"></i>
+           Hello, admin&nbsp;&nbsp;<i class="el-icon-caret-bottom"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="loginout" divided>退出登录</el-dropdown-item>

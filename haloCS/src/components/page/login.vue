@@ -5,20 +5,20 @@
                 <el-container id="login_container">
                     <el-header id="login_container_header">
                         <div class="login_box_header">
-                            <a style="margin-right: 20px" @click="accLogin=true" :class="{on:accLogin}">账号登录</a> |
-                            <a style="margin-left: 20px" @click="accLogin=false" :class="{on:!accLogin}">验证码登录</a>
+                            <a style="margin-right: 20px" @click="accLogin=true;errormsg = ''" :class="{on:accLogin}">账号登录</a> |
+                            <a style="margin-left: 20px" @click="accLogin=false;errormsg = ''" :class="{on:!accLogin}">验证码登录</a>
                         </div>
                     </el-header>
                     <el-container id="login_container_main">
                         <el-form :model="loginForm" :rules="rules" ref="loginForm" class="form_main">
                             <el-form-item prop="phone">
                                 <el-input v-model="loginForm.phone" placeholder="手机号"
-                                          @change="verifyPhone()"></el-input>
-                                <p style="color:#e22841;font-size: 12px">{{errormsg}}</p>
+                                          @change="verifyPhone()" :class="{'is-error':errormsg !== ''}"></el-input>
+                                <p style="color:#f56c6c;font-size: 12px;position: absolute;top: 30px;">{{errormsg}}</p>
                             </el-form-item>
-                            <el-form-item prop="pwd" v-show="accLogin">
-                                <el-input placeholder="密码" type="password" v-model="loginForm.pwd"
-                                          @keyup.enter.native=""></el-input>
+                            <el-form-item prop="loginPwd" v-show="accLogin">
+                                <el-input placeholder="密码" type="password" v-model="loginForm.loginPwd"
+                                          @keyup.enter.native="" :class="{'is-error':errormsg === '密码错误'}"></el-input>
                             </el-form-item>
 
                             <el-container id="login_container_mains" v-show="!accLogin">
@@ -26,7 +26,6 @@
                                     <el-form-item prop="code">
                                         <el-input v-model="loginFormMsg.code" placeholder="短信验证码"
                                                   @change="send"></el-input>
-                                        <p style="color:#e22841;font-size: 12px">{{errormsg}}</p>
                                         <el-button @click="countDown" :class="{disabled:!canClick}" class="button_sms">
                                             {{content}}
                                         </el-button>
@@ -64,6 +63,7 @@
 <script>
     import vCode from "./register/common/vCode";
     import vSms from "./register/common/sms";
+    import { JSEncrypt } from 'jsencrypt';
     import qs from 'qs';
     export default {
         data: function () {
@@ -71,6 +71,7 @@
                 loginForm: {
                     phone: "",
                     pwd: "",
+                    loginPwd:''
                 },
                 loginFormMsg: {
                     phone: "",
@@ -80,7 +81,7 @@
                     phone: [
                         {required: true, message: "请输入手机号码", trigger: "blur"}
                     ],
-                    pwd: [
+                    loginPwd: [
                         {required: true, message: "请输入密码", trigger: "blur"}
                     ],
                     sms: [
@@ -97,6 +98,7 @@
                 canClick: true,
                 count: 0,
                 dialogVisible: false,
+                publicDer:''
             };
         },
         methods: {
@@ -112,24 +114,31 @@
                 };
 
                 this.$axios(options).then((res) => {
-                    if (res.data.errorCode == 0) {
-
+                    let item = res.data.data;
+                    if (item.errorCode == 0) {
+                        this.errormsg = '';
                     } else {
-                        this.errormsg = res.data.msg;
+                        this.errormsg = item.msg;
+                        this.$message.error('请检查账号');
                     }
                 })
             },
             check(){
                 if (this.accLogin) {
+                    var encrypt = new JSEncrypt();
+                    encrypt.setPublicKey(this.publicDer);
+                    this.loginForm.pwd =  encrypt.encrypt(this.loginForm.loginPwd);
                     var url = this.$rootUrl + "/api/user/loginByPwd";
                     const options = {
                         method: 'POST',
                         url: url,
-                        data: this.loginForm
+                        data: {
+                            phone: this.loginForm.phone,
+                            pwd: this.loginForm.pwd
+                        }
                     };
                     this.$axios(options).then((res) => {
                         let item = res.data.data;
-                        if (item.data) {
                             if (item.errorCode == 0) {
                                 let userInfo = item.data.userinfo;
                                 this.$store.commit('LOGIN', {
@@ -148,11 +157,10 @@
                                 } else {
                                     this.$router.push({path: "/"});
                                 }
-                            }
-                            else {
+                            }else {
                                 this.errormsg = item.msg;
+                                this.$message.error('请检查密码');
                             }
-                        }
                     })
                 } else {
                     var url = this.$rootUrl + "/api/user/loginByCode";
@@ -164,7 +172,6 @@
                     };
                     this.$axios(options).then((res) => {
                         let item = res.data.data;
-                        if (item.data) {
                             if (item.errorCode == 0) {
                                 let userInfo = item.data.userinfo;
                                 this.$store.commit('LOGIN',{
@@ -186,8 +193,8 @@
                             }
                             else {
                                 this.errormsg = item.msg;
+                                this.$message.error('请检查验证码');
                             }
-                        }
                     })
 
                 }
@@ -232,7 +239,23 @@
                     }
                 })
             },
-
+            publicKey(){
+                var url = this.$rootUrl + "/api/user/publicKey";
+                const options = {
+                    method: 'GET',
+                    url: url,
+                    data: {}
+                };
+                this.$axios(options).then((res) => {
+                    let item = res.data.data;
+                if (item.errorCode == 0) {
+                    this.publicDer = item.data;
+                }
+            })
+            }
+        },
+        created(){
+            this.publicKey();
         },
         components: {
             vCode, vSms
@@ -351,6 +374,11 @@
     }
     .loginBtn{
         height: 36px;
+    }
+    .is-error{
+    .el-input__inner{
+        border-color: #f56c6c!important;
+    }
     }
     }
 </style>

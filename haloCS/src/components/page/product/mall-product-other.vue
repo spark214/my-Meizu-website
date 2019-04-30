@@ -5,7 +5,9 @@
 
         <div class="container clearfix pageContain">
             <div class="contain_head clearfix">
-                <v-photo></v-photo>
+                <div class="contain_head_left">
+                    <v-photo :imgurl="imgList"></v-photo>
+                </div>
                 <div class="contain_head_right">
                     <h1>{{common.name}}</h1>
                     <p class="right_slogan">{{common.title}}</p>
@@ -60,7 +62,7 @@
                 @open="setTimeClose">
             <div class="cartDialog">
                 <i class="el-icon-circle-check-outline"></i>
-                <span>已成功加入购物车</span>
+                <span style="color: #31a5e7">已成功加入购物车</span>
                 <p @click="goRouter('mallcart')">去购物车结算 ></p>
             </div>
         </el-dialog>
@@ -92,7 +94,8 @@
                 selectColor: 0,
                 formcount: 0,
                 centerDialogVisible: false,
-                detailData: []
+                detailData: [],
+                imgList:[]
             }
         },
         components: {
@@ -129,7 +132,7 @@
                                 });
                                 this.$router.push({path: "/mallCheck", query: {type: 1}})
                             }else{
-                                throw item.errorMsg;
+                                throw item.msg;
                             }
                         }
                     }).catch(errorMsg => {
@@ -149,11 +152,9 @@
                         "price": this.common.price,
                         "number": this.form.buyCount
                     }
-                    var token = sessionStorage.getItem('accessToken');
                     var url = this.$rootUrl + "/api/carts/addCart";
                     const options = {
                         method: 'POST',
-                        headers: {'token': token},
                         url: url,
                         data: buyForm
                     };
@@ -167,7 +168,7 @@
                                 }
                                 bus.$emit("cart", 1);
                             }else{
-                                throw item.errorMsg;
+                                throw item.msg;
                             }
                         }
                     }).catch(errorMsg => {
@@ -203,9 +204,10 @@
                     let item = res.data.data;
                     if (item.errorCode == 0 && item.data.itemDetail.specificationJson) {
                         this.common = JSON.parse(item.data.itemDetail.specificationJson);
-                        this.detailData = item.data.itemDetail.detailImg.replace(/data-original/g, "src");
+                        this.detailData = item.data.itemDetail.detailImg;
+                        this.imgList = item.data.imgurl;
                     } else if (item.errorCode != 0) {
-                        throw item.errorMsg;
+                        throw item.msg;
                     } else if (!item.data.itemDetail.specificationJson) {
                         throw '产品信息加载错误';
                         this.$router.go(-1);
@@ -247,6 +249,12 @@
 
     .contain_head {
         width: 100%;
+    }
+    .contain_head_left{
+        position: relative;
+        width: 40%;
+        height: 422px;
+        float: left;
     }
 
     .contain_head_right {

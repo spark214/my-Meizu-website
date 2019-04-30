@@ -3,7 +3,7 @@
         <div class="msg-header">
             我的消息
         </div>
-        <div class="msg-item" v-for="item in message">
+        <div class="msg-item" v-for="item in message" v-loading="loading">
             <div class="msg-reply">
                 <!--<img :src="item.avatar" width="48px" height="48px">-->
                 <p class="msg-item-info clearfix">
@@ -18,6 +18,10 @@
                 </p>
             </div>
         </div>
+        <div class="unfound" v-if="message.length === 0">
+            <h3>您暂无消息，多去社区发表吧！</h3>
+            <img src="http://store.res.meizu.com/member/img/noData-31ec95ea89.png">
+        </div>
     </div>
 </template>
 <script>
@@ -25,6 +29,7 @@
         data(){
             return {
                 message: [],
+                loading:false
             }
         },
         methods:{
@@ -32,6 +37,7 @@
                 this.$router.push({path: item, query: {topicId:id}});
             },
             getData(){
+                this.loading = true;
                 const url = this.$rootUrl + "/api/forum/getMessage";
 
                 const options = {
@@ -44,6 +50,7 @@
                     let item = res.data.data;
                 if (item.code == 0) {
                     this.message = item.data.backs;
+                    this.loading = false;
                 }
                 })
             }
@@ -145,6 +152,19 @@
         text-overflow: ellipsis;
         overflow: hidden;
     }
+    }
+    .unfound{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height:400px;
+    }
+    .unfound h3{
+        color: #666666;
+        font-size: 24px;
+        margin-bottom: 20px;
+
     }
     }
 </style>

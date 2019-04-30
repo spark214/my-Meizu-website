@@ -1,11 +1,11 @@
 <template>
     <div class="contain_head_img">
-        <img v-lazy="imgurl[picS][selectPic]" :key="imgurl[picS][selectPic]" width="395px"
+        <img v-lazy="imgurl[picS][selectPic]" :key="imgurl[picS][selectPic]" width="395px" height="395px"
              class="img_preview">
         <ul>
             <li v-for="(pic,picIndex) in imgurl[picS]">
                 <img v-lazy="pic" :key="pic"
-                     width="75px" @click="changePic(picIndex)" :class="{selectPic:selectPic == (picIndex)}">
+                     width="75px" height="75px" @click="changePic(picIndex)" :class="{selectPic:selectPic == (picIndex)}">
             </li>
         </ul>
     </div>
@@ -14,13 +14,16 @@
     import bus from '../../../common/bus.js';
 
     export default {
+        props:{
+          imgurl:[]
+        },
         data() {
             return {
                 common: [],
                 selectPic: 0,
-                imgurl: [],
                 picS: 0,
-                bigImg: ''
+                bigImg: '',
+                source:''
             }
         },
         methods: {
@@ -29,6 +32,9 @@
                 this.bigImg = this.imgurl[this.picS][this.selectPic];
             },
             getData() {
+                var CancelToken = this.$axios.CancelToken
+                this.source = CancelToken.source()
+                this.cancelRequest();
                 var proId = this.$route.query.proId;
                 var url = this.$rootUrl + "/api/product/productDetail";
 
@@ -37,7 +43,10 @@
                     url: url,
                     data: {
                         proId: proId
-                    }
+                    },
+                    cancelToken: new this.$axios.CancelToken((c) => {
+                        this.source = c;
+                    })
                 };
 
                 this.$axios(options).then((res) => {
@@ -48,23 +57,26 @@
                         for (let i = 0; i < common.imgUrl.length; i++) {
                             this.imgurl[i] = new Array(i);
                             this.imgurl[i] = common.imgUrl[i].split(',');
-
                         }
                     }
                 })
+            },
+            cancelRequest(){
+                if(typeof this.source ==='function'){
+                    this.source('终止请求')
+                }
             }
-
         },
         computed: {},
-        created() {
-            this.getData();
+        mounted() {
+//            this.getData();
             bus.$on("pic", msg => {
                 this.picS = msg;
             });
         },
         watch: {
             '$route'(to, from) {
-                this.getData();
+//                this.getData();
             }
         }
     }
@@ -72,15 +84,11 @@
 <style lang="less">
     .contain_head_img {
         position: relative;
-        float: left;
-        width: 40%;
         margin-left: 30px;
 
-    &
-    >
-    img {
-        width: 395px;
-        height: 395px;
+    & > img {
+        width: 395px !important;
+        height: 395px !important;
     }
 
     }

@@ -22,12 +22,12 @@
           width="150"></el-table-column>
         <el-table-column
           prop="address"
-          width="500"></el-table-column>
+          width="450"></el-table-column>
         <el-table-column
           prop="phone"
           width="200"></el-table-column>
         <el-table-column
-          width="150">
+          width="180">
           <template slot-scope="scope">
             <span class="blue" @click="updateAddr(scope.$index, scope.row)">修改</span>
             <span style="color:#ccc;cursor: pointer" @click="delAddr(scope.$index, scope.row)">删除</span>
@@ -84,9 +84,9 @@
             }else if (item.errorCode == 403) {
               sessionStorage.setItem('pageHistory', this.$route.fullPath);
               this.$router.push({path: "/login"});
-              throw item.errorMsg;
+              throw item.msg;
             } else {
-              throw item.errorMsg;
+              throw item.msg;
             }
           }
         }).catch(errorMsg => {
@@ -113,9 +113,9 @@
             }else if (item.errorCode == 403) {
               sessionStorage.setItem('pageHistory', this.$route.fullPath);
               this.$router.push({path: "/login"});
-              throw item.errorMsg;
+              throw item.msg;
             } else {
-              throw item.errorMsg;
+              throw item.msg;
             }
           }
         }).catch(errorMsg => {

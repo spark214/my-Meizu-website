@@ -26,12 +26,12 @@
           </el-dropdown>
         </li>
         <li v-else>
-          <span @click="goRouter('login')">
+          <span @click="goOther('login')">
           登录
           </span>
         </li>
         <li v-if="!isLogin">
-          <span @click="goRouter('register')">
+          <span @click="goOther('register')">
             注册
           </span>
         </li>
@@ -55,13 +55,36 @@
       }
     },
     methods: {
+      goOther(that){
+        sessionStorage.setItem('pageHistory',this.$route.fullPath);
+        this.$router.push({path: "/" + that});
+      },
       goRouter(that) {
         this.$router.push({path: "/" + that});
       },
       handleCommand(command) {
         if (command == 'loginout') {
-          localStorage.removeItem('ms_userId');
-          this.$router.push('/login');
+          var url = this.$rootUrl + "/api/user/logout";
+          const options = {
+            method: 'GET',
+            url: url,
+            data: {}
+          };
+          this.$axios(options).then((res) => {
+            let item = res.data.data;
+            if (item.errorCode == 0) {
+              sessionStorage.removeItem('expireTime');
+              sessionStorage.removeItem('token');
+              sessionStorage.removeItem('userName');
+              sessionStorage.removeItem('avatar');
+              const path = this.$route.path;
+              if(path == '/newPost' || path == '/user' || path == '/mallCheck' || this.$route.matched[0].path == '/member'){
+                this.$router.push({path:'/'});
+              }else{
+                this.isLogin = false;
+              }
+            }
+          });
         }
       },
     },
@@ -72,11 +95,10 @@
         this.isLogin = true;
       }
       this.user = this.$store.state.userInfo.username;
-      console.log(this.$store.state.userInfo);
     }
   }
 </script>
-<style>
+<style lang="less">
   .header {
     z-index: 100;
     background-color: #fff;
@@ -98,7 +120,7 @@
 
   .login {
     position: absolute;
-    left: 90%;
+    right: 150px;
     top: 20px;
     font-size: 14px;
   }
@@ -122,7 +144,7 @@
 
   .logo {
     position: absolute;
-    margin-left: 25px;
+    margin-left: 175px;
     z-index: 100;
   }
 
@@ -218,10 +240,13 @@
     width: 600px;
     position: relative;
     top: 25px;
-    left: 15%;
+    left: 350px;
   }
 
   .step {
-    font-weight: 700 !important;
+
+    span{
+      color: #31a5e7;
+    }
   }
 </style>

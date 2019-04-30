@@ -2,7 +2,7 @@
   <div class="orderDetail clearfix">
     <div class="orderDetail_title"><span class="selectedSection">订单详情</span></div>
     <div class="order_steps">
-      <el-steps :space="200" :active="status" finish-status="success" align-center="true">
+      <el-steps :space="200" :active="status"  align-center="true">
         <el-step title="提交订单"></el-step>
         <el-step title="买家已付款"></el-step>
         <el-step title="发货中"></el-step>
@@ -16,12 +16,12 @@
       <span class="orderDetail_table_title ">订单号：{{orderDetail.id}}</span>
       <span class="orderDetail_table_title " style="margin-left: 15px"
             v-if="status!=5&&status!=0">支付方式：{{payType}}</span>
-      <el-table :data="orderDetail.products" class="cart_table" id="cart_table" ref="multipleTable" border>
+      <el-table :data="orderDetail.products" id="cart_table" ref="multipleTable" border>
 
         <el-table-column width="510" label="商品" class="table_product clearfix" align="center">
           <template scope="scope">
-            <img :src="scope.row.imgUrl" width="100" height="100" class="table_product_img">
-            <div class="table_product_msg">
+            <img :src="scope.row.imgUrl" width="60" height="60" class="orderTable_product_img">
+            <div class="orderTable_product_msg">
               <p>{{scope.row.title}}</p>
             </div>
 
@@ -59,6 +59,7 @@
       <p>收货人：{{orderDetail.receiver.name}}</p>
       <p>地址：{{orderDetail.receiver.address}}</p>
       <p>电话：{{orderDetail.receiver.phone}}</p>
+      <el-button size="small" @click="back()">返回我的订单</el-button>
     </div>
   </div>
 </template>
@@ -78,6 +79,9 @@
       }
     },
     methods: {
+      back(){
+        this.$router.push({path: '/myOrder', query: {}});
+      },
       getData() {
         var id = this.$route.query.id
         var url = this.$rootUrl + "/api/order/orderDetail";
@@ -92,14 +96,15 @@
         this.$axios(options).then((res) => {
           let item = res.data.data;
           if (item.errorCode == 0) {
+            this.alltotal = 0;
             this.orderDetail = item.data.orderDetail;
             this.status = item.data.status;
           }else if (item.errorCode == 403) {
             sessionStorage.setItem('pageHistory', this.$route.fullPath);
             this.$router.push({path: "/login"});
-            throw item.errorMsg;
+            throw item.msg;
           } else {
-            throw item.errorMsg;
+            throw item.msg;
           }
         }).catch(errorMsg => {
           this.$message.error(errorMsg);
@@ -115,17 +120,29 @@
       },
       payType() {
         switch (this.orderDetail.payType) {
-          case 0:
+          case 1:
             return "花呗分期";
             break;
-          case 1:
+          case 2:
             return "支付宝";
             break;
-          case 2:
+          case 3:
             return "微信";
             break;
-          case 3:
-            return "银行卡";
+          case 4:
+            return "中国银行网上银行";
+            break;
+          case 5:
+            return "中国工商银行网上银行";
+            break;
+          case 6:
+            return "中国建设银行网上银行";
+            break;
+          case 7:
+            return "中国交通银行网上银行";
+            break;
+          case 8:
+            return "中国农业银行网上银行";
             break;
         }
       },
@@ -153,11 +170,21 @@
       }
     },
     created() {
-      this.getData()
+      this.getData();
+      window.scroll(0, 0);
+    },
+    watch: {
+      '$route'(to, from) {
+        if(to.path === '/orderDetail'){
+          this.getData();
+          window.scroll(0, 0);
+          this.alltotal = 0;
+        }
+      }
     }
   }
 </script>
-<style scoped>
+<style scoped lang="less">
   .orderDetail {
     width: 100%;
     margin-bottom: 80px;
@@ -185,7 +212,7 @@
   .step_box {
     width: 100%;
     height: 50px;
-    border: 1px solid #ccc;
+    border: 1px solid #dcdcdc;
     display: flex;
     align-items: center;
     margin-top: 30px;
@@ -201,19 +228,19 @@
     margin-top: 10px;
   }
 
-  .table_product_img {
+  .orderTable_product_img {
     float: left;
   }
 
-  .table_product_msg {
+  .orderTable_product_msg {
     float: left;
-    height: 100px;
+    height: 60px;
     display: flex;
     align-items: center;
     font-size: 14px;
   }
 
-  .table_product_msg p {
+  .orderTable_product_msg p {
     margin-right: 10px;
   }
 
@@ -243,6 +270,13 @@
     line-height: 30px;
     position: relative;
     top: 200px;
+
+    p{
+      color: #999;
+    }
+    .el-button{
+      margin-top: 20px;
+    }
   }
 
   .payment_computed {

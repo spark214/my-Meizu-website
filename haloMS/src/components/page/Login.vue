@@ -10,13 +10,13 @@
           <el-container id="login_container_main">
             <el-form :model="loginForm" :rules="rules" ref="loginForm">
               <el-form-item prop="username">
-                <el-input v-model="loginForm.username" placeholder="Halo. 员工ID" @change="vp"></el-input>
+                <el-input v-model="loginForm.username" placeholder="Halo. 员工ID" @change="vp" class="loginInput"></el-input>
               </el-form-item>
               <el-form-item prop="password">
-                <el-input placeholder="密码" type="password" v-model="loginForm.password" @keyup.enter.native="submitForm()"></el-input>
+                <el-input placeholder="密码" type="password" v-model="loginForm.password" @keyup.enter.native="submitForm()"  class="loginInput"></el-input>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="submitForm('loginForm')">登录</el-button>
+                <el-button type="primary" @click="submitForm('loginForm')"  class="loginInput">登录</el-button>
               </el-form-item>
             </el-form>
           </el-container>
@@ -75,8 +75,13 @@
         this.$axios(options).then((res) => {
           let item = res.data.data;
             if (item.code == 0) {
-              this.$router.push({path: '/'});
               sessionStorage.setItem('expireTime', (new Date().getTime() + 58 * 60 * 1000));
+              let pageHistory = sessionStorage.getItem('pageHistory');
+              if (pageHistory) {
+                this.$router.push({path: pageHistory});
+              } else {
+                this.$router.push({path: "/"});
+              }
             } else {
               this.errormsg = '请检查账号及密码';
             }
@@ -135,7 +140,7 @@
     line-height: 120px;
   }
 
-  .el-input, .el-button {
+  .loginInput{
     width: 300px;
     height: 46px;
   }

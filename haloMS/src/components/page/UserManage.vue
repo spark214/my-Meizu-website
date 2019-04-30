@@ -10,7 +10,7 @@
         <!--</div>-->
         <div class="container">
             <div class="order_handleBox">
-                <el-input v-model="select_word" placeholder="通过用户id筛选" class="handle-input mr10"></el-input>
+                <el-input v-model="select_word" placeholder="" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="search" @click="search">搜索</el-button>
             </div>
             <el-table :data="dataTable" ref="multipleTable" @selection-change="handleSelectionChange"
@@ -39,10 +39,10 @@
         </div>
 
         <el-dialog title="封号" width="300px" :visible.sync="honorVisible">
-            <div>
+            <div class="honorDialog-item">
                 <p>
                     <lable>封号时长：</lable>
-                    <el-select v-model="honorParams.time" placeholder="请选择">
+                    <el-select v-model="honorParams.time" placeholder="请选择" style="width: 260px">
                         <el-option
                                 v-for="item in honorTimeOptions"
                                 :key="item.value"
@@ -51,9 +51,10 @@
                         </el-option>
                     </el-select>
                 </p>
-                <p>
+                <p class="honorDialog-item">
                     <label>封号理由：</label>
                     <el-input
+                            size="small"
                             type="textarea"
                             :autosize="{ minRows: 4, maxRows: 4}"
                             placeholder="请输入内容"
@@ -125,23 +126,34 @@
         },
         methods: {
             search(){
-                var url = this.$rootUrl + "/api/ms/searchUser";
-                const options = {
-                    method: 'POST',
-                    url: url,
-                    data: {
-                        key: this.select_word,
-                        pageNum:this.currentPage,
-                        pageSize:10
-                    }
-                };
-                this.$axios(options).then((res) => {
-                    let item = res.data.data;
-                    if (item.code == 0) {
-                        this.dataTable = item.data.users;
-                        this.total = item.data.count;
-                    }
-            })
+                this.currentPage = 1;
+                if(this.select_word !== ''){
+                    var url = this.$rootUrl + "/api/ms/searchUser";
+                    const options = {
+                        method: 'POST',
+                        url: url,
+                        data: {
+                            key: this.select_word,
+                            pageNum:this.currentPage,
+                            pageSize:10
+                        }
+                    };
+                    this.$axios(options).then((res) => {
+                        let item = res.data.data;
+                        if (item.code && item.code == 0) {
+                            this.dataTable = item.data.users;
+                            this.total = item.data.count;
+                        }else if(item.erroeCode == '403'){
+                            this.$message.error(item.msg);
+                            sessionStorage.setItem('pageHistory',this.$route.fullPath);
+                            this.$router.push({path: '/login'});
+                        }else{
+                            this.$message.error(item.message);
+                        }
+                    })
+                }else{
+                    this.getData();
+                }
             },
             // 分页导航
             handleCurrentChange(val) {
@@ -160,9 +172,15 @@
                 };
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
-                if (item.code == 0) {
+                if (item.code && item.code == 0) {
                     this.dataTable = item.data.users;
                     this.total = item.data.count;
+                }else if(item.erroeCode == '403'){
+                    this.$message.error(item.msg);
+                    sessionStorage.setItem('pageHistory',this.$route.fullPath);
+                    this.$router.push({path: '/login'});
+                }else{
+                    this.$message.error(item.message);
                 }
             })
             },
@@ -200,6 +218,12 @@
                     this.delVisible = false;
                     this.$message.success("删除成功");
                     this.getData();
+                }else if(item.erroeCode == '403'){
+                    this.$message.error(item.msg);
+                    sessionStorage.setItem('pageHistory',this.$route.fullPath);
+                    this.$router.push({path: '/login'});
+                }else{
+                    this.$message.error(item.message);
                 }
             })
             },
@@ -217,32 +241,45 @@
                 this.multipleSelection = val;
             },
             settleHonor(){
-                this.honorParams.duration = this.afterDate(parseInt(this.honorParams.time)) + " 23:59:59";
-                var url = this.$rootUrl + "/api/ms/settleUserStatus";
-                const options = {
-                    method: 'POST',
-                    url: url,
-                    data: this.honorParams
-                };
-                this.$axios(options).then((res) => {
-                    let item = res.data.data;
-                    if (item.code == 0) {
-                        _.each(this.dataTable,item => {
-                            if(item.userId == this.honorParams.userId){
-                                item.status = '封禁';
-                            }
-                        });
-                        this.$message.success("封号成功");
-                        this.honorVisible = false;
-                        this.honorParams = {
-                            userId:'',
-                            reason: '',
-                            duration: '',
-                            status: -1,
-                            time:''
-                        };
-                    }
-                })
+                if(this.honorParams.time == ''){
+                    this.$message.error('请输入封号时长');
+                }else if(this.honorParams.reason == ''){
+                    this.$message.error('请输入封号理由');
+                }else{
+                    this.honorParams.duration = this.afterDate(parseInt(this.honorParams.time)) + " 23:59:59";
+                    var url = this.$rootUrl + "/api/ms/settleUserStatus";
+                    const options = {
+                        method: 'POST',
+                        url: url,
+                        data: this.honorParams
+                    };
+                    this.$axios(options).then((res) => {
+                        let item = res.data.data;
+                        if (item.code && item.code == 0) {
+                            _.each(this.dataTable,item => {
+                                if(item.userId == this.honorParams.userId){
+                                    item.status = '封禁';
+                                }
+                            });
+                            this.$message.success("封号成功");
+                            this.honorVisible = false;
+                            this.honorParams = {
+                                userId:'',
+                                reason: '',
+                                duration: '',
+                                status: -1,
+                                time:''
+                            };
+                        }else if(item.erroeCode == '403'){
+                            this.$message.error(item.msg);
+                            sessionStorage.setItem('pageHistory',this.$route.fullPath);
+                            this.$router.push({path: '/login'});
+                        }else{
+                            this.$message.error(item.message);
+                        }
+                    })
+                }
+
             },
             cancelHonor(){
                 var url = this.$rootUrl + "/api/ms/settleUserStatus";
@@ -253,7 +290,7 @@
                 };
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
-                    if (item.code == 0) {
+                    if (item.code && item.code == 0) {
                         _.each(this.dataTable,item => {
                             if(item.userId == this.cancelHonorParams.userId){
                                 item.status = '正常';
@@ -265,6 +302,12 @@
                             userId: '',
                             status: 0
                         };
+                    }else if(item.erroeCode == '403'){
+                        this.$message.error(item.msg);
+                        sessionStorage.setItem('pageHistory',this.$route.fullPath);
+                        this.$router.push({path: '/login'});
+                    }else{
+                        this.$message.error(item.message);
                     }
                 })
             },
@@ -340,8 +383,15 @@
         width: 50%;
     }
 
-    .el-button {
-        height: 31px !important;
+    .honorDialog-item{
+        margin-top: 15px;
+        label{
+            margin-bottom: 5px;
+        }
+        &:first-child{
+        margin-top: 0;
+         }
     }
+
     }
 </style>

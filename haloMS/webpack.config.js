@@ -58,15 +58,6 @@ module.exports = {
     noInfo: true,
     overlay: true,
     port:8686,
-    // proxy:{
-    //   '/proxy':{
-    //     target:'http://115.159.53.208:8080',
-    //     changeOrigin: true,
-    //     pathRewrite: {
-    //       '^/proxy': '/message/list'
-    //     }
-    //   }
-    // }
   },
   performance: {
     hints: false

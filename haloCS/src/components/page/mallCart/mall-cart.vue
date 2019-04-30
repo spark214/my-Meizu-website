@@ -6,7 +6,7 @@
                 <div class="cart_container">
                     <el-table :data="product" clss="cart_table" id="cart_table" ref="multipleTable"
                               @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" width="80" align="center"></el-table-column>
+                        <el-table-column width="80" align="center"></el-table-column>
                         <el-table-column width="450" label="商品" class="table_product clearfix" align="center">
                             <template scope="scope">
                                 <img :src="scope.row.imgUrl" width="100" height="100" class="table_product_img">
@@ -44,8 +44,8 @@
                     </el-table>
 
                 </div>
-                <div class="cart_footer clearfix" :class="{fixed:barShow}">
-                    <a @click="deleteSelected">删除选中的商品</a>
+                <div class="cart_footer clearfix">
+                    <!--<a @click="deleteSelected">删除选中的商品</a>-->
                     <div class="footer_right">
                         <span> 合计(不含运费)： <span class="table_price" style="color: rgb(224, 43, 65)"
                                                v-model="totalPrices">￥{{totalPrice}}.00</span></span>
@@ -96,7 +96,7 @@
                 totalPrice: 0,
                 productNum: 2,
                 dialogVisible: false,
-                barShow: false,
+                barShow: true,
                 idx: -1,
                 multipleSelection: [],
                 del_list: [],
@@ -140,9 +140,9 @@
                         } else if(item.errorCode == 403){
                             sessionStorage.setItem('pageHistory',this.$route.fullPath);
                             this.$router.push({path: "/login"});
-                            throw item.errorMsg;
+                            throw item.msg;
                         } else {
-                            throw item.errorMsg;
+                            throw item.msg;
                         }
                     }).catch(errorMsg => {
                         this.$message.error(errorMsg);
@@ -170,7 +170,7 @@
                                 document.cookie = 'cart=' + item.cookie;
                             }
                         } else {
-                            throw item.errorMsg;
+                            throw item.msg;
                         }
                     }).catch(errorMsg => {
                         this.$message.error(errorMsg);
@@ -195,7 +195,7 @@
                             val["total"] = val["price"];
                         });
                     }else{
-                        throw item.errorMsg;
+                        throw item.msg;
                     }
                 }).catch(errorMsg => {
                     this.$message.error(errorMsg);
@@ -251,11 +251,11 @@
                             document.cookie = 'cart=' + item.cookie;
                         }
                         this.$message.success('删除成功');
-                        this.handleScroll();
+//                        this.handleScroll();
                         this.dialogVisible = false;
                         this.getData();
                     }else{
-                        throw item.errorMsg;
+                        throw item.msg;
                     }
                 }).catch(errorMsg => {
                     this.$message.error(errorMsg);
@@ -273,14 +273,14 @@
             }
         },
         mounted() {
-            setTimeout(() => {
-                this.handleScroll()
-            }, 300)
-            window.addEventListener('scroll', this.handleScroll)
-            window.addEventListener('resize', this.handleScroll)
-            if(document.getElementById('deleteIcon')){
-                document.getElementById('deleteIcon').addEventListener('click', this.handleScroll);
-            }
+//            setTimeout(() => {
+//                this.handleScroll()
+//            }, 300)
+//            window.addEventListener('scroll', this.handleScroll)
+//            window.addEventListener('resize', this.handleScroll)
+//            if(document.getElementById('deleteIcon')){
+//                document.getElementById('deleteIcon').addEventListener('click', this.handleScroll);
+//            }
         },
         created() {
             this.getData()

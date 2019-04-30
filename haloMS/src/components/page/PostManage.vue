@@ -10,6 +10,9 @@
         <!--</div>-->
         <div class="container">
             <div class="post-header">
+                <el-select v-model="select_type" placeholder="筛选版块" class="handle-select mr10" @change="selectChange">
+                    <el-option v-for="item in options" :key="item.typeId" :label="item.typeName" :value="item.typeId"></el-option>
+                    </el-select>
                 <el-input v-model="keyword" placeholder="" class="searchInput"></el-input>
                 <el-button icon="search" @click="search" type="primary">搜索</el-button>
                 <!--<el-button type="primary" @click="handleNew()" class="newBtn">发帖</el-button>-->
@@ -17,9 +20,9 @@
                         :exportData="dataTable" class="loadBtn"></loader>
             </div>
             <el-table :data="dataTable" ref="multipleTable"
-                      style="width: 100%" class="elTable">
+                      style="width: 100%" class="elTable" v-loading="loading">
                 <el-table-column label="ID" prop="topicId"></el-table-column>
-                <el-table-column label="标题" prop="title"></el-table-column>
+                <el-table-column label="标题" prop="title" min-width="180"></el-table-column>
                 <el-table-column label="版块" prop="typeName"></el-table-column>
                 <el-table-column label="用户ID" prop="userId"></el-table-column>
                 <el-table-column label="用户名" prop="userName"></el-table-column>
@@ -28,7 +31,7 @@
                         {{scope.row.backNumber || 0}}
                         </template>
                 </el-table-column>
-                <el-table-column label="最后回复时间" prop="lastTime"></el-table-column>
+                <el-table-column label="最后回复时间" prop="lastTime" min-width="120"></el-table-column>
                 <el-table-column label="操作" min-width="100">
                     <template slot-scope="scope">
                         <el-button size="small" type="primary" @click="getTopicDetail(scope.row.topicId,scope.row.typeName,scope.row.backNumber,scope.row.userName)">
@@ -110,12 +113,9 @@ export default{
     },
     data(){
         return{
-            options: [
-                {value: '1', label: '综合讨论'},
-                {value: '2', label: '闲置交易'},
-                {value: '3', label: '建议反馈'},
-                {value: '4', label: '谈天说地'},
-            ],
+            loading:false,
+            select_type:'',
+            options: [],
             keyword:'',
             dataTable:[],
             view: {},
@@ -144,13 +144,46 @@ export default{
         }
     },
     methods:{
+        selectChange(){
+            if(this.select_type != 0){
+                this.loading = true;
+                const url = this.$rootUrl + "/api/ms/searchByType";
+
+                const options = {
+                    method: 'POST',
+                    url: url,
+                    data: {
+                        id:this.select_type,
+                        pageNum:this.pageNum,
+                        pageSize:10
+                    }
+                };
+
+                this.$axios(options).then((res) => {
+                    let item = res.data.data;
+                    if (item.code && item.code == 0) {
+                        this.total = item.data.count;
+                        this.dataTable = item.data.topics;
+                    }else if(item.erroeCode == '403'){
+                        this.$message.error(item.msg);
+                        sessionStorage.setItem('pageHistory',this.$route.fullPath);
+                        this.$router.push({path: '/login'});
+                    }else{
+                        this.$message.error(item.message);
+                    }
+                    this.loading = false;
+                })
+            }else{
+                this.getData();
+            }
+        },
         handleCurrentChange(value){
             this.pageNum = value;
             this.getData();
         },
         handleBackPageChange(value){
             this.backPageNum = value;
-            this.getBack();
+            this.getBack(this.view.id);
         },
         handleEdit(index,row){
             this.idx = index;
@@ -162,6 +195,7 @@ export default{
             this.editorVisible = true;
         },
         getData(){
+            this.loading = true;
             const url = this.$rootUrl + "/api/ms/getTopicList";
 
             const options = {
@@ -175,13 +209,21 @@ export default{
 
             this.$axios(options).then((res) => {
                 let item = res.data.data;
-                if (item.code == 0) {
+                if (item.code && item.code == 0) {
                     this.total = item.data.count;
                     this.dataTable = item.data.topics;
+                }else if(item.erroeCode == '403'){
+                    this.$message.error(item.msg);
+                    sessionStorage.setItem('pageHistory',this.$route.fullPath);
+                    this.$router.push({path: '/login'});
+                }else{
+                    this.$message.error(item.message);
                 }
+                this.loading = false;
             })
         },
         getTopicDetail(id,typeName,backNumber,userName){
+            this.backPageNum = 1;
             const url = this.$rootUrl + "/api/ms/getTopicDetail";
 
             const options = {
@@ -196,14 +238,21 @@ export default{
 
             this.$axios(options).then((res) => {
                 let item = res.data.data;
-                if (item.code == 0) {
+                if (item.code && item.code == 0) {
                     this.view = item.data.topic;
+
                     this.view.typeName = typeName;
                     this.view.backNumber = backNumber;
                     this.view.userName = userName;
                     this.reply = item.data.backs;
                     this.backTotal = item.data.count;
                     this.viewVisible = true;
+                }else if(item.erroeCode == '403'){
+                    this.$message.error(item.msg);
+                    sessionStorage.setItem('pageHistory',this.$route.fullPath);
+                    this.$router.push({path: '/login'});
+                }else{
+                    this.$message.error(item.message);
                 }
             })
         },
@@ -222,32 +271,51 @@ export default{
 
             this.$axios(options).then((res) => {
                 let item = res.data.data;
-                if (item.code == 0) {
+                if (item.code && item.code == 0) {
                     this.reply = item.data.backs;
                     this.backTotal = item.data.count;
+                }else if(item.erroeCode == '403'){
+                    this.$message.error(item.msg);
+                    sessionStorage.setItem('pageHistory',this.$route.fullPath);
+                    this.$router.push({path: '/login'});
+                }else{
+                    this.$message.error(item.message);
                 }
             })
         },
         search(){
-            const url = this.$rootUrl + "/api/ms/searchTopic";
+            this.loading = true;
+            this.pageNum = 1;
+            if(this.keyword !== ''){
+                const url = this.$rootUrl + "/api/ms/searchTopic";
 
-            const options = {
-                method: 'POST',
-                url: url,
-                data: {
-                    pageNum:this.pageNum,
-                    pageSize:10,
-                    keyword:this.keyword
-                }
-            };
+                const options = {
+                    method: 'POST',
+                    url: url,
+                    data: {
+                        pageNum:this.pageNum,
+                        pageSize:10,
+                        keyword:this.keyword
+                    }
+                };
 
-            this.$axios(options).then((res) => {
-                let item = res.data.data;
-                if (item.code == 0) {
+                this.$axios(options).then((res) => {
+                    let item = res.data.data;
+                if (item.code && item.code == 0) {
                     this.total = item.data.count;
                     this.dataTable = item.data.topics;
+                }else if(item.erroeCode == '403'){
+                    this.$message.error(item.msg);
+                    sessionStorage.setItem('pageHistory',this.$route.fullPath);
+                    this.$router.push({path: '/login'});
+                }else{
+                    this.$message.error(item.message);
                 }
             })
+                this.loading = false;
+            }else{
+                this.getData();
+            }
         },
         delTopic(id){
             this.$confirm('此操作将永久删除该帖子, 是否继续?', '提示', {
@@ -267,12 +335,18 @@ export default{
 
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
-                    if (item.code == 0) {
+                    if (item.code && item.code == 0) {
                         this.$message({
                             message: '删除成功',
                             type: 'success'
                         });
                         this.getData();
+                    }else if(item.erroeCode == '403'){
+                        this.$message.error(item.msg);
+                        sessionStorage.setItem('pageHistory',this.$route.fullPath);
+                        this.$router.push({path: '/login'});
+                    }else{
+                        this.$message.error(item.message);
                     }
                 })
             })
@@ -295,18 +369,48 @@ export default{
 
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
-                    if (item.code == 0) {
+                    if (item.code && item.code == 0) {
                         this.$message({
                             message: '删除成功',
                             type: 'success'
                         });
-                        this.getBack(id);
+                        this.getBack(this.view.id);
+                    }else if(item.erroeCode == '403'){
+                        this.$message.error(item.msg);
+                        sessionStorage.setItem('pageHistory',this.$route.fullPath);
+                        this.$router.push({path: '/login'});
+                    }else{
+                        this.$message.error(item.message);
                     }
                 })
             })
+        },
+        getType(){
+            const url = this.$rootUrl + "/api/ms/getType";
+
+            const options = {
+                method: 'GET',
+                url: url,
+                data: {}
+            };
+
+            this.$axios(options).then((res) => {
+                let item = res.data.data;
+                if (item.code && item.code == 0) {
+                    this.options = item.data.types;
+                    this.options.push({typeId:'0',typeName:'全部'});
+                }else if(item.erroeCode == '403'){
+                    this.$message.error(item.msg);
+                    sessionStorage.setItem('pageHistory',this.$route.fullPath);
+                    this.$router.push({path: '/login'});
+                }else{
+                    this.$message.error(item.message);
+                }
+            })
         }
     },
-    created(){
+    mounted(){
+        this.getType();
         this.getData();
     }
 }
@@ -357,6 +461,7 @@ export default{
             margin: 10px 0;
             font-size: 18px;
             font-weight: bold;
+            width: 720px;
         }
         .view-info{
             display: flex;
@@ -380,6 +485,10 @@ export default{
     border: 1px solid #dddddd;
     border-radius: 3px;
     padding: 20px 10px;
+
+    img{
+        max-width: 770px;
+    }
 }
 .viewDialog-comment{
     position: relative;
@@ -411,6 +520,26 @@ export default{
            padding: 5px;
            padding-top: 0px;
            color: #666;
+
+blockquote {
+    max-width: 600px;
+    display: block;
+    background: #f0f0f0;
+    padding: 10px;
+    font-size: 14px;
+    color: #666;
+    max-height: 100px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+img {
+    max-width: 600px;
+}
        }
        .comment-item-info{
            span{
@@ -425,6 +554,10 @@ export default{
            }
        }
     }
+}
+.handle-select {
+    width: 150px;
+    margin-right: 16px;
 }
 .backPagination{
     position: absolute;

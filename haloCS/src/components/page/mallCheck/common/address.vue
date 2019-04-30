@@ -104,9 +104,9 @@
                         }else if (item.errorCode == 403) {
                             sessionStorage.setItem('pageHistory', this.$route.fullPath);
                             this.$router.push({path: "/login"});
-                            throw item.errorMsg;
+                            throw item.msg;
                         } else {
-                            throw item.errorMsg;
+                            throw item.msg;
                         }
                     }
                 }).catch(errorMsg => {
@@ -156,9 +156,9 @@
                         } else if (item.errorCode == 403) {
                             sessionStorage.setItem('pageHistory', this.$route.fullPath);
                             this.$router.push({path: "/login"});
-                            throw item.errorMsg;
+                            throw item.msg;
                         } else {
-                            throw item.errorMsg;
+                            throw item.msg;
                         }
                     }
                 }).catch(errorMsg => {

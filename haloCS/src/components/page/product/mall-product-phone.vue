@@ -4,7 +4,9 @@
 
         <div class="clearfix pageContain">
             <div class="contain_head clearfix">
-                <v-photo></v-photo>
+                <div class="contain_head_left">
+                    <v-photo :imgurl="imgList"></v-photo>
+                </div>
                 <div class="contain_head_right">
                     <h1>{{common.name}}</h1>
                     <p class="right_slogan">{{common.title}}</p>
@@ -84,8 +86,8 @@
                 width="30%"
                 @open="setTimeClose">
             <div class="cartDialog" v-if="form.color != ''">
-                <i class="el-icon-circle-check-outline"></i>
-                <span>已成功加入购物车</span>
+                <i class="el-icon-circle-check-outline" style="color: #31a5e7"></i>
+                <span style="color: #31a5e7">已成功加入购物车</span>
                 <p @click="goRouter('mallcart')" style="cursor: pointer">去购物车结算 ></p>
             </div>
             <div v-else>
@@ -118,8 +120,9 @@
                 sumPrice: 0,
                 selectColor: 0,
                 centerDialogVisible: false,
-                detailData:[]
-
+                detailData:[],
+                source:'',
+                imgList:[]
             }
         },
         components: {
@@ -155,7 +158,7 @@
                                 });
                                 this.$router.push({path: "/mallCheck", query: {type: 1}})
                             }else{
-                                throw item.errorMsg;
+                                throw item.msg;
                             }
                         }
                     }).catch(errorMsg => {
@@ -191,7 +194,7 @@
                             }
                             bus.$emit("cart", 1);
                         }else{
-                            throw item.errorMsg;
+                            throw item.msg;
                         }
                     }
                 }).catch(errorMsg => {
@@ -214,6 +217,10 @@
                     this.$router.push({path: "/mallProductOther", query: {proId: id}})
             },
             getData() {
+                var CancelToken = this.$axios.CancelToken
+                this.source = CancelToken.source()
+                this.cancelRequest();
+
                 var proId = this.$route.query.proId;
                 var url = this.$rootUrl + "/api/product/productDetail";
 
@@ -222,7 +229,10 @@
                     url: url,
                     data: {
                         proId: proId
-                    }
+                    },
+                    cancelToken: new this.$axios.CancelToken((c) => {
+                        this.source = c;
+                    })
                 };
 
                 this.$axios(options).then((res) => {
@@ -232,10 +242,10 @@
                         this.form.rom = this.common.rom[0].size;
                         this.form.price = this.common.rom[0].price;
                         this.form.nettype = this.common.nettype[0];
-                        this.detailData = item.data.itemDetail.detailImg.replace(/data-original/g,"src");
-
+                        this.detailData = item.data.itemDetail.detailImg;
+                        this.imgList = item.data.imgurl;
                     } else if (item.errorCode != 0) {
-                        throw item.errorMsg;
+                        throw item.msg;
                     } else if (!item.data.itemDetail.specificationJson) {
                         throw '产品信息加载错误';
                         this.$router.go(-1);
@@ -243,9 +253,13 @@
                 }).catch(errorMsg => {
                     this.$message.error(errorMsg);
                 });
+            },
+            cancelRequest(){
+                if(typeof this.source ==='function'){
+                    this.source('终止请求')
+                }
             }
         },
-
         computed: {
             filterColor() {
                 let color = []
@@ -273,7 +287,7 @@
 
     }
 </script>
-<style>
+<style lang="less">
     .mall-product {
         /*position: absolute;*/
         /*top: 0px;*/
@@ -282,8 +296,15 @@
 
     .contain_head {
         width: 100%;
+        position: relative;
     }
 
+    .contain_head_left{
+        position: relative;
+        width: 40%;
+        height: 422px;
+        float: left;
+    }
     .contain_head_right {
         position: relative;
         width: 50%;

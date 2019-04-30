@@ -33,9 +33,9 @@
                         } else if (item.errorCode == 403) {
                             sessionStorage.setItem('pageHistory', this.$route.fullPath);
                             this.$router.push({path: "/login"});
-                            throw item.errorMsg;
+                            throw item.msg;
                         } else {
-                            throw item.errorMsg;
+                            throw item.msg;
                         }
                 }).catch(errorMsg => {
                     this.$message.error(errorMsg);
@@ -46,7 +46,8 @@
             vOrder, vUnfound
         },
         created(){
-            this.getData()
+            this.getData();
+            window.scroll(0, 0);
         }
     }
 </script>

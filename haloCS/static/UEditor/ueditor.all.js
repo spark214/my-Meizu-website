@@ -6924,7 +6924,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
                     '.view{padding:0;word-wrap:break-word;cursor:text;height:90%;}\n' +
                     //设置默认字体和字号
                     //font-family不能呢随便改，在safari下fillchar会有解析问题
-                    'body{margin:8px;font-family:sans-serif;font-size:16px;}' +
+                    'body{margin:8px;font-family:sans-serif;font-size:14px;}' +
                     //设置段落间距
                     'p{margin:5px 0;}</style>' +
                     ( options.iframeCssUrl ? '<link rel=\'stylesheet\' type=\'text/css\' href=\'' + utils.unhtml(options.iframeCssUrl) + '\'/>' : '' ) +
@@ -11116,7 +11116,6 @@ UE.commands['imagefloat'] = {
 
 UE.commands['insertimage'] = {
     execCommand:function (cmd, opt) {
-        console.log("111112");
         opt = utils.isArray(opt) ? opt : [opt];
         if (!opt.length) {
             return;
@@ -11198,7 +11197,6 @@ UE.commands['insertimage'] = {
                     html.push(str);
                 }
             }
-            console.log("111111");
             me.execCommand('insertHtml', html.join(''));
         }
 
@@ -23781,6 +23779,7 @@ UE.plugin.register('autoupload', function (){
                     loader.setAttribute('alt', data.original || '');
                     loader.removeAttribute('id');
                     domUtils.removeClasses(loader, 'loadingclass');
+                    me.fireEvent("myImg",link,data.title);
                 }
             };
         } else {
@@ -24542,6 +24541,7 @@ UE.plugin.register('simpleupload', function() {
         }
       }
       xhr.onload = function() {
+
         if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
           var res = JSON.parse(xhr.responseText)
           var link = me.options.imageUrlPrefix + res.url;

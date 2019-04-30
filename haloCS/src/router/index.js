@@ -9,12 +9,15 @@ export default new Router({
         {
             path: '/',
             component: resolve => require(['../components/page/Index/mall-index.vue'], resolve),
+            meta: {
+                title: 'Halo商城'
+            },
         },
         {
             path: '/haloCenter',
             component: resolve => require(['../components/page/haloCenter/index.vue'], resolve),
             meta: {
-                title: 'Halo Center_Halo社区'
+                title: 'Halo社区_Halo Center'
             }
         },
         {
@@ -84,7 +87,7 @@ export default new Router({
             path: '/user',
             component: resolve => require(['../components/page/user/user.vue'], resolve),
             meta: {
-                title: '账号管理'
+                title: '账号管理_Halo.商城'
             }
         },
         {

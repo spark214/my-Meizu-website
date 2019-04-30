@@ -81,7 +81,7 @@
                             } else if(item.errorCode == 403){
                                 sessionStorage.setItem('pageHistory',this.$route.fullPath);
                                 this.$router.push({path: "/login"});
-                                throw item.errorMsg;
+                                throw item.msg;
                             } else {
                                 throw '充值失败'
                             }
@@ -139,9 +139,9 @@
                         }else if(item.errorCode == 403){
                             sessionStorage.setItem('pageHistory',this.$route.fullPath);
                             this.$router.push({path: "/login"});
-                            throw item.errorMsg;
+                            throw item.msg;
                         }else {
-                            throw errorMsg;
+                            throw item.msg;
                         }
                     }
                 }).catch(errorMsg => {
