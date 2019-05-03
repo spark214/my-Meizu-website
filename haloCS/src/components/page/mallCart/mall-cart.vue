@@ -2,7 +2,7 @@
     <div class="mallCart">
         <v-header currStep="购物车"></v-header>
         <div class="pageContain">
-            <div class="login_container" v-if="isLogin">
+            <div class="login_container" v-if="isLogin && product.length > 0">
                 <div class="cart_container">
                     <el-table :data="product" clss="cart_table" id="cart_table" ref="multipleTable"
                               @selection-change="handleSelectionChange">
@@ -53,25 +53,24 @@
                     </div>
                 </div>
             </div>
-            <div class="nologin_container" v-else>
+            <div class="nologin_container" v-if="product.length == 0" v-loading="loading">
                 <div class="clearfix">
                     <img src="../../../../static/img/noLoginPanda.png">
                     <div class="nologin_msg">
-                        <h3>您还没有登录！</h3>
-                        <p>登录后可显示您账号中已加入的商品哦~</p>
-                        <el-button type="primary" size="medium" @click="goRouter('login')">去登陆</el-button>
+                        <h3>您的购物车还没有商品！</h3>
+                        <p>快去添加商品吧~</p>
+                        <el-button type="primary" size="medium" @click="goCart()">去挑选</el-button>
                     </div>
 
                 </div>
             </div>
-
-            <v-footer></v-footer>
         </div>
+        <v-footer></v-footer>
+
         <el-dialog
                 title="删除"
                 :visible.sync="dialogVisible"
-                width="30%"
-        >
+                width="30%">
             <span>您确定要删除该商品吗？</span>
             <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
@@ -80,7 +79,6 @@
         </el-dialog>
 
     </div>
-
 </template>
 <script>
     import vHeader from '../../common/header/page/headerLite';
@@ -101,6 +99,7 @@
                 multipleSelection: [],
                 del_list: [],
                 isLogin: true,
+                loading:false
             }
         },
         components: {
@@ -178,6 +177,7 @@
                 }
             },
             getData() {
+                this.loading = true;
                 var url = this.$rootUrl + "/api/carts/getCart";
                 const options = {
                     method: 'GET',
@@ -188,6 +188,7 @@
                 this.$axios(options).then((res) => {
                     let item = res.data.data;
                     if (item.errorCode == 0) {
+                        this.loading = false;
                         this.product = item.data.cart.carts;
                         this.productNum = item.data.cart.totalNumber;
                         this.totalPrice = item.data.cart.totalPrice;
@@ -203,6 +204,9 @@
             },
             goRouter(that) {
                 this.$router.push({path: "/" + that});
+            },
+            goCart(){
+                this.$router.push({path: "/mallList",query:{cateId:0} });
             },
             handleScroll() {
                 var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
@@ -290,6 +294,10 @@
 <style lang="less">
     .mallCart {
         background-color: #F6F6F6;
+
+    .pageContain{
+        min-height: 600px;
+    }
 
     .cart_container, .nologin_container {
         width: 100%;
@@ -390,6 +398,9 @@
         bottom: 0;
         left: 0;
         z-index: 999;
+    }
+    .contain_footer{
+        margin-top: 120px;
     }
 
     }

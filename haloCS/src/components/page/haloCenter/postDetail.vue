@@ -171,7 +171,7 @@
                     this.$axios(options).then((res) => {
                         let item = res.data.data;
                         if (item.code == 0) {
-                            this.pageNum = (this.total + 1) / 10;
+                            this.pageNum = Math.ceil((this.total + 1) / 10);
                             this.getData();
                             this.quote = '';
                             this.clear++;

@@ -12,7 +12,7 @@
                 <router-view></router-view>
               </keep-alive>
               <el-form-item>
-                <a @click="" class="login">登录</a>
+                <a @click="" class="loginButton">登录</a>
               </el-form-item>
             </div>
           </el-container>
@@ -45,9 +45,6 @@
           password: [
             {required: true, message: "请输入密码", trigger: "blur"}
           ],
-          yzcode:[
-            {required:true,validator:validatePass,trigger:'blur'}
-          ]
 
         }
       };
@@ -155,7 +152,7 @@
       width: 1080px;
     }
   }
-  .login {
+  .loginButton {
     font-size: 14px;
     color: #409EFF;
     cursor: pointer;

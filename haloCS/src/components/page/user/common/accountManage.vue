@@ -480,7 +480,7 @@
                 this.getData();
             },
             reload:function (msg) {
-                console.log(msg);
+                window.scroll(0, 0);
                 this.getData();
             }
         }

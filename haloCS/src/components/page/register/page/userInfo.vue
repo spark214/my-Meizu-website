@@ -90,6 +90,7 @@ export default {
               message: '注册成功',
               type: 'success'
             });
+            let userInfo = item.data.userinfo;
             this.$store.commit('LOGIN', {
               username: userInfo.username,
               avatar: userInfo.avatar,

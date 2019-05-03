@@ -1,5 +1,5 @@
 <template>
-  <div class="crop" v-loading="loading">
+  <div class="crop"  v-loading.fullscreen.lock="loading" element-loading-text="上传头像中...">
 
     <div class="now_pro">
       <h3 class="title">当前头像</h3>
@@ -163,7 +163,13 @@
       change(e) {
         this.file = e.target.files[0]
         let files = e.target.files || e.dataTransfer.files;
-        if (!files.length) return;
+        if (!files.length){
+          return;
+        }
+        if( (files.size/1024) > 5 ){
+          this.$message.error('图片尺寸超过5M，请重新选择');
+          return;
+        }
         this.panel = true;
         this.picValue = files[0];
 

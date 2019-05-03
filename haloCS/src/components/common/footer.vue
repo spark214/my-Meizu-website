@@ -35,7 +35,7 @@
 </script>
 <style>
   .foottable {
-    width: 800px;
+    width:800px;
     position: relative;
     left: 50%;
     margin-bottom: 10px;

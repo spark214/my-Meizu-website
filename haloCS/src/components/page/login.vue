@@ -38,7 +38,7 @@
                                 <el-button type="primary" @click="check()" class="loginBtn">登录</el-button>
                             </el-form-item>
                             <el-form-item>
-                                <a @click="goRouter('register')" class="login">注册</a>
+                                <a @click="goRouter('register')" class="loginButton">注册</a>
                             </el-form-item>
                         </el-form>
 
@@ -151,6 +151,7 @@
                                 sessionStorage.setItem('userName',userInfo.username);
                                 sessionStorage.setItem('avatar',userInfo.avatar);
                                 sessionStorage.setItem('expireTime', (new Date().getTime() + 58 * 60 * 1000));
+                                document.cookie = 'cart=; expires=' + new Date().toUTCString() ;
                                 let pageHistory = sessionStorage.getItem('pageHistory');
                                 if (pageHistory) {
                                     this.$router.push({path: pageHistory});
@@ -184,6 +185,7 @@
                                 sessionStorage.setItem('userName',userInfo.username);
                                 sessionStorage.setItem('avatar',userInfo.avatar);
                                 sessionStorage.setItem('expireTime', (new Date().getTime() + 58 * 60 * 1000));
+                                document.cookie = 'cart=; expires=' + new Date().toUTCString() ;
                                 let pageHistory = sessionStorage.getItem('pageHistory');
                                 if (pageHistory) {
                                     this.$router.push({path: pageHistory});
@@ -354,7 +356,7 @@
         }
     }
 
-    .login {
+    .loginButton {
         position: relative;
         top: -10px;
         font-size: 14px;

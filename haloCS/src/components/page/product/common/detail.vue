@@ -86,6 +86,7 @@
 
   .detail_section {
     margin-top: 25px;
+    margin-bottom: 150px;
   }
 
   .question_section {

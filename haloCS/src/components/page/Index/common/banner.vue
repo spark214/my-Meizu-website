@@ -11,13 +11,12 @@
     <div class="sideBar" @mouseleave="evtSideLeave">
       <div class="side-left">
         <ul class="side">
-          <li class="side-item" @mouseenter="evtSideEnter(item.type)" v-for="item in sideItems"
-              @click="goList(item.id)">
+          <li class="side-item" v-for="item in sideItems" @mouseenter="evtSideEnter(item.type)" @click="goList(item.id)">
             {{item.content}}
           </li>
         </ul>
       </div>
-      <div class="side-detail" v-show="goodsStatus" @mouseenter="evtSideEnter(item.type)" @mouseleave="evtSideLeave">
+      <div class="side-detail" v-show="goodsStatus">
         <ul class="detail-item" v-for="goods in filterCurrGoods">
           <li class="datail-goods" v-for="item in goods">
             <a class="goods-link" @click="goProduct(item.proId)">

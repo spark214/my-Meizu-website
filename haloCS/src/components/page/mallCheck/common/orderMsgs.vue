@@ -30,7 +30,7 @@
     <div class="orderMsg_table_footer clearfix">
       <div class="orderMsg_total" style="font-size: 16px">
         合计
-        <span style="font-size: 22px;color:#e02b41;font-weight: bold;" >{{(product.number*product.price).toFixed(2)}}</span>
+        <span style="font-size: 22px;color:#e02b41;font-weight: bold;" >￥{{(product.number*product.price).toFixed(2)}}</span>
       </div>
     </div>
 
